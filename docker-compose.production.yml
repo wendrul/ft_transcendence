@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  nestjs:
+    container_name: nestjs_api_prod
+    image: nestjs-api-prod:1.0.0
+    build:
+      context: ./srcs/nestjs-backend/
+      target: production
+    command: npm run start:prod
+    ports:
+      - 3000:3000
+      - 9229:9229
+    networks:
+      - transcendence-net
+    volumes:
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+
+networks:
+  transcendence-net:
