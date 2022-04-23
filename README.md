@@ -5,4 +5,4 @@ To run the development environment run:
 ``docker-compose up``
 
 To run the production environment run:
-```docker-compose -f docker-compose.production.yml up`
+``docker-compose -f docker-compose.production.yml up``
