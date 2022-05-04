@@ -16,6 +16,22 @@ services:
     volumes:
       - /usr/src/app/node_modules
     restart: unless-stopped
+  react:
+    container_name: react_frontend_prod
+    image: react_frontend_prod:1.0.0
+    build:
+      context: ./srcs/react-frontend
+      target: production
+    # command: npm run build && echo pusyyyy # && serve -s build
+    ports:
+      - 80:3000
+    networks:
+      - transcendence-net
+    volumes:
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+
+
 
 networks:
   transcendence-net:
