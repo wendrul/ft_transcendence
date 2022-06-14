@@ -4,6 +4,7 @@ import RootPage from "./pages/RootPage";
 import Layout from "./components/layout/Layout";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProfilePage from "./pages/ProfilePage";
+import Game from "./Game";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Routes>
             <Route path="/" element={<RootPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/game" element={<Game />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Layout>

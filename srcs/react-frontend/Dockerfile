@@ -1,4 +1,4 @@
-FROM node:12.19.0-alpine3.9 AS development
+FROM node:alpine AS development
 
 WORKDIR /usr/src/app
 
@@ -12,7 +12,7 @@ RUN npm install --only=development
 
 COPY . .
 
-RUN npm run build
+# RUN npm run build
 
 FROM node:alpine as production
 

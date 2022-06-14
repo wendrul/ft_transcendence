@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://pixijs.download/release/pixi.min.js"></script>
+  </head>
+  <body>
+    <script type="module">
+      const app = new PIXI.Application({
+        width: 800,
+        height: 600,
+        backgroundColor: 0x5bba6f,
+      });
+      document.body.appendChild(app.view);
+
+      gameSetup(app);
+
+
+      export function gameSetup(instantiatedApp) {
+        // let parent = document.createElement("div");
+        // app = new PIXI.Application({ width: 640, height: 360 });
+        // parent.appendChild(app.view);
+        // app = instantiatedApp;
+        // console.log("Finished Game setup");
+        main();
+      }
+
+      function main() {
+        // Create the sprite and add it to the stage
+        let sprite = PIXI.Sprite.from("sample.png");
+        app.stage.addChild(sprite);
+        console.log("Nice sprite");
+        // Add a ticker callback to move the sprite back and forth
+        let elapsed = 0.0;
+        app.ticker.add((delta) => {
+          elapsed += delta;
+          sprite.x = 100.0 + Math.cos(elapsed / 50.0) * 100.0;
+        });
+      }
+    </script>
+  </body>
+</html>

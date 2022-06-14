@@ -15,7 +15,10 @@ export default function MainNavigation(props: any) {
               <Link to="/profile">Profile</Link>
             </li>
             <li>
-              <Link to="/four-o-four">game(doesn't exist)</Link>
+              <Link to="/four-o-four">nonexistent page</Link>
+            </li>
+            <li>
+              <Link to="/game">game</Link>
             </li>
           </ul>
         </nav>
