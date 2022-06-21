@@ -2,12 +2,14 @@ version: '3.9'
 
 services:
   nestjs:
+    depends_on:
+      - postgres
     container_name: nestjs_api_dev
     image: nestjs-api-dev:1.0.0
     build:
       context: ./srcs/nestjs-backend
       target: development
-    command: npm run start:debug
+    command: npm run start:dev
     ports:
       - 3000:3000
       - 9229:9229
@@ -19,6 +21,8 @@ services:
     restart: unless-stopped
   
   react:
+    depends_on:
+      - nestjs
     container_name: react_frontend_dev
     image: react_frontend_dev:1.0.0
     build:
@@ -34,6 +38,24 @@ services:
       - /usr/src/app/node_modules
     restart: unless-stopped
 
+  postgres:
+    image: postgres:alpine
+    container_name: "postgres"
+    environment:
+      POSTGRES_PASSWORD: "root"
+      POSTGRES_USER: "root"
+      POSTGRES_DB: "db"
+      PG_DATA: /var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - transcendence-net
+    restart: unless-stopped
+
 
 networks:
   transcendence-net:
+volumes:
+  pgdata:
