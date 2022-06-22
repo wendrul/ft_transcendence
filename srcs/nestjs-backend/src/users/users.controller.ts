@@ -1,30 +1,95 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
+	NotFoundException,
 	Param,
-	Post, 
+	Patch,
+	Post,
+	Query, 
+	Session,
+	UseGuards,
 } from '@nestjs/common';
+import {AuthGuard} from 'src/guards/auth.guard';
 import {Serialize} from 'src/interceptors/serialize.interceptor';
+import {CurrentUser} from './decorators/current-user.decorator';
 import {CreateUserDto} from './dtos/create-user.dto';
+import {UpdateUserDto} from './dtos/update-user.dto';
 import {UserDto} from './dtos/user.dto';
 import {UsersService} from './users.service';
+import {User} from './users.entity';
+import {AuthService} from './auth.service';
 
 @Controller('users')
 @Serialize(UserDto)
 export class UsersController {
-	
 	constructor(
 		private userService: UsersService,
+		private authService: AuthService
 	) {}
 
-	@Post('/signup')
-	async createUser(@Body() body: CreateUserDto) {
-		const user = await this.userService.create(body.email, body.password);
+	@Get('/whoami')
+	@UseGuards(AuthGuard)
+	whoAmI(@CurrentUser() user: User) {
 		return user;
 	}
 
-	@Get('/:id')
-	findUserById(@Param('id') id: string) {}
+	@UseGuards(AuthGuard)
+	@Post('/signout')
+	signout(@Session() session: any, @CurrentUser() user: User) {
+		this.userService.update(user.id, {status: 'offline'});
+		session.userId = null;
+	}
 
+	@Post('/signup')
+	async signup(@Body() body: CreateUserDto, @Session() session: any, @CurrentUser() c_user: User) {
+		if (c_user) {
+			this.userService.update(c_user.id, {status: 'offline'});
+		}
+		
+		const user = await this.authService.signup(body.email, body.password);
+		session.userId = user.id;
+
+		this.userService.update(user.id, {status: 'online'});
+		return user;
+	}
+
+	@Post('/signin')
+	async	signin(@Body() body: CreateUserDto, @Session() session: any, @CurrentUser() c_user: User) {
+		if (c_user) {
+			this.userService.update(c_user.id, {status: 'offline'});
+		}
+
+		const user = await this.authService.signin(body.email, body.password);
+		session.userId = user.id;
+
+		this.userService.update(user.id, {status: 'online'});
+
+		return user;
+	} 
+
+	@Get('/:id')
+	async findUserById(@Param('id') id: string) {
+		const user = await this.userService.findOne(parseInt(id));
+		if (!user) {
+			throw new NotFoundException('user not found');
+		}
+		return user;
+	}
+
+	@Get()
+	findAllUsers(@Query('email') email: string) {
+		return this.userService.find(email);
+	}
+
+	@Delete('/:id')
+	removeUser(@Param('id') id: string) {
+		return this.userService.remove(parseInt(id));
+	}
+
+	@Patch('/:id')
+	updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
+		return this.userService.update(parseInt(id), body);
+	}
 }
