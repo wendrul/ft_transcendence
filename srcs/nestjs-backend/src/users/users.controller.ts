@@ -20,6 +20,7 @@ import {UserDto} from './dtos/user.dto';
 import {UsersService} from './users.service';
 import {User} from './users.entity';
 import {AuthService} from './auth.service';
+import {SigninUserDto} from './dtos/signin-user.dto';
 
 @Controller('users')
 @Serialize(UserDto)
@@ -48,7 +49,7 @@ export class UsersController {
 			this.userService.update(c_user.id, {status: 'offline'});
 		}
 		
-		const user = await this.authService.signup(body.email, body.password);
+		const user = await this.authService.signup(body.email, body.password, body.login);
 		session.userId = user.id;
 
 		this.userService.update(user.id, {status: 'online'});
@@ -56,12 +57,12 @@ export class UsersController {
 	}
 
 	@Post('/signin')
-	async	signin(@Body() body: CreateUserDto, @Session() session: any, @CurrentUser() c_user: User) {
+	async	signin(@Body() body: SigninUserDto, @Session() session: any, @CurrentUser() c_user: User) {
 		if (c_user) {
 			this.userService.update(c_user.id, {status: 'offline'});
 		}
 
-		const user = await this.authService.signin(body.email, body.password);
+		const user = await this.authService.signin(body.email, body.password, body.login);
 		session.userId = user.id;
 
 		this.userService.update(user.id, {status: 'online'});
@@ -80,7 +81,7 @@ export class UsersController {
 
 	@Get()
 	findAllUsers(@Query('email') email: string) {
-		return this.userService.find(email);
+		return this.userService.findEmail(email);
 	}
 
 	@Delete('/:id')

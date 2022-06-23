@@ -11,5 +11,9 @@ export class UpdateUserDto {
 	
 	@IsOptional()
 	@IsString()
+	login: string;
+
+	@IsOptional()
+	@IsString()
 	status: string;
 }

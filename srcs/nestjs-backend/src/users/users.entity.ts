@@ -15,6 +15,9 @@ export class User {
 	@Column()
 	password: string;
 
+	@Column()
+	login: string;
+
 	@Column({ default: 'online'})
 	status: string;
 }
