@@ -10,8 +10,9 @@ import {
 	Query, 
 	Session,
 	UseGuards,
+	Req,
 } from '@nestjs/common';
-import {AuthGuard} from 'src/guards/auth.guard';
+import {AuthGuardApi} from 'src/guards/auth.guard';
 import {Serialize} from 'src/interceptors/serialize.interceptor';
 import {CurrentUser} from './decorators/current-user.decorator';
 import {CreateUserDto} from './dtos/create-user.dto';
@@ -21,6 +22,7 @@ import {UsersService} from './users.service';
 import {User} from './users.entity';
 import {AuthService} from './auth.service';
 import {SigninUserDto} from './dtos/signin-user.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 @Serialize(UserDto)
@@ -31,19 +33,19 @@ export class UsersController {
 	) {}
 
 	@Get('/whoami')
-	@UseGuards(AuthGuard)
+	@UseGuards(AuthGuardApi)
 	whoAmI(@CurrentUser() user: User) {
 		return user;
 	}
 
-	@UseGuards(AuthGuard)
+	@UseGuards(AuthGuardApi)
 	@Post('/signout')
 	signout(@Session() session: any, @CurrentUser() user: User) {
 		this.userService.update(user.id, {status: 'offline'});
 		session.userId = null;
 	}
 
-	@UseGuards(AuthGuard)
+	@UseGuards(AuthGuardApi)
 	@Patch('/addfriend')
 	async addFriend(@CurrentUser() user: User, @Query('id') id: number) {
 		const friend = await this.userService.findOne(id);
@@ -72,6 +74,28 @@ export class UsersController {
 		this.userService.update(user.id, {status: 'online'});
 		return user;
 	}
+
+	@Get('/googleAuth') //por el momento
+	@UseGuards(AuthGuard('google'))
+	async googleAuth(@Req() req) {}
+
+	@Get('auth/google/callback')
+	@UseGuards(AuthGuard('google'))
+	async googleAuthRedirect(@Req() req: any, @Session() session: any, @CurrentUser() c_user: User) {
+		if (c_user) {
+			this.userService.update(c_user.id, {status: 'offline'});
+		}
+	//	console.log(req.user)
+		const user = await this.userService.create(req.user.email, "", req.user.firstName);
+		session.userId = user.id;
+	//	const user = this.userService.create(req.email, null, req.email);
+	
+		this.userService.update(user.id, {status: 'online'});
+	
+		return user;
+
+	}
+
 
 	@Post('/signin')
 	async	signin(@Body() body: SigninUserDto, @Session() session: any, @CurrentUser() c_user: User) {

@@ -21,6 +21,16 @@ export class UsersService {
 		return this.repo.findOneBy({id});
 	}
 
+	googleLogin(req) {
+		if (!req.user) {
+		  return 'No user from google'
+		}
+		return {
+		  message: 'User Info from Google',
+		  user: req.user
+		}
+	  }
+
 	findEmail(email: string) {
 		return this.repo.findBy({email});
 	}

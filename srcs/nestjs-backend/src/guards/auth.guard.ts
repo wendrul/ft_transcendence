@@ -3,7 +3,7 @@ import {
 	ExecutionContext,
 } from '@nestjs/common';
 
-export class AuthGuard implements CanActivate {
+export class AuthGuardApi implements CanActivate {
 	canActivate(context: ExecutionContext) {
 		const request = context.switchToHttp().getRequest();
 

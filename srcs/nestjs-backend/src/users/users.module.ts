@@ -5,11 +5,12 @@ import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users.entity';
 import { CurrentUserMiddleware } from './middleware/current-user.middleware';
+import { GoogleStrategy } from './google.strategy';
 
 @Module({
 	imports: [TypeOrmModule.forFeature([User])],
 	controllers: [UsersController],
-  providers: [UsersService, AuthService]
+  providers: [UsersService, AuthService, GoogleStrategy]
 })
 
 export class UsersModule {
