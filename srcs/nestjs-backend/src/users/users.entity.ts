@@ -1,6 +1,8 @@
 import {
 	Column,
 	Entity,
+	JoinTable,
+	ManyToMany,
 	PrimaryGeneratedColumn,
 } from "typeorm";
 
@@ -20,4 +22,11 @@ export class User {
 
 	@Column({ default: 'online'})
 	status: string;
+
+	@ManyToMany(() => User, (user) => user.friends)
+	@JoinTable()
+	friendOf: User[];
+
+	@ManyToMany(() => User, (user) => user.friendOf)
+	friends: User[];
 }

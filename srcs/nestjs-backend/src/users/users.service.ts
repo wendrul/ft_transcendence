@@ -45,4 +45,15 @@ export class UsersService {
 		}
 		return this.repo.remove(user);
 	}
+
+	findFriends() {
+		return this.repo.find({
+			where: {
+				id: 3
+			},
+			relations: {
+				friendOf: true,
+			},
+		});
+	}
 }
