@@ -1,10 +1,10 @@
 import {
 	Column,
 	Entity,
-	JoinTable,
-	ManyToMany,
+	OneToMany,
 	PrimaryGeneratedColumn,
 } from "typeorm";
+import {FriendRequest} from "./friendRequest.entity";
 
 @Entity()
 export class User {
@@ -23,10 +23,9 @@ export class User {
 	@Column({ default: 'online'})
 	status: string;
 
-	@ManyToMany(() => User, (user) => user.friends)
-	@JoinTable()
-	friendOf: User[];
+	@OneToMany(() => FriendRequest, (friendRequest) => friendRequest.sender)
+	sentFriendRequests: FriendRequest[];	
 
-	@ManyToMany(() => User, (user) => user.friendOf)
-	friends: User[];
+	@OneToMany(() => FriendRequest, (friendRequest) => friendRequest.reciver)
+	recivedFriendRequests: FriendRequest[];
 }

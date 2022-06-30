@@ -1,5 +1,4 @@
 import {IsEmail, IsOptional, IsString} from "class-validator";
-import {User} from "../users.entity";
 
 export class UpdateUserDto {
 	@IsOptional()
@@ -17,10 +16,4 @@ export class UpdateUserDto {
 	@IsOptional()
 	@IsString()
 	status: string;
-
-	@IsOptional()
-	friends: User[];
-
-	@IsOptional()
-	friendOf: User[];
 }

@@ -45,23 +45,6 @@ export class UsersController {
 		session.userId = null;
 	}
 
-	@UseGuards(AuthGuardApi)
-	@Patch('/addfriend')
-	async addFriend(@CurrentUser() user: User, @Query('id') id: number) {
-		const friend = await this.userService.findOne(id);
-		if (!friend) {
-			throw new NotFoundException('user not found');
-		}
-
-		user.friends = [friend];
-		return this.userService.update(user.id, {friends: user.friends});
-	}
-
-	@Get('/getFriends')
-	findFriends() {
-		return this.userService.findFriends();
-	}
-
 	@Post('/signup')
 	async signup(@Body() body: CreateUserDto, @Session() session: any, @CurrentUser() c_user: User) {
 		if (c_user) {

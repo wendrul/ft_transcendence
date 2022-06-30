@@ -15,6 +15,7 @@ export class AuthService {
 			throw new BadRequestException('email in use');
 		}
 
+		console.log(login);
 	 	const l_users = await this.usersService.findLogin(login);
 		if (l_users.length) {
 			throw new BadRequestException('login in use');

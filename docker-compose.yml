@@ -42,6 +42,7 @@ services:
     image: postgres:alpine
     container_name: "postgres"
     environment:
+      DATABASE_HOST: "127.0.0.1"
       POSTGRES_PASSWORD: "root"
       POSTGRES_USER: "root"
       POSTGRES_DB: "db"
@@ -53,6 +54,20 @@ services:
     networks:
       - transcendence-net
     restart: unless-stopped
+  
+  pgadmin:
+    depends_on:
+      - postgres
+    container_name: "container-pgadmin4"
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+    networks:
+      - transcendence-net
 
 
 networks:
