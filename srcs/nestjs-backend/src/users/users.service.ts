@@ -7,6 +7,15 @@ import {User} from './users.entity';
 export class UsersService {
 	constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
+	async getFriends(user: User) {
+		const t_user = await this.repo.findOne({
+			relations: ['sentFriendRequests', 'recivedFriendRequests'],
+			where: {id: user.id},
+		});
+
+		return t_user.recivedFriendRequests;
+	}
+
 	create(email: string, password: string, login: string) {
 		const user = this.repo.create({ email, password, login });
 

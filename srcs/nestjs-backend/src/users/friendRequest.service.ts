@@ -17,6 +17,11 @@ export class FriendRequestService {
 		if (reciver.length === 0) {
 			throw new NotFoundException('user not found');
 		}
+
+		if (reciver[0].id === user.id) {
+			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+		}
+
 		const request = this.repo.create();
 		request.sender = user;
 		request.reciver = reciver[0];
@@ -40,6 +45,47 @@ export class FriendRequestService {
 
 		friendRequest.status = status;
 		return this.repo.save(friendRequest);
+	}
+
+	async getFriends(user: User) {
+		const r_req = await this.repo.find({
+			relations: ['reciver', 'sender'],
+			where: {
+				reciver: user,
+				status: 'accepted'
+			}
+		});  
+
+		const s_req = await this.repo.find({
+			relations: ['reciver', 'sender'],
+			where: {
+				sender: user,
+				status: 'accepted'
+			}
+		});
+
+		let friends: User[] = [];
+
+		for (let i = 0; i < r_req.length; i++) {
+			friends.push(r_req[i].sender);
+		}
+
+		for (let i = 0; i < s_req.length; i++) {
+			friends.push(s_req[i].reciver);
+		}
+
+		return friends;
+	}
+
+	findPending(user: User) {
+
+		return this.repo.find({
+			relations: ['reciver', 'sender'],
+			where: {
+				status: 'pending',
+				reciver: user,
+			}
+		});
 	}
 
 	find(id: number) {

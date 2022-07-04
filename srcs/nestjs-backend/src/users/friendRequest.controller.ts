@@ -13,6 +13,7 @@ import {Serialize} from "src/interceptors/serialize.interceptor";
 import {CurrentUser} from "./decorators/current-user.decorator";
 import {AcceptFriendRequestDto} from "./dtos/accept-friendRequest.dto";
 import {FriendRequestDto} from "./dtos/friendRequest.dto";
+import {UserDto} from "./dtos/user.dto";
 import {FriendRequestService} from "./friendRequest.service";
 import {User} from './users.entity';
 
@@ -29,9 +30,19 @@ export class FriendRequestController {
 		return this.friendRequestService.create(user, login);	
 	}
 
-	@Get('/:id')
-	find(@Param('id') id: string) {
-		return this.friendRequestService.find(parseInt(id));
+	@Get('/friends')
+	@UseGuards(AuthGuardApi)
+	@Serialize(UserDto)
+	getFriends(@CurrentUser() user: User) {
+		console.log('hola');
+		return this.friendRequestService.getFriends(user);
+	}
+
+	@Get('/pendingRequests')
+	@Serialize(FriendRequestDto)
+	@UseGuards(AuthGuardApi)
+	getPendingRequests(@CurrentUser() user: User) {
+		return this.friendRequestService.findPending(user);
 	}
 
 	@Patch('/:id')
@@ -43,5 +54,10 @@ export class FriendRequestController {
 		@Body() body: AcceptFriendRequestDto) {	
 
 		return this.friendRequestService.changeStatus(user, parseInt(id), body.status);
+	}
+
+	@Get('/:id')
+	find(@Param('id') id: string) {
+		return this.friendRequestService.find(parseInt(id));
 	}
 }

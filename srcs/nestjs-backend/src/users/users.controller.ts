@@ -32,6 +32,12 @@ export class UsersController {
 		private authService: AuthService
 	) {}
 
+	@Get('/friends')
+	@UseGuards(AuthGuardApi)
+	getFriends(@CurrentUser() user: User) {
+		return this.userService.getFriends(user)
+	}
+
 	@Get('/whoami')
 	@UseGuards(AuthGuardApi)
 	whoAmI(@CurrentUser() user: User) {
