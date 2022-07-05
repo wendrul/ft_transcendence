@@ -23,7 +23,9 @@ import {User} from './users.entity';
 import {AuthService} from './auth.service';
 import {SigninUserDto} from './dtos/signin-user.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger'
 
+@ApiTags('Users')
 @Controller('users')
 @Serialize(UserDto)
 export class UsersController {
