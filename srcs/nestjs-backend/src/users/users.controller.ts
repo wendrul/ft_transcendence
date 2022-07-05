@@ -23,7 +23,9 @@ import {User} from './users.entity';
 import {AuthService} from './auth.service';
 import {SigninUserDto} from './dtos/signin-user.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger'
 
+@ApiTags('Users')
 @Controller('users')
 @Serialize(UserDto)
 export class UsersController {
@@ -64,27 +66,22 @@ export class UsersController {
 		return user;
 	}
 
-	@Get('/googleAuth') //por el momento
-	@UseGuards(AuthGuard('google'))
-	async googleAuth(@Req() req) {}
+	@Get('/Auth42')
+	@UseGuards(AuthGuard('42'))
+	async Auth42(@Req() req) {
+	}
 
-	@Get('auth/google/callback')
-	@UseGuards(AuthGuard('google'))
-	async googleAuthRedirect(@Req() req: any, @Session() session: any, @CurrentUser() c_user: User) {
+	@Get('auth/42/callback') //toca implementar con signup para que no se puede crear multiples cuentas con mismo usuario
+	@UseGuards(AuthGuard('42'))
+	async Auth42Redirect(@Req() req: any, @Session() session: any, @CurrentUser() c_user: User) {
 		if (c_user) {
 			this.userService.update(c_user.id, {status: 'offline'});
 		}
-	//	console.log(req.user)
-		const user = await this.userService.create(req.user.email, "", req.user.firstName);
+		const user = await this.userService.create(req.user.email, "", req.user.login);
 		session.userId = user.id;
-	//	const user = this.userService.create(req.email, null, req.email);
-	
 		this.userService.update(user.id, {status: 'online'});
-	
 		return user;
-
 	}
-
 
 	@Post('/signin')
 	async	signin(@Body() body: SigninUserDto, @Session() session: any, @CurrentUser() c_user: User) {

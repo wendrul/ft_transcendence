@@ -30,12 +30,12 @@ export class UsersService {
 		return this.repo.findOneBy({id});
 	}
 
-	googleLogin(req) {
+	auth42Login(req) {
 		if (!req.user) {
-		  return 'No user from google'
+		  return 'No user from 42'
 		}
 		return {
-		  message: 'User Info from Google',
+		  message: 'User Info from 42',
 		  user: req.user
 		}
 	  }
