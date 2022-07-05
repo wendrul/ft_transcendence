@@ -1,25 +1,26 @@
 import { PassportStrategy } from '@nestjs/passport'
 
-import { Strategy, VerifyCallback } from 'passport-google-oauth20'
+import { Strategy, VerifyCallback } from 'passport-42';
 
 import { Injectable } from '@nestjs/common'
 
 @Injectable()
 
-export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
+export class Auth42Strategy extends PassportStrategy(Strategy, '42') {
 	constructor(){
 		super({
-			clientID: process.env.GOOGLE_CLIENTID,
-			clientSecret: process.env.GOOGLE_CLIENTSECRET,
-			callbackURL: process.env.GOOGLE_CLIENT_CALLBACKURL,
-			scope: ['email', 'profile']
+			clientID: process.env.AUTH42_CLIENTID,
+			clientSecret: process.env.AUTH42_CLIENTSECRET,
+			callbackURL: process.env.AUTH42_CLIENT_CALLBACKURL,
 		});
 
 	}
 
 	async validate(accessToken: string, refreshToken: string, profile: any, done: VerifyCallback): Promise<any> {
-		const { name, emails, photos } = profile
+		console.log(profile);
+		const { username, name, emails, photos } = profile
 		const user = {
+			login: username,
 			email: emails[0].value,
 			firstName: name.givenName,
 			lastName: name.familyName,
@@ -28,4 +29,5 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 		}
 		done(null, user);
 	}
+	
 }

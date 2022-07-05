@@ -7,6 +7,7 @@ import { User } from './users.entity';
 import { FriendRequest } from './friendRequest.entity';
 import { CurrentUserMiddleware } from './middleware/current-user.middleware';
 import { GoogleStrategy } from './google.strategy';
+import { Auth42Strategy } from './auth42.strategy';
 import {FriendRequestService} from './friendRequest.service';
 import {FriendRequestController} from './friendRequest.controller';
 
@@ -18,6 +19,7 @@ import {FriendRequestController} from './friendRequest.controller';
 		AuthService,
 		FriendRequestService,
 		GoogleStrategy,
+		Auth42Strategy,
 	]
 })
 

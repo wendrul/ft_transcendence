@@ -40,6 +40,16 @@ export class UsersService {
 		}
 	  }
 
+	auth42Login(req) {
+		if (!req.user) {
+		  return 'No user from 42'
+		}
+		return {
+		  message: 'User Info from 42',
+		  user: req.user
+		}
+	  }
+
 	findEmail(email: string) {
 		return this.repo.findBy({email});
 	}

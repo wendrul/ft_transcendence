@@ -64,6 +64,23 @@ export class UsersController {
 		return user;
 	}
 
+	@Get('/Auth42')
+	@UseGuards(AuthGuard('42'))
+	async Auth42(@Req() req) {
+	}
+
+	@Get('auth/42/callback') //toca implementar con signup para que no se puede crear multiples cuentas con mismo usuario
+	@UseGuards(AuthGuard('42'))
+	async Auth42Redirect(@Req() req: any, @Session() session: any, @CurrentUser() c_user: User) {
+		if (c_user) {
+			this.userService.update(c_user.id, {status: 'offline'});
+		}
+		const user = await this.userService.create(req.user.email, "", req.user.login);
+		session.userId = user.id;
+		this.userService.update(user.id, {status: 'online'});
+		return user;
+	}
+
 	@Get('/googleAuth') //por el momento
 	@UseGuards(AuthGuard('google'))
 	async googleAuth(@Req() req) {}
