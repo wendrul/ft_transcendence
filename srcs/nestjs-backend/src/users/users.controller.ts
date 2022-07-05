@@ -83,28 +83,6 @@ export class UsersController {
 		return user;
 	}
 
-	@Get('/googleAuth') //por el momento
-	@UseGuards(AuthGuard('google'))
-	async googleAuth(@Req() req) {}
-
-	@Get('auth/google/callback')
-	@UseGuards(AuthGuard('google'))
-	async googleAuthRedirect(@Req() req: any, @Session() session: any, @CurrentUser() c_user: User) {
-		if (c_user) {
-			this.userService.update(c_user.id, {status: 'offline'});
-		}
-	//	console.log(req.user)
-		const user = await this.userService.create(req.user.email, "", req.user.firstName);
-		session.userId = user.id;
-	//	const user = this.userService.create(req.email, null, req.email);
-	
-		this.userService.update(user.id, {status: 'online'});
-	
-		return user;
-
-	}
-
-
 	@Post('/signin')
 	async	signin(@Body() body: SigninUserDto, @Session() session: any, @CurrentUser() c_user: User) {
 		if (c_user) {

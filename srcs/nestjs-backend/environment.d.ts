@@ -8,8 +8,5 @@ declare namespace NodeJS {
 		AUTH42_CLIENTID?: string;
 		AUTH42_CLIENTSECRET?: string;
 		AUTH42_CLIENT_CALLBACKURL?: string;
-		GOOGLE_CLIENTID?: string;
-		GOOGLE_CLIENTSECRET?: string;
-		GOOGLE_CLIENT_CALLBACKURL?: string;
 	}
 }
