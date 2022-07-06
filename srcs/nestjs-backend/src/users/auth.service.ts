@@ -1,13 +1,26 @@
 import {UsersService} from './users.service';
 import {randomBytes, scrypt as _scrypt} from 'crypto';
 import {promisify} from 'util';
-import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
+import {BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
 
 const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class AuthService {
 	constructor(private usersService: UsersService) {}
+
+	async login42(email: string, login: string) {
+		const users = await this.usersService.findEmail(email);	
+
+		if (users.length) {
+			return users[0];
+		}
+
+		const user = await this.usersService.create(email, "", login);
+		this.usersService.update(user.id, {user42: true});
+
+		return user;
+	}
 
 	async signup(email: string, password: string, login: string) {
 		const e_users = await this.usersService.findEmail(email);
@@ -40,6 +53,10 @@ export class AuthService {
 
 		if (!user){
 			throw new NotFoundException('user not found');
+		}
+
+		if (user.user42) {
+			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 		}
 
 		const [salt, storedHash] = user.password.split('.');

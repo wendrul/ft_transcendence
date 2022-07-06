@@ -23,6 +23,9 @@ export class User {
 	@Column({ default: 'online'})
 	status: string;
 
+	@Column({default: false})
+	user42: boolean;
+
 	@OneToMany(() => FriendRequest, (friendRequest) => friendRequest.sender)
 	sentFriendRequests: FriendRequest[];	
 

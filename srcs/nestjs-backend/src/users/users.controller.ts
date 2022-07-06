@@ -55,11 +55,13 @@ export class UsersController {
 
 	@Post('/signup')
 	async signup(@Body() body: CreateUserDto, @Session() session: any, @CurrentUser() c_user: User) {
+		
+		const user = await this.authService.signup(body.email, body.password, body.login);
+		
 		if (c_user) {
 			this.userService.update(c_user.id, {status: 'offline'});
 		}
-		
-		const user = await this.authService.signup(body.email, body.password, body.login);
+
 		session.userId = user.id;
 
 		this.userService.update(user.id, {status: 'online'});
@@ -68,16 +70,20 @@ export class UsersController {
 
 	@Get('/Auth42')
 	@UseGuards(AuthGuard('42'))
-	async Auth42(@Req() req) {
+	async Auth42(@Req() req: any) {
 	}
 
-	@Get('auth/42/callback') //toca implementar con signup para que no se puede crear multiples cuentas con mismo usuario
+	@Get('auth/42/callback')
 	@UseGuards(AuthGuard('42'))
 	async Auth42Redirect(@Req() req: any, @Session() session: any, @CurrentUser() c_user: User) {
+
+		// const user = await this.userService.create(req.user.email, "", req.user.login);
+		const user = await this.authService.login42(req.user.email, req.user.login);
+
 		if (c_user) {
 			this.userService.update(c_user.id, {status: 'offline'});
 		}
-		const user = await this.userService.create(req.user.email, "", req.user.login);
+
 		session.userId = user.id;
 		this.userService.update(user.id, {status: 'online'});
 		return user;
@@ -85,11 +91,13 @@ export class UsersController {
 
 	@Post('/signin')
 	async	signin(@Body() body: SigninUserDto, @Session() session: any, @CurrentUser() c_user: User) {
+
+		const user = await this.authService.signin(body.email, body.password, body.login);
+
 		if (c_user) {
 			this.userService.update(c_user.id, {status: 'offline'});
 		}
 
-		const user = await this.authService.signin(body.email, body.password, body.login);
 		session.userId = user.id;
 
 		this.userService.update(user.id, {status: 'online'});
