@@ -18,25 +18,30 @@ class Ball {
   enteringState: boolean = false;
   elapsedTime: number = 0;
 
-  private _gfx: Graphics;
-  private _app: PIXI.Application;
+  private _gfx: Graphics | null;
+  private _app: PIXI.Application | null;
   colliders: Array<ICollider>;
 
   static readonly radius = 15;
   static readonly bounceStallDelay = 0.05;
 
-  constructor(app: PIXI.Application) {
-    this.pos = new Vector2(app.renderer.width / 2, app.renderer.height / 2);
+  constructor(app: PIXI.Application | null) {
     this.velocity = new Vector2(10, -20);
-    this._gfx = new Graphics();
-    this._app = app;
-
+    this.pos = new Vector2(0, 0);
     this.colliders = new Array<ICollider>();
 
-    app.ticker.add((delta) => {
-      this.update(delta);
-    });
-    this._app.stage.addChild(this._gfx);
+    this._app = null;
+    this._gfx = null;
+    if (app != null) {
+      this.pos = new Vector2(app.renderer.width / 2, app.renderer.height / 2);
+      this._app = app;
+      this._gfx = new Graphics();
+      app.ticker.add((delta) => {
+        this.update(delta);
+        this.redraw();
+      });
+      this._app.stage.addChild(this._gfx);
+    }
     const k_Listener = addKeyListeners("k");
     k_Listener.press = () => {
       // this.velocity = this.velocity.normalized().scale(1000);
@@ -44,8 +49,7 @@ class Ball {
     };
   }
 
-  private update(delta: number) {
-    this.redraw();
+  public update(delta: number) {
 
     switch (this.state) {
       case States.BOUNCE_STALL:
@@ -56,7 +60,7 @@ class Ball {
         const t = this.elapsedTime / Ball.bounceStallDelay;
         // this._gfx.x = this.pos.x;
         // this._gfx.y = this.pos.y;
-        this._gfx.scale.set(1,0.5);
+        this._gfx?.scale.set(1, 0.5);
         this.elapsedTime += delta / 60;
         if (this.elapsedTime > Ball.bounceStallDelay) {
           this.state = States.MOVING;
@@ -66,7 +70,7 @@ class Ball {
 
       case States.MOVING:
         this.enteringState = false;
-        this._gfx.scale.set(1,1);
+        this._gfx?.scale.set(1, 1);
         // this._gfx.x = 0;
         // this._gfx.y = 0;
 
@@ -96,24 +100,23 @@ class Ball {
   }
 
   redraw() {
-    this._gfx.clear();
+    this._gfx!.clear();
 
-    this._gfx
-      .moveTo(this.pos.x, this.pos.y)
+    this._gfx!.moveTo(this.pos.x, this.pos.y)
       .beginFill(0xfffffff)
       .drawCircle(Ball.radius, Ball.radius, Ball.radius)
       .endFill();
-    this._gfx.x = this.pos.x;
-    this._gfx.y = this.pos.y;
-    this._gfx.pivot.x = Ball.radius;
-    this._gfx.pivot.y = Ball.radius;
-
+    this._gfx!.x = this.pos.x;
+    this._gfx!.y = this.pos.y;
+    this._gfx!.pivot.x = Ball.radius;
+    this._gfx!.pivot.y = Ball.radius;
 
     if (globalThis.debugMode) {
       const col_start = this.pos;
-      const col_end = this.velocity.scale(0.1).add(new Vector2(Ball.radius, Ball.radius));
-      this._gfx
-        .moveTo(Ball.radius,Ball.radius)
+      const col_end = this.velocity
+        .scale(0.1)
+        .add(new Vector2(Ball.radius, Ball.radius));
+      this._gfx!.moveTo(Ball.radius, Ball.radius)
         .lineStyle(3, 0xfcdb03)
         .lineTo(col_end.x, col_end.y)
         .endFill();

@@ -2,8 +2,9 @@ import * as PIXI from "pixi.js";
 import { Graphics } from "pixi.js";
 import { ICollider, Ray, rayIntersection } from "../util/Collider";
 import Vector2 from "../util/Vector2";
+import IGameObject from "./IGameObject";
 
-class Wall implements ICollider {
+class Wall implements IGameObject, ICollider {
   pos: Vector2;
   height: number;
   width: number;
@@ -14,8 +15,7 @@ class Wall implements ICollider {
 
   colliderSide: "top" | "bot" | "left" | "right";
 
-  private _gfx: Graphics;
-  private _app: PIXI.Application;
+  private _gfx: Graphics | null;
 
   constructor(
     app: PIXI.Application,
@@ -32,10 +32,11 @@ class Wall implements ICollider {
     this.color = color;
     this.colliderSide = side;
 
-    this._gfx = new Graphics();
-    this._app = app;
-
-    app.stage.addChild(this._gfx);
+    this._gfx = null;
+    if (app != null) {
+      this._gfx = new Graphics();
+      app.stage.addChild(this._gfx);
+    }
 
     switch (side) {
       case "top":
@@ -63,9 +64,8 @@ class Wall implements ICollider {
   }
 
   public redraw() {
-    this._gfx.clear();
-    this._gfx
-      .beginFill(this.color)
+    this._gfx!.clear();
+    this._gfx!.beginFill(this.color)
       .drawRect(this.pos.x, this.pos.y, this.width, this.height)
       .endFill();
 
@@ -82,16 +82,14 @@ class Wall implements ICollider {
           .rotate(rotation_dir)
       );
       const col_end = this.colliderRay.dir.add(col_start);
-      this._gfx
-        .moveTo(col_start.x, col_start.y)
+      this._gfx!.moveTo(col_start.x, col_start.y)
         .lineStyle(line_width, 0xfcdb03)
         .lineTo(col_end.x, col_end.y)
         .endFill();
     }
   }
 
-  private update(delta: number) {
-    this.redraw();
+  public update(delta: number) {
   }
 
   public intersectRay(ray: Ray): Vector2 | null {

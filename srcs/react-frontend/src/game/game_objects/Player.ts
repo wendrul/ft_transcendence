@@ -15,52 +15,52 @@ class Player {
 
   playerNo: 1 | 2;
 
-  private _player_gfx: PIXI.Graphics;
+  phi: number = 0;
+
   private _elapsed: number;
-  private _app: PIXI.Application;
+  private _player_gfx: PIXI.Graphics | null;
+  private _app: PIXI.Application | null;
 
   static readonly racketSize = 100;
   static readonly racketWidth = 10;
   static readonly fieldSize = 700;
   static readonly racketRadius = 600;
 
-  constructor(app: PIXI.Application, name: String, playerNo: 1 | 2) {
+  constructor(app: PIXI.Application | null, name: String, playerNo: 1 | 2) {
     this.pos = new Vector2(200, 200);
     this.rot = 0;
     this.name = name;
-    this._player_gfx = new Graphics();
     this._elapsed = 0;
     this.color = 0xff0099;
     this.playerNo = playerNo;
 
-    app.ticker.add((delta) => {
-      this.update(delta);
-    });
-    this._app = app;
-    this._app.stage.addChild(this._player_gfx);
+    this._player_gfx = null;
+    this._app = null;
+
+    if (app != null) {
+      this._player_gfx = new Graphics();
+      app.ticker.add((delta) => {
+        this.update(delta); // replace with only drawing
+        this.redraw();
+      });
+      this._app = app;
+      this._app.stage.addChild(this._player_gfx);
+    }
     console.log(`Created player ${this.playerNo}`);
   }
 
-  private update(delta: number) {
+  public update(delta: number) {
     this._elapsed += delta;
-    const x = this.pos.x;
-    const y = this.pos.y;
+  }
+  
+  private redraw() {
+    this._player_gfx!.clear();
 
-    this._player_gfx.clear();
-
-    const phi = 0.3 * Math.cos(0.05 * this.playerNo * this._elapsed);
     this.drawRacket(
-      phi,
-      this._app.renderer.width / 2,
-      this._app.renderer.height / 2
+      this.phi,
+      this._app!.renderer.width / 2,
+      this._app!.renderer.height / 2
     );
-
-    if (this._player_gfx.containsPoint(new Point(100, 300))) {
-      this.color = 0xff0000;
-      console.log("hit");
-    } else {
-      this.color = 0xff00ff;
-    }
   }
 
   private drawRacket(phi: number, fieldx: number, fieldy: number) {
@@ -72,7 +72,7 @@ class Player {
       cx = fieldx + Player.racketRadius - Player.fieldSize / 2;
     }
 
-    this._player_gfx
+    this._player_gfx!
       .beginFill(this.color)
       .drawTorus?.(
         cx,
@@ -85,14 +85,14 @@ class Player {
       .endFill();
 
     if (globalThis.debugMode) {
-      this._player_gfx.lineStyle(2, 0xffffff, 0.1); //Player.racketWidth, this.color);
-      this._player_gfx.arc(cx, cy, Player.racketRadius, phi + 20, phi - 20);
+      this._player_gfx!.lineStyle(2, 0xffffff, 0.1); //Player.racketWidth, this.color);
+      this._player_gfx!.arc(cx, cy, Player.racketRadius, phi + 20, phi - 20);
     }
   }
 
-  public contains(x: number, y: number) {
-    return this._player_gfx.containsPoint(new Point(x, y));
-  }
+  // public contains(x: number, y: number) {
+  //   return this!._player_gfx.containsPoint(new Point(x, y));
+  // }
 }
 
 export default Player;
