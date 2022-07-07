@@ -26,8 +26,8 @@ export class FriendRequestController {
 	@Post('/create')
 	@UseGuards(AuthGuardApi)
 	@Serialize(FriendRequestDto)
-	create(@CurrentUser() user: User, @Query('login') login: string) {
-		return this.friendRequestService.create(user, login);	
+	create(@CurrentUser() user: User, @Query('email') email: string) {
+		return this.friendRequestService.create(user, email);	
 	}
 
 	@Get('/friends')

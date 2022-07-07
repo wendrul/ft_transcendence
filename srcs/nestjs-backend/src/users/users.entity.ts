@@ -15,9 +15,15 @@ export class User {
 	email: string;
 
 	@Column()
-	password: string;
+	firstName: string;
 
 	@Column()
+	lastName: string;
+
+	@Column()
+	password: string;
+
+	@Column({ default: null })
 	login: string;
 
 	@Column({ default: 'online'})

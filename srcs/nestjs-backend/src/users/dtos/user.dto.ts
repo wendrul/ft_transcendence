@@ -12,6 +12,14 @@ export class UserDto {
 
 	@Expose()
 	@ApiProperty()
+	firstName: string;
+	
+	@Expose()
+	@ApiProperty()
+	lastName: string;
+
+	@Expose()
+	@ApiProperty()
 	login: string;
 
 	@Expose()

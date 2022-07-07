@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
 import {User} from './users.entity';
@@ -16,8 +16,8 @@ export class UsersService {
 		return t_user.recivedFriendRequests;
 	}
 
-	create(email: string, password: string, login: string) {
-		const user = this.repo.create({ email, password, login });
+	create(email: string, password: string, firstName: string, lastName: string) {
+		const user = this.repo.create({ email, password, firstName, lastName });
 
 		return this.repo.save(user);
 	}
@@ -30,15 +30,15 @@ export class UsersService {
 		return this.repo.findOneBy({id});
 	}
 
-	auth42Login(req) {
-		if (!req.user) {
-		  return 'No user from 42'
-		}
-		return {
-		  message: 'User Info from 42',
-		  user: req.user
-		}
-	  }
+	// auth42Login(req) {
+	// 	if (!req.user) {
+	// 	  return 'No user from 42'
+	// 	}
+	// 	return {
+	// 	  message: 'User Info from 42',
+	// 	  user: req.user
+	// 	}
+	//   }
 
 	findEmail(email: string) {
 		return this.repo.findBy({email});
@@ -53,6 +53,17 @@ export class UsersService {
 		if (!user) {
 			throw new NotFoundException('user not found');
 		}
+
+		if (attrs.login) {
+			
+			const login = await this.findLogin(attrs.login);
+
+			if (login.length) {
+				throw new BadRequestException('login in use');
+			}
+
+		}
+
 		Object.assign(user, attrs);
 		return this.repo.save(user);	
 	}

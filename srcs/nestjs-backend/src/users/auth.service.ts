@@ -9,36 +9,35 @@ const scrypt = promisify(_scrypt);
 export class AuthService {
 	constructor(private usersService: UsersService) {}
 
-	async login42(email: string, login: string) {
+	async login42(email: string, firstName: string, lastName: string) {
 		const users = await this.usersService.findEmail(email);	
 
 		if (users.length) {
 			return users[0];
 		}
 
-		const user = await this.usersService.create(email, "", login);
+		const user = await this.usersService.create(email, "",  firstName, lastName);
 		this.usersService.update(user.id, {user42: true});
 
 		return user;
 	}
 
-	async signup(email: string, password: string, login: string) {
+	async signup(email: string, password: string, firstName: string, lastName: string) {
 		const e_users = await this.usersService.findEmail(email);
 		if (e_users.length) {
 			throw new BadRequestException('email in use');
 		}
 
-		console.log(login);
-	 	const l_users = await this.usersService.findLogin(login);
-		if (l_users.length) {
-			throw new BadRequestException('login in use');
-		}
+	 	// const l_users = await this.usersService.findLogin(login);
+		// if (l_users.length) {
+			// throw new BadRequestException('login in use');
+		// }
 
 		const salt = randomBytes(8).toString('hex');
 		const hash = (await scrypt(password, salt, 32)) as Buffer;
 		const result = salt + '.' + hash.toString('hex');
 
-		const user = await this.usersService.create(email, result, login);
+		const user = await this.usersService.create(email, result, firstName, lastName);
 
 		return user;
 	}

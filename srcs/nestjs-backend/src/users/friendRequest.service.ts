@@ -12,8 +12,8 @@ export class FriendRequestService {
 		private usersService: UsersService
 	) {}
 
-	async create(user: User, login: string) {
-		const reciver = await this.usersService.findLogin(login);
+	async create(user: User, email: string) {
+		const reciver = await this.usersService.findEmail(email);
 		if (reciver.length === 0) {
 			throw new NotFoundException('user not found');
 		}

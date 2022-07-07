@@ -11,7 +11,11 @@ import {
 	Session,
 	UseGuards,
 	Req,
+	UseInterceptors,
+	UploadedFiles,
 } from '@nestjs/common';
+import { diskStorage } from 'multer';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {AuthGuardApi} from 'src/guards/auth.guard';
 import {Serialize} from 'src/interceptors/serialize.interceptor';
 import {CurrentUser} from './decorators/current-user.decorator';
@@ -46,6 +50,15 @@ export class UsersController {
 		return user;
 	}
 
+// 	@Post('/avatar')
+// 	@UseGuards(AuthGuardApi)
+// 	@UseInterceptors(FileInterceptor('file', {
+// 		storage: diskStorage({
+// 			destination: '/src/usr/avatars'
+// 		})
+// 	}))
+// 	addAvatar(@CurrentUser() user: User) {}
+
 	@UseGuards(AuthGuardApi)
 	@Post('/signout')
 	signout(@Session() session: any, @CurrentUser() user: User) {
@@ -56,7 +69,7 @@ export class UsersController {
 	@Post('/signup')
 	async signup(@Body() body: CreateUserDto, @Session() session: any, @CurrentUser() c_user: User) {
 		
-		const user = await this.authService.signup(body.email, body.password, body.login);
+		const user = await this.authService.signup(body.email, body.password, body.firstName, body.lastName);
 		
 		if (c_user) {
 			this.userService.update(c_user.id, {status: 'offline'});
@@ -78,7 +91,7 @@ export class UsersController {
 	async Auth42Redirect(@Req() req: any, @Session() session: any, @CurrentUser() c_user: User) {
 
 		// const user = await this.userService.create(req.user.email, "", req.user.login);
-		const user = await this.authService.login42(req.user.email, req.user.login);
+		const user = await this.authService.login42(req.user.email, req.user.firstName, req.user.lastName);
 
 		if (c_user) {
 			this.userService.update(c_user.id, {status: 'offline'});
@@ -125,7 +138,8 @@ export class UsersController {
 	}
 
 	@Patch('/:id')
-	updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
-		return this.userService.update(parseInt(id), body);
+	@UseGuards(AuthGuardApi)
+	updateUser(@CurrentUser() user: User, @Body() body: UpdateUserDto) {
+		return this.userService.update(user.id, body);
 	}
 }
