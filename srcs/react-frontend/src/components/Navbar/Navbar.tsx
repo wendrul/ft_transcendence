@@ -58,10 +58,10 @@ export default function NavbarComponent() {
                     <MDBDropdownLink>Users connected</MDBDropdownLink>
                   </MDBDropdownItem>
                   <MDBDropdownItem>
-                    <MDBDropdownLink>friends connected</MDBDropdownLink>
+                    <MDBDropdownLink>Friends connected</MDBDropdownLink>
                   </MDBDropdownItem>
                   <MDBDropdownItem>
-                    <MDBDropdownLink>SOLO MATCH</MDBDropdownLink>
+                    <MDBDropdownLink>Quick game</MDBDropdownLink>
                   </MDBDropdownItem>
                 </MDBDropdownMenu>
               </MDBDropdown>
@@ -88,10 +88,10 @@ export default function NavbarComponent() {
                 </MDBDropdownToggle>
                 <MDBDropdownMenu>
                   <MDBDropdownItem>
-                    <MDBDropdownLink>Profile</MDBDropdownLink>
+                    <MDBDropdownLink>My Space</MDBDropdownLink>
                   </MDBDropdownItem>
                   <MDBDropdownItem>
-                    <MDBDropdownLink>Deco</MDBDropdownLink>
+                    <MDBDropdownLink>Logout</MDBDropdownLink>
                   </MDBDropdownItem>
                 </MDBDropdownMenu>
               </MDBDropdown>
