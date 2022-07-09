@@ -1,8 +1,9 @@
 import React from 'react';
 import './App.css';
-import { MDBBtn, MDBCol, MDBContainer, MDBRow } from 'mdb-react-ui-kit';
+//import { MDBBtn, MDBCol, MDBContainer, MDBRow } from 'mdb-react-ui-kit';
 import RoutesHandler from './Routes';
 import NavbarComponent from './components/Navbar/Navbar';
+import FooterComponent from './components/Footer/Footer';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <RoutesHandler>
         </RoutesHandler>
       </div>
+	  <FooterComponent />
     </div>
   );
 }
