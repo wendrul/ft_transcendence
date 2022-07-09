@@ -5,6 +5,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* A partir de aqui, son mis cambios */
+  background-color: #F6F6F6; /* Color de toda la pagina */
 }
 
 code {
