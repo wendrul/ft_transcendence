@@ -13,7 +13,7 @@ export default function FooterComponent() {
     <MDBFooter className='bg-dark text-center text-white t_footer'>
       <MDBContainer className='p-4 pb-0'>
         <section className='mb-4'>
-		  <a className='btn btn-outline-light btn-floating m-1' href='#!' role='button'>
+		  <a className='btn btn-outline-light btn-floating m-1' href='https://github.com/wendrul/ft_transcendence' role='button'>
             <MDBIcon fab icon='github' />
           </a>
           <a className='btn btn-outline-light btn-floating m-1' href='#!' role='button'>
