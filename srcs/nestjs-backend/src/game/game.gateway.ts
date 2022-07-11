@@ -4,6 +4,8 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 
+// import {Ball} from "../shared/game/game_objects"
+
 @WebSocketGateway({
   cors: {
     origin: 'http://localhost',
@@ -16,5 +18,7 @@ export class GameGateway {
   @SubscribeMessage('gameUpdate')
   handleGameUpdate(client, data): void {
     this.server.emit('gameUpdate', data);
+    let game = new Game([]);
   }
+  
 }

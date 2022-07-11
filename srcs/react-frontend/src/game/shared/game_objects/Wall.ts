@@ -1,5 +1,6 @@
-import * as PIXI from "pixi.js";
-import { Graphics } from "pixi.js";
+// import * as PIXI from "pixi.js";
+// import { Graphics } from "pixi.js";
+import { GraphicalApplication, pixiGraphics } from "../../shared-header";
 import { ICollider, Ray, rayIntersection } from "../util/Collider";
 import Vector2 from "../util/Vector2";
 import IGameObject from "./IGameObject";
@@ -15,10 +16,10 @@ class Wall implements IGameObject, ICollider {
 
   colliderSide: "top" | "bot" | "left" | "right";
 
-  private _gfx: Graphics | null;
+  private _gfx: pixiGraphics | null;
 
   constructor(
-    app: PIXI.Application,
+    app: GraphicalApplication,
     x: number,
     y: number,
     width: number,
@@ -34,7 +35,7 @@ class Wall implements IGameObject, ICollider {
 
     this._gfx = null;
     if (app != null) {
-      this._gfx = new Graphics();
+      this._gfx = new pixiGraphics();
       app.stage.addChild(this._gfx);
     }
 

@@ -14,6 +14,7 @@ services:
     networks:
       - transcendence-net
     volumes:
+      - ./srcs/react-frontend/src/game/shared:/usr/src/app/src/game/shared
       - ./srcs/nestjs-backend:/usr/src/app
       - /usr/src/app/node_modules
     restart: unless-stopped

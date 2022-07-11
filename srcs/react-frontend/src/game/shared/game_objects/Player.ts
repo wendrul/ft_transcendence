@@ -1,8 +1,6 @@
-import * as PIXI from "pixi.js";
-import { Point } from "pixi.js";
 import Vector2 from "../util/Vector2";
-import { Graphics } from "@pixi/graphics";
-import "@pixi/graphics-extras";
+import { pixiGraphics } from "../../shared-header";
+import { GraphicalApplication } from "../../shared-header";
 
 class Player {
   name: String;
@@ -18,15 +16,15 @@ class Player {
   phi: number = 0;
 
   private _elapsed: number;
-  private _player_gfx: PIXI.Graphics | null;
-  private _app: PIXI.Application | null;
+  private _player_gfx: pixiGraphics | null;
+  private _app: GraphicalApplication | null;
 
   static readonly racketSize = 100;
   static readonly racketWidth = 10;
   static readonly fieldSize = 700;
   static readonly racketRadius = 600;
 
-  constructor(app: PIXI.Application | null, name: String, playerNo: 1 | 2) {
+  constructor(app: GraphicalApplication | null, name: String, playerNo: 1 | 2) {
     this.pos = new Vector2(200, 200);
     this.rot = 0;
     this.name = name;
@@ -38,7 +36,7 @@ class Player {
     this._app = null;
 
     if (app != null) {
-      this._player_gfx = new Graphics();
+      this._player_gfx = new pixiGraphics();
       app.ticker.add((delta) => {
         this.update(delta); // replace with only drawing
         this.redraw();

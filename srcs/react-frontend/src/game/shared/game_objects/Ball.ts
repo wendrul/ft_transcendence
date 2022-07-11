@@ -1,8 +1,7 @@
 import Vector2 from "../util/Vector2";
-import * as PIXI from "pixi.js";
-import { Graphics } from "pixi.js";
 import addKeyListeners from "../util/Interaction";
 import { ICollider, Ray } from "../util/Collider";
+import { GraphicalApplication, pixiGraphics } from "../../shared-header";
 
 enum States {
   MOVING,
@@ -18,14 +17,14 @@ class Ball {
   enteringState: boolean = false;
   elapsedTime: number = 0;
 
-  private _gfx: Graphics | null;
-  private _app: PIXI.Application | null;
+  private _gfx: pixiGraphics | null;
+  private _app: GraphicalApplication | null;
   colliders: Array<ICollider>;
 
   static readonly radius = 15;
   static readonly bounceStallDelay = 0.05;
 
-  constructor(app: PIXI.Application | null) {
+  constructor(app: GraphicalApplication | null) {
     this.velocity = new Vector2(10, -20);
     this.pos = new Vector2(0, 0);
     this.colliders = new Array<ICollider>();
@@ -35,7 +34,7 @@ class Ball {
     if (app != null) {
       this.pos = new Vector2(app.renderer.width / 2, app.renderer.height / 2);
       this._app = app;
-      this._gfx = new Graphics();
+      this._gfx = new pixiGraphics();
       app.ticker.add((delta) => {
         this.update(delta);
         this.redraw();

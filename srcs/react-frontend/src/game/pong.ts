@@ -1,13 +1,12 @@
 import * as PIXI from "pixi.js";
-import Ball from "./game_objects/Ball";
-import Player from "./game_objects/Player";
-import Wall from "./game_objects/Wall";
+import Ball from "./shared/game_objects/Ball";
+import Player from "./shared/game_objects/Player";
+import Wall from "./shared/game_objects/Wall";
 import { io } from "socket.io-client";
 
-import addKeyListeners from "./util/Interaction";
+import addKeyListeners from "./shared/util/Interaction";
 
-export type GraphicalApplication = PIXI.Application;
-export type pixiGraphics = PIXI.Graphics;
+import {GraphicalApplication} from "./shared-header"
 
 let app: GraphicalApplication;
 
