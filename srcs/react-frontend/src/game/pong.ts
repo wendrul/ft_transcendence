@@ -7,6 +7,7 @@ import { io } from "socket.io-client";
 import addKeyListeners from "./shared/util/Interaction";
 
 import {GraphicalApplication} from "./shared-header"
+import BallDrawable from "./graphics/BallDrawable";
 
 let app: GraphicalApplication;
 
@@ -62,7 +63,7 @@ export function gameSetup(instantiatedApp: GraphicalApplication) {
   walls.push(new Wall(app, 900, 0, 50, 600, "left"));
   redrawStatics([...walls]);
 
-  const ball = new Ball(app);
+  const ball = new BallDrawable(app);
   ball.colliders.push(...walls);
 
   console.log("Finished Game setup");
@@ -71,7 +72,7 @@ export function gameSetup(instantiatedApp: GraphicalApplication) {
   PIXI.Ticker.shared.add((delta) => {
     elapsed += delta / 60;
     if (elapsed > 0.03) {
-      console.log(elapsed);
+      // console.log(elapsed);
       
       elapsed = 0;
       socket.emit("gameUpdate", {

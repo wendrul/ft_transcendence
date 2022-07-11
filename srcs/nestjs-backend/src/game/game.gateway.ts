@@ -18,7 +18,7 @@ export class GameGateway {
   @SubscribeMessage('gameUpdate')
   handleGameUpdate(client, data): void {
     this.server.emit('gameUpdate', data);
-    let game = new Game([]);
+    // let game = new Game([]);
   }
   
 }
