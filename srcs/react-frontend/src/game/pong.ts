@@ -8,6 +8,8 @@ import addKeyListeners from "./shared/util/Interaction";
 
 import {GraphicalApplication} from "./shared-header"
 import BallDrawable from "./graphics/BallDrawable";
+import PlayerDrawable from "./graphics/PlayerDrawable";
+import WallDrawable from "./graphics/WallDrawable";
 
 let app: GraphicalApplication;
 
@@ -32,18 +34,18 @@ export function gameSetup(instantiatedApp: GraphicalApplication) {
   // fetch("http://localhost:3000").then((s) => console.log(s));
   const socket = io("http://localhost:3000");
   socket.on("gameUpdate", (gameState : any) => {
-    p.phi = gameState.p1.phi;
-    p2.phi = gameState.p2.phi;
-    ball.pos.x = gameState.ballpos.x;
-    ball.pos.y = gameState.ballpos.y;
-    ball.velocity.x = gameState.ballvel.x;
-    ball.velocity.y = gameState.ballvel.y;
+    // p.phi = gameState.p1.phi;
+    // p2.phi = gameState.p2.phi;
+    // ball.pos.x = gameState.ballpos.x;
+    // ball.pos.y = gameState.ballpos.y;
+    // ball.velocity.x = gameState.ballvel.x;
+    // ball.velocity.y = gameState.ballvel.y;
   });
 
   app = instantiatedApp;
 
-  const p = new Player(app, "John", 1);
-  const p2 = new Player(app, "John2", 2);
+  const p = new PlayerDrawable(app, "John", 1);
+  const p2 = new PlayerDrawable(app, "John2", 2);
 
   addKeyListeners("w").press = () => (p.phi += 0.05);
   addKeyListeners("s").press = () => (p.phi -= 0.05);
@@ -57,10 +59,10 @@ export function gameSetup(instantiatedApp: GraphicalApplication) {
   };
   globalThis.debugMode = false;
   let walls: any = [];
-  walls.push(new Wall(app, 50, 0, 900, 100, "bot"));
-  walls.push(new Wall(app, 50, 500, 900, 100, "top"));
-  walls.push(new Wall(app, 50, 0, 50, 600, "right"));
-  walls.push(new Wall(app, 900, 0, 50, 600, "left"));
+  walls.push(new WallDrawable(app, 50, 0, 900, 100, "bot"));
+  walls.push(new WallDrawable(app, 50, 500, 900, 100, "top"));
+  walls.push(new WallDrawable(app, 50, 0, 50, 600, "right"));
+  walls.push(new WallDrawable(app, 900, 0, 50, 600, "left"));
   redrawStatics([...walls]);
 
   const ball = new BallDrawable(app);

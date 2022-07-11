@@ -10,34 +10,23 @@ class Wall implements IGameObject, ICollider {
   height: number;
   width: number;
 
-  color: number;
 
   colliderRay: Ray;
 
   colliderSide: "top" | "bot" | "left" | "right";
 
-  private _gfx: pixiGraphics | null;
 
   constructor(
-    app: GraphicalApplication,
     x: number,
     y: number,
     width: number,
     height: number,
     side: "top" | "bot" | "left" | "right" = "bot",
-    color = 0x496085
   ) {
     this.pos = new Vector2(x, y);
     this.height = height;
     this.width = width;
-    this.color = color;
     this.colliderSide = side;
-
-    this._gfx = null;
-    if (app != null) {
-      this._gfx = new pixiGraphics();
-      app.stage.addChild(this._gfx);
-    }
 
     switch (side) {
       case "top":
@@ -61,32 +50,6 @@ class Wall implements IGameObject, ICollider {
       default:
         this.colliderRay = new Ray(this.pos.clone(), new Vector2(x + width, y));
         break;
-    }
-  }
-
-  public redraw() {
-    this._gfx!.clear();
-    this._gfx!.beginFill(this.color)
-      .drawRect(this.pos.x, this.pos.y, this.width, this.height)
-      .endFill();
-
-    if (globalThis.debugMode) {
-      const line_width = 10;
-      const rotation_dir =
-        this.colliderSide === "right" || this.colliderSide === "top"
-          ? Math.PI / 2
-          : -Math.PI / 2;
-      const col_start = this.colliderRay.pos.add(
-        this.colliderRay.dir
-          .normalized()
-          .scale(line_width / 2)
-          .rotate(rotation_dir)
-      );
-      const col_end = this.colliderRay.dir.add(col_start);
-      this._gfx!.moveTo(col_start.x, col_start.y)
-        .lineStyle(line_width, 0xfcdb03)
-        .lineTo(col_end.x, col_end.y)
-        .endFill();
     }
   }
 
