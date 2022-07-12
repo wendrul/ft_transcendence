@@ -1,0 +1,25 @@
+.bc-bl{
+	background-color: #3E3B3B;
+	box-shadow: active;
+}
+
+.bc-gr{
+	background-color: #d6d6d6;
+	box-shadow: active;
+}
+
+.h-px{
+	height: 300px;
+}
+
+.btn-history{
+	background-color: #616060;
+}
+
+.btn-history:hover{
+	background-color: #616060;
+}
+
+.btn-history:focus{
+	background-color: #616060;
+}
