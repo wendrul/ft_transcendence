@@ -23,7 +23,7 @@ export default function NavbarComponent() {
   return (
     <MDBNavbar expand='lg' light bgColor='light'>
       <MDBContainer fluid>
-        <MDBNavbarBrand href='#'>transcendence</MDBNavbarBrand>
+        <MDBNavbarBrand href='/'>transcendence</MDBNavbarBrand>
 
         <MDBNavbarToggler
           aria-controls='navbarSupportedContent'
@@ -36,11 +36,11 @@ export default function NavbarComponent() {
 
         <MDBCollapse navbar show={showBasic}>
           <MDBNavbarNav className='mr-auto mb-2 mb-lg-0'>
-            <MDBNavbarItem>
+            {/*<MDBNavbarItem>
               <MDBNavbarLink active aria-current='page' href='#'>
                 Home
               </MDBNavbarLink>
-            </MDBNavbarItem>
+            </MDBNavbarItem>*/}
             <MDBNavbarItem>
               <MDBNavbarLink href='#'>Webchat</MDBNavbarLink>
             </MDBNavbarItem>
