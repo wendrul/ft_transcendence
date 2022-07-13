@@ -23,3 +23,30 @@
 .btn-history:focus{
 	background-color: #616060;
 }
+
+.stats{
+	background-color: #616060;
+	border-radius: 1ch;
+	width: 200px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: row;
+}
+
+.stats-txt{
+	font-size: 12px;
+}
+
+.stats > h5{
+	color: white;
+	margin-block-start: 0px;
+	margin-block-end: 0px;
+}
+
+.user{
+	height: 100px;
+	width: 100px;
+	padding: 10px;
+}
+
