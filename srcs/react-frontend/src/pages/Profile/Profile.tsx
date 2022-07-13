@@ -4,6 +4,10 @@ import "./Profile.css";
 
 // Image
 import img_user from '../../icon/utilisateur.png'
+import img_friends from '../../icon/friends.png'
+import img_chat from '../../icon/chat.png'
+import img_swords from '../../icon/swords.png'
+import img_prohibition from '../../icon/prohibition.png'
 
 function Profile(){
 	return (
@@ -25,23 +29,23 @@ function Profile(){
 	</MDBBtnGroup>
 
 		<div className="h-px border border-danger d-flex flex-row">
-			<div className="bc-gr rounded d-flex flex-column 
+			<div className="shadow-lg bd-gr bc-gr rounded d-flex flex-column 
 			align-items-center m-5">
 				<img className='user' src={img_user}></img>
 				<p>AVAILABLE</p>
-				<div className="d-flex flex-row  m-4">
-					<div className="border border border-dark d-flex flex-row ">
-						<h1>1</h1>
-					</div>
-					<div className="border border border-dark d-flex flex-row ">
-						<h1>2</h1>
-					</div>
-					<div className="border border border-dark d-flex flex-row ">
-						<h1>3</h1>
-					</div>
-					<div className="border border border-dark d-flex flex-row ">
-						<h1>4</h1>
-					</div>
+				<div className="d-flex flex-row m-3">
+					<button className="row-but border border border-dark d-flex flex-row ">
+					<img className="row-img"src={img_friends}></img>
+					</button>
+					<button className="row-but border border border-dark d-flex flex-row ">
+					<img className="row-img"src={img_chat}></img>
+					</button>
+					<button className="row-but border border border-dark d-flex flex-row ">
+					<img className="row-img"src={img_swords}></img>
+					</button>
+					<button className="row-but border border border-dark d-flex flex-row ">
+					<img className="row-img"src={img_prohibition}></img>
+					</button>
 				</div>
 			</div>
 

@@ -3,6 +3,10 @@
 	box-shadow: active;
 }
 
+.bd-gr{
+	border: solid 1.5px grey;
+}
+
 .bc-gr{
 	background-color: #d6d6d6;
 	box-shadow: active;
@@ -50,3 +54,17 @@
 	padding: 10px;
 }
 
+.row-img{
+	height: 20px;
+	width: 20px;
+	margin: 5px;
+}
+.row-but{
+	border-radius: 2px;
+	height: 35px;
+}
+
+.row-but:active {
+  background-color: grey;
+  transform: translateY(1px);
+}
