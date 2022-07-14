@@ -1,0 +1,74 @@
+#btn-profile2{
+	width: 150px;
+	font-weight: bold;
+	border: solid 1px black;
+	border-radius: 3px;
+	color: white;
+
+	background-color: #6b6a6a;
+  -webkit-box-shadow: inset 0px 0px 5px black;
+     -moz-box-shadow: inset 0px 0px 5px black;
+          box-shadow: inset 0px 0px 5px black;
+   outline: none;
+}
+
+.btn-profile2{
+	background-color: #616060;
+}
+
+.btn-profile2:hover{
+	background-color: #616060;
+}
+
+.btn-profile2:focus{
+	background-color: #616060;
+}
+#btn-profile2:active{
+  transform: translateY(1px);
+	border:none;
+	box-shadow: none;
+}
+
+ #btn-history2{
+	width: 150px;
+	font-weight: bold;
+	border: solid 1px black;
+	border-radius: 3px;
+	color: white;
+	background-color: #1266f1;
+	box-shadow: none;
+}
+
+.div-scroll{
+	overflow: auto;
+	margin-top: 40px;
+	height: 300px;
+}
+
+.div-score{
+	height: 50px;
+	width: 700px;
+	border: solid 1px black;
+	border-radius: 2px;
+	margin-bottom: 0.5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: row;
+	color: white;
+}
+
+.div-score > h3{
+	color: white;
+	font-weight: bold;
+	margin: 10px;
+	font-size: 25px;
+}
+
+.bc-red{
+	background-color: #eb3434;
+}
+
+.bc-green{
+	background-color: #00B74A;
+}
