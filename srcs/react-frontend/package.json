@@ -10,6 +10,7 @@
     "@types/node": "^16.11.43",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
+    "axios": "^0.27.2",
     "mdb-react-ui-kit": "^4.0.0",
     "mdbreact": "^5.2.0",
     "react": "^18.2.0",
