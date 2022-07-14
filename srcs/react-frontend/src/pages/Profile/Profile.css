@@ -106,7 +106,6 @@
 	box-shadow: none;
 }
 
-
 .row-but2:active {
   background-color: grey;
   transform: translateX(1px);
@@ -127,7 +126,6 @@
 	height: 80px;
 	display: flex;
 	flex-direction: row;
-
 	text-align: center;
 
 
@@ -159,5 +157,4 @@
 	height: 30px;
 	width: 30p;
 	padding-left: 20px;
-	/* padding-right: 10px; */
 }

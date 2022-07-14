@@ -21,21 +21,22 @@ import img_medal_black from '../../icon/medal_black.png'
 function Profile(){
 	return (
 		<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
-				<p className="register_btn mb-1 display-2">
-					Ranking #1
-				</p>
-				<p className="register_btn mb-3 display-6">
-					PSEUDO
-				</p>
-
-		<div className='row-btn1 mt-3'>
-			<button id='btn-profile'>
-				PROFILE
-			</button>
-			<button id='btn-history'>
-				HISTORY
-			</button>
-		</div>
+			<p className="register_btn mb-1 display-2">
+				Ranking #1
+			</p>
+			<p className="register_btn mb-3 display-6">
+				PSEUDO
+			</p>
+			<div className='row-btn1 mt-3'>
+				<button id='btn-profile'>
+					PROFILE
+				</button>
+				<a href={window.location.origin + '/history'}>
+					<button id='btn-history'>
+						HISTORY
+					</button>
+				</a>
+			</div>
 
 		<div className="h-px d-flex flex-row mt-4">
 
@@ -44,16 +45,16 @@ function Profile(){
 				<img className='user' src={img_user} alt='user'></img>
 				<p>AVAILABLE</p>
 				<div className="d-flex flex-row m-3 mb-1">
-					<button className="row-but2 border border border-dark d-flex flex-row ">
+					<button className="row-but2 border border-dark d-flex flex-row ">
 					<img className="row-img2"src={img_friends} alt='friends'></img>
 					</button>
-					<button className="row-but2 border border border-dark d-flex flex-row ">
+					<button className="row-but2 border border-dark d-flex flex-row ">
 					<img className="row-img2"src={img_chat} alt='chat'></img>
 					</button>
-					<button className="row-but2 border border border-dark d-flex flex-row ">
+					<button className="row-but2 border border-dark d-flex flex-row ">
 					<img className="row-img2"src={img_swords} alt='swords'></img>
 					</button>
-					<button className="row-but2 border border border-dark d-flex flex-row ">
+					<button className="row-but2 border border-dark d-flex flex-row ">
 					<img className="row-img2"src={img_prohibition} alt='prohibition'></img>
 					</button>
 				</div>
