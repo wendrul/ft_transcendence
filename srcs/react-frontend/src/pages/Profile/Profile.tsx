@@ -146,8 +146,8 @@ function Profile(){
 							<img className ='img2' src={img_medal_black} alt='black medal'></img>
 						</div>
 						<div className='achievement-txt'>
-							<h6> 10 FRIENDS</h6>
-							<p> You've got a friend in me</p>
+							<h6> 10 MESSAGES</h6>
+							<p> Don't Drink And Drive, But When You Do, Call Saul.</p>
 						</div>
 					</div>
 				</div>
@@ -159,8 +159,8 @@ function Profile(){
 						<img className ='img2' src={img_medal_black} alt='black medal'></img>
 					</div>
 					<div className='achievement-txt'>
-						<h6> 10 FRIENDS</h6>
-						<p> You've got a friend in me</p>
+						<h6>126 LOSES</h6>
+						<p>OH MY GOD! THEY KILLED KENNY! YOU B*******!</p>
 					</div>
 				</div>
 
@@ -169,18 +169,18 @@ function Profile(){
 						<img className ='img2' src={img_medal_black} alt='black medal'></img>
 					</div>
 					<div className='achievement-txt'>
-						<h6> 10 FRIENDS</h6>
-						<p> You've got a friend in me</p>
+						<h6> 10 BANS</h6>
+						<p> I could simply snap my fingers and they would all cease to exist.</p>
 					</div>
 				</div>
 
 				<div className='achievement bc-gr'>
-					<div className='d-flex align-items-center justify-content-center'>
+					<div className='d-flex align-items-center'>
 						<img className ='img2' src={img_medal_black} alt='black medal'></img>
 					</div>
 					<div className='achievement-txt'>
-						<h6> 10 FRIENDS</h6>
-						<p> You've got a friend in me</p>
+						<h6> ?</h6>
+						<p> Où est Charlie ? Where's Wally?</p>
 					</div>
 				</div>
 			</div>
@@ -191,8 +191,8 @@ function Profile(){
 						<img className ='img2' src={img_medal_black} alt='black medal'></img>
 					</div>
 					<div className='achievement-txt'>
-						<h6> 10 FRIENDS</h6>
-						<p> You've got a friend in me</p>
+						<h6> BE #1 ONE MONTH</h6>
+						<p> Not a Queen. A Khaleesi.</p>
 					</div>
 				</div>
 
@@ -201,8 +201,8 @@ function Profile(){
 						<img className ='img2' src={img_medal_black} alt='black medal'></img>
 					</div>
 					<div className='achievement-txt'>
-						<h6> 10 FRIENDS</h6>
-						<p> You've got a friend in me</p>
+						<h6> 1 PERFECT MATCH</h6>
+						<p>Why am I so different from them ?</p>
 					</div>
 				</div>
 
@@ -211,8 +211,8 @@ function Profile(){
 						<img className ='img2' src={img_medal_black} alt='black medal'></img>
 					</div>
 					<div className='achievement-txt'>
-						<h6> 10 FRIENDS</h6>
-						<p> You've got a friend in me</p>
+						<h6>BE OFFLINE</h6>
+						<p>I'm hiding, I can see you ...</p>
 					</div>
 				</div>
 			</div>
