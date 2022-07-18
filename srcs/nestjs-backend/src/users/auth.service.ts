@@ -42,14 +42,11 @@ export class AuthService {
 		return user;
 	}
 
-	async signin(email: string, password: string, login: string) {
+	async signin(email: string, password: string) {
 
 		if (email) {
 			var [user] = await this.usersService.findEmail(email);
-		} else if (login) {
-			var [user] = await this.usersService.findLogin(login);
 		}
-
 		if (!user){
 			throw new NotFoundException('user not found');
 		}

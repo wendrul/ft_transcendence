@@ -1,38 +1,53 @@
-import React, { useEffect } from 'react';
-
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate } from 'react-router-dom';
 import {
 	MDBBtn,
-	MDBCheckbox,
-	MDBRow,
-	MDBCol,
-	MDBIcon,
 	MDBInput
   } from 'mdb-react-ui-kit';
 import "./SignIn.css";
-/*
-interface IPost {
-    firstName: string;
-    LastName: string;
-  }
-const defaultPosts:IPost[] = [];
-*/
+
 
 function SignIn() {
-
-//	const [posts, setPosts]: [IPost[], (posts: IPost[]) => void] = React.useState(defaultPosts);
+	let navigate = useNavigate();
 	useEffect(() => {
 		document.title = "SigIn";
 	}, []);
 
-	axios.get(`http://localhost:3002/users`)
+/*	axios.get(`http://localhost:3002/users`)
 	.then(res => {
 	  const persons = res.data;
-		console.log(res.data);
+		console.log(res.data.email);
 	})
+*/
 
+	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+	
+		axios.post(`http://localhost:3002/users/signin`, {
+		  email: hEmail.value,
+		  password: hPassword.value,
+		}, { withCredentials: true })
+		.then((res: any) => {
+		//	console.log(res)
+			navigate('/');
+		})
+		.catch((err: any) => {
+		  console.log(err.response)
+		})
+	}
+
+	const [hEmail, setEmail] = useState({ value: "" });
+	const [hPassword, setPassword] = useState({ value: "" });
+  
+
+	const handleChangeEmail = function(event: ChangeEvent<HTMLInputElement>) {
+		setEmail({ value: event?.currentTarget?.value });
+	}
+	
+	const handleChangePassword = function(event: ChangeEvent<HTMLInputElement>) {
+	setPassword({ value: event?.currentTarget?.value });
+	}
 
   return (
 	<div className="p-5 row bd-highlight justify-content-center">
@@ -49,10 +64,10 @@ function SignIn() {
 
 	{/* intentando con https://mdbootstrap.com/docs/b5/react/forms/overview/ */}
 			<div className="d-flex flex-column align-items-center justify-content-center w-75 pb-5 mb-3">
-				<form>
+				<form onSubmit={onSubmit}>
 					
-					<MDBInput className='mb-4' type='email' id='form1Example1' label='Email address' />
-					<MDBInput className='mb-4' type='password' id='form1Example2' label='Password' />
+					<MDBInput className='mb-4' onChange={handleChangeEmail} type='email' id='form1Example1' required label='Email address'  />
+					<MDBInput className='mb-4' onChange={handleChangePassword} type='password' id='form1Example2' required label='Password' />
 
 					{/*<MDBRow className='mb-4'>
 						<MDBCol>

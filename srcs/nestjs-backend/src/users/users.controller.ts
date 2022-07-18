@@ -105,7 +105,7 @@ export class UsersController {
 	@Post('/signin')
 	async	signin(@Body() body: SigninUserDto, @Session() session: any, @CurrentUser() c_user: User) {
 
-		const user = await this.authService.signin(body.email, body.password, body.login);
+		const user = await this.authService.signin(body.email, body.password);
 
 		if (c_user) {
 			this.userService.update(c_user.id, {status: 'offline'});

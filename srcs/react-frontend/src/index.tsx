@@ -11,6 +11,8 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 //import 'bootstrap-css-only/css/bootstrap.min.css';
 //import 'mdbreact/dist/css/mdb.css';
 
+import { CookiesProvider } from "react-cookie";
+
 
 
 const root = ReactDOM.createRoot(
@@ -18,9 +20,11 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <CookiesProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </CookiesProvider>
   </React.StrictMode>
 );
 

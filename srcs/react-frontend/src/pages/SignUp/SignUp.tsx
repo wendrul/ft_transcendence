@@ -1,12 +1,11 @@
-import react, { useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
+import axios from 'axios';
 
 import {
 	MDBBtn,
-	MDBCheckbox,
 	MDBRow,
 	MDBCol,
-	MDBInput,
-  MDBIcon
+	MDBInput
   } from 'mdb-react-ui-kit';
 import "./SignUp.css";
 
@@ -14,6 +13,49 @@ function SignUp() {
 	useEffect(() => {
 		document.title = "SignUp";  
 	}, []);
+
+  const [hFirstName, setFirstName] = useState({ value: "" });
+  const [hLastName, setLastName] = useState({ value: "" });
+  const [hEmail, setEmail] = useState({ value: "" });
+  const [hPassword, setPassword] = useState({ value: "" });
+
+	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+
+ //   alert(JSON.stringify(data))
+    axios.post(`http://localhost:3002/users/signup`, {
+      firstName: hFirstName.value,
+      lastName: hLastName.value,
+      email: hEmail.value,
+      password: hPassword.value,
+    })
+    .catch((err: any) => {
+      console.log(err.response)
+      alert(err.response.data.message);
+    })
+  }
+
+  const handleChangeFirstName = function(event: ChangeEvent<HTMLInputElement>) {
+    console.log(event.target.value);
+    event.preventDefault();
+    setFirstName({ value: event?.currentTarget?.value });
+  }
+
+  const handleChangeLastName = function(event: ChangeEvent<HTMLInputElement>) {
+    console.log(event.target.value);
+    setLastName({ value: event?.currentTarget?.value });
+  }
+
+  const handleChangeEmail = function(event: ChangeEvent<HTMLInputElement>) {
+    console.log(event.target.value);
+    setEmail({ value: event?.currentTarget?.value });
+  }
+
+  const handleChangePassword = function(event: ChangeEvent<HTMLInputElement>) {
+    console.log(event.target.value);
+    setPassword({ value: event?.currentTarget?.value });
+  }
+
   return (
     <div className="p-5 row bd-highlight justify-content-center">
 		  <div className="p-2 d-flex flex-column bd-highlight col-example col-md-6 align-items-center justify-content-center h-100">
@@ -27,17 +69,17 @@ function SignUp() {
 			  </div>
     	{/* intentando con https://mdbootstrap.com/docs/b5/react/forms/overview/ */}
 			  <div className="d-flex flex-column align-items-center justify-content-center w-75 pb-5 mb-3">
-          <form>
+          <form onSubmit={onSubmit}>
             <MDBRow className='mb-4'>
               <MDBCol>
-                <MDBInput id='form3Example1' label='First name' />
+                <MDBInput id='form3Example1' onChange={handleChangeFirstName} label='First name' required />
               </MDBCol>
               <MDBCol>
-                <MDBInput id='form3Example2' label='Last name' />
+                <MDBInput id='form3Example2' onChange={handleChangeLastName} label='Last name' required />
               </MDBCol>
             </MDBRow>
-            <MDBInput className='mb-4' type='email' id='form3Example3' label='Email address' />
-            <MDBInput className='mb-4' type='password' id='form3Example4' label='Password' />
+            <MDBInput className='mb-4' onChange={handleChangeEmail} type='email' id='form3Example3' label='Email address' required />
+            <MDBInput className='mb-4' onChange={handleChangePassword} type='password' id='form3Example4' label='Password' required />
 
             <MDBBtn type='submit' className='mb-4' block>
               Sign Up
