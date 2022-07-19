@@ -78,17 +78,18 @@ class Wall implements IGameObject, ICollider {
     return normal;
   }
 
-  public onCollision(collidingObject: any): void {
-    // console.log("Collided with wall");
-
-    const normal = this.normal(collidingObject.velocity).scale(1);
+  public onCollision(collidingObject: any): Vector2 {
+    const normal = this.normal(collidingObject.velocity);
     const v = collidingObject.velocity;
     const angle = Math.atan2(normal.cross(v), v.dot(normal)) * 2;
-
+    
     collidingObject.velocity = collidingObject.velocity.rotate(
       -angle + Math.PI
     );
-    collidingObject.velocity = collidingObject.velocity.scale(0.8); // Loose energy on bounce
+
+    //Decrease velocity by 20% on bounce
+    collidingObject.velocity = collidingObject.velocity.scale(0.8);
+    return normal;
   }
 
   public wouldPointCollide(oldPos: Vector2, newPos: Vector2): boolean {

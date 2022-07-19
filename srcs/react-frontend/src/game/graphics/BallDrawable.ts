@@ -41,6 +41,8 @@ export default class BallDrawable extends Drawable {
     redraw() {
         this.gfx!.clear();
 
+        //add squishing
+
         this.gfx!.moveTo(this.pos.x, this.pos.y)
           .beginFill(0xfffffff)
           .drawCircle(Ball.radius, Ball.radius, Ball.radius)
@@ -70,8 +72,6 @@ export default class BallDrawable extends Drawable {
                 Math.random() * 1000 + 2000,
                 Math.random() * Math.PI * 2
               );
-              console.log(this.pos);
-              console.log(this.velocity);
         };
     }
 }

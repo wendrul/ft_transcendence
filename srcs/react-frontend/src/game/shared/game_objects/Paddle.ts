@@ -1,8 +1,9 @@
 import Vector2 from "../util/Vector2";
 import { pixiGraphics } from "../../shared-header";
 import { GraphicalApplication } from "../../shared-header";
+import { ICollider, Ray } from "../util/Collider";
 
-export default class Player {
+export default class Paddle implements ICollider {
   name: String;
 
   rot: number;
@@ -24,7 +25,17 @@ export default class Player {
 
     console.log(`Created player ${this.playerNo}`);
   }
-  // public contains(x: number, y: number) {
-  //   return this!._player_gfx.containsPoint(new Point(x, y));
-  // }
+
+  wouldPointCollide(oldPos: Vector2, newPos: Vector2): boolean {
+    throw new Error("Method not implemented.");
+  }
+  intersectRay(ray: Ray): Vector2 | null {
+    throw new Error("Method not implemented.");
+  }
+  onCollision(collidingObject: any) {
+    throw new Error("Method not implemented.");
+  }
+  normal(incoming: Vector2): Vector2 {
+    throw new Error("Method not implemented.");
+  }
 }

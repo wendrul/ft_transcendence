@@ -2,25 +2,25 @@ import Vector2 from "../util/Vector2";
 import addKeyListeners from "../util/Interaction";
 import { ICollider, Ray } from "../util/Collider";
 import { GraphicalApplication, pixiGraphics } from "../../shared-header";
+import { cp } from "fs";
 
-enum States {
+enum BallStates {
   MOVING,
   BOUNCE_STALL,
 }
 
 class Ball {
   pos: Vector2;
-  static readonly States = States;
   velocity: Vector2;
 
-  state: States = States.MOVING;
+  state: BallStates = BallStates.MOVING;
   enteringState: boolean = false;
   elapsedTime: number = 0;
 
   colliders: Array<ICollider>;
 
   static readonly radius = 15;
-  static readonly bounceStallDelay = 0.05;
+  static readonly bounceStallDelay = 0.02;
 
   constructor() {
     this.velocity = new Vector2(10, -20);
@@ -31,44 +31,38 @@ class Ball {
   public update(delta: number) {
 
     switch (this.state) {
-      case States.BOUNCE_STALL:
+      case BallStates.BOUNCE_STALL:
         if (this.enteringState) {
           this.enteringState = false;
           this.elapsedTime = 0;
         }
         const t = this.elapsedTime / Ball.bounceStallDelay;
-        // this._gfx.x = this.pos.x;
-        // this._gfx.y = this.pos.y;
-        // this._gfx?.scale.set(1, 0.5);
         this.elapsedTime += delta / 60;
         if (this.elapsedTime > Ball.bounceStallDelay) {
-          this.state = States.MOVING;
+          this.state = BallStates.MOVING;
           this.enteringState = true;
         }
         break;
 
-      case States.MOVING:
+      case BallStates.MOVING:
         this.enteringState = false;
-        // this._gfx?.scale.set(1, 1);
-        // this._gfx.x = 0;
-        // this._gfx.y = 0;
-
         const newPos = this.pos.add(this.velocity.scale(delta / 60));
 
-        // gravity:
-        this.velocity = this.velocity.subtract(
-          new Vector2(0, (-1500 * delta) / 60)
-        );
+        // this.gravity(delta);
 
-        const collisionPoint = this.findPossibleCollision(
+        const collidedObject = this.findPossibleCollision(
           this.pos,
           newPos,
           this.colliders
         );
 
         //Avoid going over the wall by going exactly to the point where it would collide
-        if (collisionPoint != null) {
+        if (collidedObject != null) {
+          const collisionPoint = collidedObject.inter;
           this.pos = collisionPoint;
+          // ball will be 1 pixel away from wall
+          const normal = collidedObject.collider.onCollision(this);
+          this.pos = this.pos.add(normal);
         } else {
           this.pos = newPos;
         }
@@ -76,6 +70,12 @@ class Ball {
       default:
         break;
     }
+  }
+
+  private gravity(delta: number) {
+    this.velocity = this.velocity.subtract(
+      new Vector2(0, (-1500 * delta) / 60)
+    );
   }
 
   private findPossibleCollision(
@@ -104,10 +104,9 @@ class Ball {
     }
 
     if (chosenCollider != null) {
-      chosenCollider.collider.onCollision(this);
-      this.state = States.BOUNCE_STALL;
+      this.state = BallStates.BOUNCE_STALL;
       this.enteringState = true;
-      return chosenCollider.inter;
+      return chosenCollider;
     }
     return null;
   }

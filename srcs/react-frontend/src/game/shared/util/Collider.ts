@@ -32,6 +32,6 @@ export class Ray {
 export interface ICollider {
   wouldPointCollide(oldPos: Vector2, newPos: Vector2): boolean;
   intersectRay(ray: Ray): Vector2 | null;
-  onCollision(collidingObject: any): void;
+  onCollision(collidingObject: any): any;
   normal(incoming: Vector2): Vector2;
 }

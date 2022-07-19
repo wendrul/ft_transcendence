@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import Ball from "./shared/game_objects/Ball";
-import Player from "./shared/game_objects/Player";
+import Paddle from "./shared/game_objects/Paddle";
 import Wall from "./shared/game_objects/Wall";
 import { io } from "socket.io-client";
 
@@ -8,7 +8,7 @@ import addKeyListeners from "./shared/util/Interaction";
 
 import {GraphicalApplication} from "./shared-header"
 import BallDrawable from "./graphics/BallDrawable";
-import PlayerDrawable from "./graphics/PlayerDrawable";
+import PaddleDrawable from "./graphics/PaddleDrawable";
 import WallDrawable from "./graphics/WallDrawable";
 
 let app: GraphicalApplication;
@@ -44,8 +44,8 @@ export function gameSetup(instantiatedApp: GraphicalApplication) {
 
   app = instantiatedApp;
 
-  const p = new PlayerDrawable(app, "John", 1);
-  const p2 = new PlayerDrawable(app, "John2", 2);
+  const p = new PaddleDrawable(app, "John", 1);
+  const p2 = new PaddleDrawable(app, "John2", 2);
 
   addKeyListeners("w").press = () => (p.phi += 0.05);
   addKeyListeners("s").press = () => (p.phi -= 0.05);

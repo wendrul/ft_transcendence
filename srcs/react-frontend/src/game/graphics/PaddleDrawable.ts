@@ -1,11 +1,11 @@
 import * as PIXI from "pixi.js";
 import "@pixi/graphics-extras";
 
-import Player from "../shared/game_objects/Player";
+import Paddle from "../shared/game_objects/Paddle";
 import Drawable from "./Drawable";
 
-export default class PlayerDrawable extends Drawable {
-  private player: Player;
+export default class PaddleDrawable extends Drawable {
+  private player: Paddle;
   private color: number = 0x9900ff;
 
   public get phi(): number {
@@ -23,7 +23,7 @@ export default class PlayerDrawable extends Drawable {
 
   constructor(app: PIXI.Application, name: String, playerNo: 1 | 2) {
     super(app, true);
-    this.player = new Player(name, playerNo);
+    this.player = new Paddle(name, playerNo);
 
     // app.ticker.add((delta) => {
     //     this.player.update(delta);
@@ -41,12 +41,12 @@ export default class PlayerDrawable extends Drawable {
   }
 
   private drawRacket(phi: number, fieldx: number, fieldy: number) {
-    const theta = Math.atan(Player.racketSize / (2 * Player.racketRadius));
-    let cx = fieldx - Player.racketRadius + Player.fieldSize / 2;
+    const theta = Math.atan(Paddle.racketSize / (2 * Paddle.racketRadius));
+    let cx = fieldx - Paddle.racketRadius + Paddle.fieldSize / 2;
     const cy = fieldy;
     if (this.playerNo === 1) {
       phi += Math.PI;
-      cx = fieldx + Player.racketRadius - Player.fieldSize / 2;
+      cx = fieldx + Paddle.racketRadius - Paddle.fieldSize / 2;
     }
 
     this.gfx!
@@ -54,8 +54,8 @@ export default class PlayerDrawable extends Drawable {
       .drawTorus?.(
         cx,
         cy,
-        Player.racketRadius - Player.racketWidth / 2,
-        Player.racketRadius + Player.racketWidth / 2,
+        Paddle.racketRadius - Paddle.racketWidth / 2,
+        Paddle.racketRadius + Paddle.racketWidth / 2,
         phi - theta,
         phi + theta
       )
@@ -63,7 +63,7 @@ export default class PlayerDrawable extends Drawable {
 
     if (globalThis.debugMode) {
       this.gfx!.lineStyle(2, 0xffffff, 0.1); //Player.racketWidth, this.color);
-      this.gfx!.arc(cx, cy, Player.racketRadius, phi + 20, phi - 20);
+      this.gfx!.arc(cx, cy, Paddle.racketRadius, phi + 20, phi - 20);
     }
   }
 }
