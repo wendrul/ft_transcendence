@@ -16,9 +16,24 @@ import {
   MDBDropdownLink,
   MDBCollapse
 } from 'mdb-react-ui-kit';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function NavbarComponent() {
   const [showBasic, setShowBasic] = useState(false);
+  let navigate = useNavigate();
+
+	const logout = () => {
+	
+		axios.post(`http://localhost:3002/users/signout`, { withCredentials: true })
+		.then((res: any) => {
+			console.log(res)
+			navigate('/login');
+		})
+		.catch((err: any) => {
+		  console.log(err.response)
+		})
+	}
 
   return (
     <MDBNavbar expand='lg' light bgColor='light'>
@@ -91,7 +106,7 @@ export default function NavbarComponent() {
                     <MDBDropdownLink>My Space</MDBDropdownLink>
                   </MDBDropdownItem>
                   <MDBDropdownItem>
-                    <MDBDropdownLink>Logout</MDBDropdownLink>
+                    <MDBDropdownLink onClick={logout} >Logout</MDBDropdownLink>
                   </MDBDropdownItem>
                 </MDBDropdownMenu>
               </MDBDropdown>
