@@ -11,14 +11,10 @@ import { ICollider } from "../shared/util/Collider";
 export default class BallDrawable extends Drawable {
     private ball: Ball;
 
-    constructor(app: PIXI.Application) {
+    constructor(ball: Ball, app: PIXI.Application) {
         super(app, true);
-        this.ball = new Ball();
+        this.ball = ball;
         this.pos = new Vector2(app.renderer.width / 2, app.renderer.height / 2);
-
-        app.ticker.add((delta) => {
-            this.ball.update(delta);
-        });
 
         this.addKListener(); //garbage
     }

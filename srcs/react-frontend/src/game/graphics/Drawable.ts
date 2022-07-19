@@ -20,4 +20,5 @@ export default abstract class Drawable implements IDrawable {
     }
 
     abstract redraw(): void;
+    // abstract exposeInternalWrappedObj(): any;
 }

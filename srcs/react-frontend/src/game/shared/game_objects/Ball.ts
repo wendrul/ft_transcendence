@@ -3,13 +3,14 @@ import addKeyListeners from "../util/Interaction";
 import { ICollider, Ray } from "../util/Collider";
 import { GraphicalApplication, pixiGraphics } from "../../shared-header";
 import { cp } from "fs";
+import IGameObject from "./IGameObject";
 
 enum BallStates {
   MOVING,
   BOUNCE_STALL,
 }
 
-class Ball {
+class Ball implements IGameObject {
   pos: Vector2;
   velocity: Vector2;
 
@@ -29,7 +30,6 @@ class Ball {
   }
 
   public update(delta: number) {
-
     switch (this.state) {
       case BallStates.BOUNCE_STALL:
         if (this.enteringState) {

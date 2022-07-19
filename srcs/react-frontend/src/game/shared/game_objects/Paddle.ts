@@ -2,8 +2,9 @@ import Vector2 from "../util/Vector2";
 import { pixiGraphics } from "../../shared-header";
 import { GraphicalApplication } from "../../shared-header";
 import { ICollider, Ray } from "../util/Collider";
+import IGameObject from "./IGameObject";
 
-export default class Paddle implements ICollider {
+export default class Paddle implements ICollider, IGameObject {
   name: String;
 
   rot: number;
@@ -24,6 +25,8 @@ export default class Paddle implements ICollider {
     this.playerNo = playerNo;
 
     console.log(`Created player ${this.playerNo}`);
+  }
+  update(dt: number): void {
   }
 
   wouldPointCollide(oldPos: Vector2, newPos: Vector2): boolean {

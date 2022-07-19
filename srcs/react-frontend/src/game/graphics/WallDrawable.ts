@@ -13,31 +13,19 @@ export default class WallDrawable extends Drawable implements IGameObject, IColl
     private wall: Wall;
     private color: number;
 
-    constructor(app: PIXI.Application, x: number,
-        y: number,
-        width: number,
-        height: number,
-        side: "top" | "bot" | "left" | "right" = "bot",
-        color = 0x496085
-    ) {
+    constructor(wall: Wall, app: PIXI.Application, color = 0x496085) {
         super(app, true);
-        this.wall = new Wall(x, y, width, height, side);
+        this.wall = wall;
         this.color = color;
-
-
-
-
-        // app.ticker.add((delta) => {
-        //     this.wall.update(delta);
-        // });
     }
+    
     wouldPointCollide(oldPos: Vector2, newPos: Vector2): boolean {
         return this.wall.wouldPointCollide(oldPos, newPos);
     }
     intersectRay(ray: Ray): Vector2 | null {
         return this.wall.intersectRay(ray);
     }
-    onCollision(collidingObject: any): void {
+    onCollision(collidingObject: any): Vector2 {
         return this.wall.onCollision(collidingObject);
     }
     normal(incoming: Vector2): Vector2 {

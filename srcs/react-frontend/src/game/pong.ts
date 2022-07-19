@@ -6,10 +6,12 @@ import { io } from "socket.io-client";
 
 import addKeyListeners from "./shared/util/Interaction";
 
-import {GraphicalApplication} from "./shared-header"
+import { GraphicalApplication } from "./shared-header"
 import BallDrawable from "./graphics/BallDrawable";
 import PaddleDrawable from "./graphics/PaddleDrawable";
 import WallDrawable from "./graphics/WallDrawable";
+import Game from "./shared/util/Game";
+import { GameStateMachine } from "./shared/util/state/GameStateMachine";
 
 let app: GraphicalApplication;
 
@@ -19,12 +21,6 @@ declare global {
 
 let game_starting_for_good = false;
 
-function redrawStatics(statics: any) {
-  for (const staticGraphic of statics) {
-    staticGraphic.redraw();
-  }
-}
-
 export function gameSetup(instantiatedApp: GraphicalApplication) {
   if (!game_starting_for_good) {
     //Hacky way to avoid running this twice, should be fixed in the future
@@ -33,7 +29,7 @@ export function gameSetup(instantiatedApp: GraphicalApplication) {
   }
   // fetch("http://localhost:3000").then((s) => console.log(s));
   const socket = io("http://localhost:3000");
-  socket.on("gameUpdate", (gameState : any) => {
+  socket.on("gameUpdate", (gameState: any) => {
     // p.phi = gameState.p1.phi;
     // p2.phi = gameState.p2.phi;
     // ball.pos.x = gameState.ballpos.x;
@@ -44,8 +40,10 @@ export function gameSetup(instantiatedApp: GraphicalApplication) {
 
   app = instantiatedApp;
 
-  const p = new PaddleDrawable(app, "John", 1);
-  const p2 = new PaddleDrawable(app, "John2", 2);
+  const game = new Game();
+
+  const p = new PaddleDrawable(game.paddle1, app);
+  const p2 = new PaddleDrawable(game.paddle2, app);
 
   addKeyListeners("w").press = () => (p.phi += 0.05);
   addKeyListeners("s").press = () => (p.phi -= 0.05);
@@ -55,27 +53,25 @@ export function gameSetup(instantiatedApp: GraphicalApplication) {
   const i_listener = addKeyListeners("i");
   i_listener.press = () => {
     globalThis.debugMode = !globalThis.debugMode;
-    redrawStatics([...walls]);
   };
   globalThis.debugMode = false;
-  let walls: any = [];
-  walls.push(new WallDrawable(app, 50, 0, 900, 100, "bot"));
-  walls.push(new WallDrawable(app, 50, 500, 900, 100, "top"));
-  walls.push(new WallDrawable(app, 50, 0, 50, 600, "right"));
-  walls.push(new WallDrawable(app, 900, 0, 50, 600, "left"));
-  redrawStatics([...walls]);
 
-  const ball = new BallDrawable(app);
-  ball.colliders.push(...walls);
+  const ball = new BallDrawable(game.ball, app);
+  game.walls.forEach((w) => new WallDrawable(w, app))
+
+  const gameStateMachine = new GameStateMachine(game);
 
   console.log("Finished Game setup");
+
+  gameLoop(game);
+
   game_starting_for_good = true;
   let elapsed = 0;
   PIXI.Ticker.shared.add((delta) => {
     elapsed += delta / 60;
     if (elapsed > 0.03) {
       // console.log(elapsed);
-      
+
       elapsed = 0;
       socket.emit("gameUpdate", {
         p1: { phi: p.phi },
@@ -85,7 +81,9 @@ export function gameSetup(instantiatedApp: GraphicalApplication) {
       });
     }
   });
-  main();
 }
 
-function main() {}
+function gameLoop(game: Game) {
+  game.update();
+  requestAnimationFrame(() => gameLoop(game));
+}
