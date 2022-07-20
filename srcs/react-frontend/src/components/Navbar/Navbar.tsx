@@ -18,8 +18,12 @@ import {
 } from 'mdb-react-ui-kit';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../_helpers/hooks';
 
 export default function NavbarComponent() {
+
+  const authentication = useAppSelector<any>(state => state.authentication);
+
   const [showBasic, setShowBasic] = useState(false);
   let navigate = useNavigate();
 
@@ -95,24 +99,26 @@ export default function NavbarComponent() {
             <input type='search' className='form-control' placeholder='User ID' aria-label='Search' />
             <MDBBtn color='primary'>Search</MDBBtn>
           </form>
-          <MDBNavbarNav className='d-flex input-group w-auto'>
-          <MDBNavbarItem>
-              <MDBDropdown>
-                <MDBDropdownToggle tag='a' className='nav-link'>
-                <MDBIcon icon="user" />
-                </MDBDropdownToggle>
-                <MDBDropdownMenu>
-                  <MDBDropdownItem>
-                    <MDBDropdownLink>My Space</MDBDropdownLink>
-                  </MDBDropdownItem>
-                  <MDBDropdownItem>
-                    <MDBDropdownLink onClick={logout} >Logout</MDBDropdownLink>
-                  </MDBDropdownItem>
-                </MDBDropdownMenu>
-              </MDBDropdown>
-            </MDBNavbarItem>
+          {
+            authentication.loggedIn && 
+            <MDBNavbarNav className='d-flex input-group w-auto'>
+              <MDBNavbarItem>
+                <MDBDropdown>
+                  <MDBDropdownToggle tag='a' className='nav-link'>
+                  <MDBIcon icon="user" />
+                  </MDBDropdownToggle>
+                  <MDBDropdownMenu>
+                    <MDBDropdownItem>
+                      <MDBDropdownLink>My Space</MDBDropdownLink>
+                    </MDBDropdownItem>
+                    <MDBDropdownItem>
+                      <MDBDropdownLink onClick={logout} >Logout</MDBDropdownLink>
+                    </MDBDropdownItem>
+                  </MDBDropdownMenu>
+                </MDBDropdown>
+              </MDBNavbarItem>
             </MDBNavbarNav>
-
+          }
         </MDBCollapse>
       </MDBContainer>
     </MDBNavbar>
