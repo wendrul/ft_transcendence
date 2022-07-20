@@ -9,7 +9,7 @@ export const store = createStore(
     rootReducer,
     applyMiddleware(
         thunkMiddleware,
-        loggerMiddleware
+        loggerMiddleware // sacar para quitar los logs.
     )
 );
 

@@ -8,7 +8,8 @@ export const userService = {
     getAll,
     whoami,
     signout,
-    signup
+    signup,
+    updateUsername
 };
 
 function whoami() {
@@ -70,6 +71,22 @@ function signout() {
         else
             return Promise.reject("ERRRRORRRRR");    
     });       
+}
+
+function updateUsername(id: string, username:string) {
+    return axios.patch(`${config.apiUrl}/users/signin`+ id,
+    {
+        id: id,
+        login: username,
+    }, { 
+        withCredentials: true 
+    }).then(handleResponse)
+        .then(user => {
+            // store user details and jwt token in local storage to keep user logged in between page refreshes
+            localStorage.setItem('user', JSON.stringify(user));
+
+            return user;
+        });
 }
 
 function getAll() {

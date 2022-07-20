@@ -8,7 +8,8 @@ export const userActions = {
     signup,
     signout,
     getAll,
-    whoami
+    whoami,
+    updateUsername
 };
 
 function whoami() {
@@ -92,6 +93,28 @@ function signout() {
     function request() { return { type: userConstants.LOGOUT_REQUEST } }
     function success() { return { type: userConstants.LOGOUT_SUCCESS } }
     function failure(error:string) { return { type: userConstants.LOGOUT_FAILURE, error } }
+}
+
+function updateUsername(id:string, username:string) {
+    return (dispatch:any) => {
+        dispatch(request({ username }));
+
+        userService.updateUsername(id, username)
+            .then(
+                user => {
+                    dispatch(success(user));
+                    history.push('/');
+                },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                }
+            );
+    };
+
+    function request(user:any) { return { type: userConstants.UPDATE_REQUEST, user } }
+    function success(user:any) { return { type: userConstants.UPDATE_SUCCESS, user } }
+    function failure(error:any) { return { type: userConstants.UPDATE_FAILURE, error } }
 }
 
 function getAll() {

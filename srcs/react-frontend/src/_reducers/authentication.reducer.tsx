@@ -10,7 +10,7 @@ export function authentication(state = {
         loggingIn: true,
         user: action.user
       };
-      case userConstants.SIGNUP_SUCCESS:
+    case userConstants.SIGNUP_SUCCESS:
     case userConstants.WHOAMI_SUCCESS:
     case userConstants.LOGIN_SUCCESS:
       return {
