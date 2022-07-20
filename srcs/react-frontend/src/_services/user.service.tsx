@@ -7,7 +7,8 @@ export const userService = {
     login,
     getAll,
     whoami,
-    signout
+    signout,
+    signup
 };
 
 function whoami() {
@@ -26,7 +27,6 @@ function whoami() {
 }
 
 function login(email:string, password:string) {
-    console.log(`${config.apiUrl}`)
     return axios.post(`${config.apiUrl}/users/signin`,
     {
         email: email,
@@ -39,15 +39,33 @@ function login(email:string, password:string) {
             localStorage.setItem('user', JSON.stringify(user));
 
             return user;
-        });        
+        });
+}
+
+function signup(firstName:string, lastName:string, email:string, password:string) {
+    return axios.post(`${config.apiUrl}/users/signup`,
+    {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password
+    }, { 
+        withCredentials: true 
+    }).then(handleResponse)
+        .then(user => {
+            // store user details and jwt token in local storage to keep user logged in between page refreshes
+            localStorage.setItem('user', JSON.stringify(user));
+
+            return user;
+        });
 }
 
 function signout() {
-    return axios.post(`${config.apiUrl}/users/signout`,
+    return axios.get(`${config.apiUrl}/users/signout`,
     { 
         withCredentials: true 
     }).then(response => {
-        if(response.status == 201 || response.status == 401)
+        if(response.status == 200 || response.status == 201 || response.status == 401)
             return true;
         else
             return Promise.reject("ERRRRORRRRR");    

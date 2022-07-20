@@ -60,7 +60,7 @@ export class UsersController {
 // 	addAvatar(@CurrentUser() user: User) {}
 
 	@UseGuards(AuthGuardApi)
-	@Post('/signout')
+	@Get('/signout')
 	signout(@Session() session: any, @CurrentUser() user: User) {
 		this.userService.update(user.id, {status: 'offline'});
 		session.userId = null;

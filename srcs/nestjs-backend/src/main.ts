@@ -17,6 +17,7 @@ async function bootstrap() {
   app.enableCors({
     origin: true,
     credentials: true,
+//    exposedHeaders: ["set-cookie"],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
 

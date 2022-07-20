@@ -26,20 +26,25 @@ export default function NavbarComponent() {
   const dispatch = useAppDispatch();
 
   const authentication = useAppSelector<any>(state => state.authentication);
+  const [data, setData] = useState(authentication)
 
   const [showBasic, setShowBasic] = useState(false);
   let navigate = useNavigate();
 
   useEffect(() => {
+    dispatch(userActions.whoami());
     let timerId = setInterval(() => {
-      if(authentication.loggedIn)
-        dispatch(userActions.whoami);
-      return () => clearInterval(timerId);
+      dispatch(userActions.whoami());
     }, 5000)
+    return () => clearInterval(timerId);
   }, [])
 
 	const logout = () => {
-    dispatch(userActions.signout);
+    dispatch(userActions.signout());
+	}
+
+  const onSerch = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 	}
 
   return (
@@ -97,8 +102,7 @@ export default function NavbarComponent() {
             </MDBNavbarItem>
            */}
           </MDBNavbarNav>
-
-          <form className='d-flex input-group w-auto'>
+          <form className='d-flex input-group w-auto' onSubmit={onSerch}>
             <input type='search' className='form-control' placeholder='User ID' aria-label='Search' />
             <MDBBtn color='primary'>Search</MDBBtn>
           </form>

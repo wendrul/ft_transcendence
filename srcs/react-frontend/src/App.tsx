@@ -4,11 +4,9 @@ import './App.css';
 import RoutesHandler from './Routes';
 import NavbarComponent from './components/Navbar/Navbar';
 import FooterComponent from './components/Footer/Footer';
-import Checker from './components/Checker/Checker';
 
 function App() {
   return (
-    <>      <Checker />
         <div className="h-100">
           <NavbarComponent />
           <div className="t_body h-100">
@@ -17,7 +15,6 @@ function App() {
           </div>
         <FooterComponent />
         </div>
-        </>
   );
 }
 
