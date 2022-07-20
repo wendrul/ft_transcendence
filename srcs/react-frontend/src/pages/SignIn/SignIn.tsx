@@ -14,8 +14,9 @@ function SignIn() {
 	const alert = useAppSelector<any>(state => state.alert);
 
 	useEffect(() => {
-		/*if(authentication.loggedIn)
-			navigate("/");*/
+		document.title = "SignIn";
+	//	if(authentication.loggedIn)
+	//		navigate("/");
 	}, [])
 
 	const [email, setEmail] = useState("");
@@ -37,7 +38,7 @@ function SignIn() {
 
   return (
 	<>
-		{1 && 
+		{/*authentication.loggedIn*/  1 && 
 		<div className="p-5 row bd-highlight justify-content-center">
 		<div className="p-2 d-flex flex-column bd-highlight col-example col-md-6 align-items-center justify-content-center h-100">
 			<div className="d-flex flex-column align-items-center justify-content-center w-75 pb-5 mb-3">

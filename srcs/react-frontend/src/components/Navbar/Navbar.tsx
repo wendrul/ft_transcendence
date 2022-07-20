@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   MDBContainer,
   MDBNavbar,
@@ -18,25 +18,28 @@ import {
 } from 'mdb-react-ui-kit';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../_helpers/hooks';
+import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
+import { userActions } from '../../_actions';
 
 export default function NavbarComponent() {
+
+  const dispatch = useAppDispatch();
 
   const authentication = useAppSelector<any>(state => state.authentication);
 
   const [showBasic, setShowBasic] = useState(false);
   let navigate = useNavigate();
 
+  useEffect(() => {
+    let timerId = setInterval(() => {
+      if(authentication.loggedIn)
+        dispatch(userActions.whoami);
+      return () => clearInterval(timerId);
+    }, 5000)
+  }, [])
+
 	const logout = () => {
-	
-		axios.post(`http://localhost:3002/users/signout`, { withCredentials: true })
-		.then((res: any) => {
-			console.log(res)
-			navigate('/login');
-		})
-		.catch((err: any) => {
-		  console.log(err.response)
-		})
+    dispatch(userActions.signout);
 	}
 
   return (

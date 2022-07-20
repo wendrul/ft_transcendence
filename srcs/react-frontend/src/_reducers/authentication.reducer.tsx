@@ -21,8 +21,11 @@ export function authentication(state = initialState, action:any) {
         loggedIn: false,
         user: null
       };
-    case userConstants.LOGOUT:
-      return {};
+    case userConstants.LOGOUT_SUCCESS:
+      return {
+        loggedIn: false,
+        user: null
+      };
     default:
       return state
   }

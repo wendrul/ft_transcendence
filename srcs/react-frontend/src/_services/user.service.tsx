@@ -6,12 +6,13 @@ import { authHeader } from '../_helpers';
 export const userService = {
     login,
     getAll,
-    whoami
+    whoami,
+    signout
 };
 
 function whoami() {
     console.log(`${config.apiUrl}`)
-    return axios.post(`${config.apiUrl}/users/whoami`,
+    return axios.get(`${config.apiUrl}/users/whoami`,
     { 
         withCredentials: true
     }).then((response:any) => {
@@ -39,6 +40,18 @@ function login(email:string, password:string) {
 
             return user;
         });        
+}
+
+function signout() {
+    return axios.post(`${config.apiUrl}/users/signout`,
+    { 
+        withCredentials: true 
+    }).then(response => {
+        if(response.status == 201 || response.status == 401)
+            return true;
+        else
+            return Promise.reject("ERRRRORRRRR");    
+    });       
 }
 
 function getAll() {
