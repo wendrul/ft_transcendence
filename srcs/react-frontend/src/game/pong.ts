@@ -10,11 +10,15 @@ import {GraphicalApplication} from "./shared-header"
 import BallDrawable from "./graphics/BallDrawable";
 import PaddleDrawable from "./graphics/PaddleDrawable";
 import WallDrawable from "./graphics/WallDrawable";
+import Vector2 from "./shared/util/Vector2";
+import { Ray } from "./shared/util/Collider";
+import { GraphicalDebugger } from "./graphics/Debug";
 
 let app: GraphicalApplication;
 
 declare global {
   var debugMode: boolean;
+  var debugTool: GraphicalDebugger;
 }
 
 let game_starting_for_good = false;
@@ -44,6 +48,9 @@ export function gameSetup(instantiatedApp: GraphicalApplication) {
 
   app = instantiatedApp;
 
+  const p1back = new Paddle("Jhon", 1, app.renderer.height / 2, app.renderer.width/2);
+  const p2back = new Paddle("Jhon2", 2, app.renderer.height / 2, app.renderer.width/2);
+
   const p = new PaddleDrawable(app, "John", 1);
   const p2 = new PaddleDrawable(app, "John2", 2);
 
@@ -52,12 +59,19 @@ export function gameSetup(instantiatedApp: GraphicalApplication) {
   addKeyListeners("o").press = () => (p2.phi += 0.05);
   addKeyListeners("l").press = () => (p2.phi -= 0.05);
 
+  addKeyListeners("w").press = () => (p1back.phi += 0.05);
+  addKeyListeners("s").press = () => (p1back.phi -= 0.05);
+  addKeyListeners("o").press = () => (p2back.phi += 0.05);
+  addKeyListeners("l").press = () => (p2back.phi -= 0.05);
+
   const i_listener = addKeyListeners("i");
   i_listener.press = () => {
     globalThis.debugMode = !globalThis.debugMode;
     redrawStatics([...walls]);
   };
   globalThis.debugMode = false;
+
+
   let walls: any = [];
   walls.push(new WallDrawable(app, 50, 0, 900, 100, "bot"));
   walls.push(new WallDrawable(app, 50, 500, 900, 100, "top"));
@@ -66,7 +80,9 @@ export function gameSetup(instantiatedApp: GraphicalApplication) {
   redrawStatics([...walls]);
 
   const ball = new BallDrawable(app);
-  ball.colliders.push(...walls);
+  ball.colliders.push(...walls, p1back, p2back);
+  globalThis.debugTool = new GraphicalDebugger(app);
+
 
   console.log("Finished Game setup");
   game_starting_for_good = true;
@@ -87,5 +103,7 @@ export function gameSetup(instantiatedApp: GraphicalApplication) {
   });
   main();
 }
+
+
 
 function main() {}

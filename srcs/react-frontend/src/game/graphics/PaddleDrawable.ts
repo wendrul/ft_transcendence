@@ -23,11 +23,11 @@ export default class PaddleDrawable extends Drawable {
 
   constructor(app: PIXI.Application, name: String, playerNo: 1 | 2) {
     super(app, true);
-    this.player = new Paddle(name, playerNo);
+    this.player = new Paddle(name, playerNo, this.app!.renderer.height / 2, this.app!.renderer.width / 2);
 
-    // app.ticker.add((delta) => {
-    //     this.player.update(delta);
-    // });
+    app.ticker.add((delta) => {
+        this.player.update(delta);
+    });
   }
 
   redraw() {

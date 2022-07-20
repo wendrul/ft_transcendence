@@ -23,13 +23,12 @@ class Ball {
   static readonly bounceStallDelay = 0.02;
 
   constructor() {
-    this.velocity = new Vector2(10, -20);
+    this.velocity = new Vector2(3000, -6000);
     this.pos = new Vector2(0, 0);
     this.colliders = new Array<ICollider>();
   }
 
   public update(delta: number) {
-
     switch (this.state) {
       case BallStates.BOUNCE_STALL:
         if (this.enteringState) {
@@ -87,10 +86,8 @@ class Ball {
     let minDist = 0;
 
     for (const collider of colliderList) {
-      const diffRad = collider.normal(this.velocity).scale(-Ball.radius);
-      if (
-        collider.wouldPointCollide(oldPos.add(diffRad), newPos.add(diffRad))
-      ) {
+      const diffRad = collider.normal(this.velocity, this.pos).scale(-Ball.radius);
+      if (collider.wouldPointCollide(oldPos.add(diffRad), newPos.add(diffRad))) {
         const inter = collider
           .intersectRay(new Ray(oldPos.add(diffRad), this.velocity.clone()))
           ?.subtract(diffRad);

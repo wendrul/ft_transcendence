@@ -2,6 +2,7 @@ import Vector2 from "../util/Vector2";
 import { pixiGraphics } from "../../shared-header";
 import { GraphicalApplication } from "../../shared-header";
 import { ICollider, Ray } from "../util/Collider";
+import Ball from "./Ball";
 
 export default class Paddle implements ICollider {
   name: String;
@@ -12,30 +13,127 @@ export default class Paddle implements ICollider {
 
   phi: number = 0;
 
+  arcCenter: Vector2;
+
+  pos: Vector2;
 
   static readonly racketSize = 100;
   static readonly racketWidth = 10;
   static readonly fieldSize = 700;
   static readonly racketRadius = 600;
 
-  constructor(name: String, playerNo: 1 | 2) {
+  constructor(
+    name: String,
+    playerNo: 1 | 2,
+    fieldHeight: number,
+    fieldWidth: number
+  ) {
     this.rot = 0;
     this.name = name;
     this.playerNo = playerNo;
-
+    let cx = fieldWidth - Paddle.racketRadius + Paddle.fieldSize / 2;
+    if (playerNo == 1) {
+      cx = fieldWidth + Paddle.racketRadius - Paddle.fieldSize / 2;
+    }
+    const cy = fieldHeight;
+    this.arcCenter = new Vector2(cx, cy);
+    const phi = this.playerNo === 2 ? this.phi : this.phi + Math.PI;
+    this.pos = this.arcCenter.add(
+      new Vector2(
+        Math.cos(phi) * Paddle.racketRadius,
+        Math.sin(phi) * Paddle.racketRadius
+      )
+    );
     console.log(`Created player ${this.playerNo}`);
   }
 
+  update(dt: number) {
+    const phi = this.playerNo === 2 ? this.phi : this.phi + Math.PI;
+    this.pos = this.arcCenter.add(
+      new Vector2(
+        Math.cos(phi) * Paddle.racketRadius,
+        Math.sin(phi) * Paddle.racketRadius
+      )
+    );
+
+    
+  }
+
   wouldPointCollide(oldPos: Vector2, newPos: Vector2): boolean {
-    throw new Error("Method not implemented.");
+    if (
+      oldPos.dist(this.arcCenter) <= Paddle.racketRadius &&
+      newPos.dist(this.arcCenter) > Paddle.racketRadius
+    )
+      return true;
+    return false;
   }
+
+  intersectCircle(ray: Ray): Vector2 | null {
+    // https://www.bluebill.net/circle_ray_intersection.html
+    const rdir = ray.dir.normalized();
+
+    const u = this.arcCenter.subtract(ray.pos);
+    const u1 = rdir.scale(u.dot(rdir));
+    const u2 = u.subtract(u1);
+    const d = u2.norm();
+
+    if (d > Paddle.racketRadius) {
+      return null;
+    }
+    const m = Math.sqrt(Paddle.racketRadius ** 2 - d ** 2);
+    if (m > u1.norm()) {
+      // ray.pos is inside the circle => only 1 intersection possible
+      return ray.pos.add(u1).add(rdir.scale(m)); // ray.pos + u1 + m*rdir
+    }
+    return null; // ignore collisions coming from outside the circle aka backside of the paddle
+    // return ray.pos.add(u1).add(rdir.scale(-m));
+  }
+
   intersectRay(ray: Ray): Vector2 | null {
-    throw new Error("Method not implemented.");
+    const circleInter = this.intersectCircle(ray);
+    // console.log(circleInter);
+
+    if (circleInter == null) return null;
+    // console.log(circleInter.dist(this.pos));
+    
+    const centerToPaddle = this.pos.subtract(this.arcCenter).normalized();
+    const centerToInter = circleInter.subtract(this.arcCenter).normalized();
+
+    const angleDiff = Math.acos(centerToInter.dot(centerToPaddle));
+    const theta = Math.atan((Paddle.racketSize + Ball.radius) / (2 * Paddle.racketRadius));
+    if (angleDiff > theta) return null;
+
+    return circleInter;
   }
+
   onCollision(collidingObject: any) {
-    throw new Error("Method not implemented.");
+    console.log("collison");
+
+    const normal = this.normal(collidingObject.velocity, collidingObject.pos);
+    const v = collidingObject.velocity;
+    const angle = Math.atan2(normal.cross(v), v.dot(normal)) * 2;
+
+    collidingObject.velocity = collidingObject.velocity.rotate(
+      -angle + Math.PI
+    );
+
+    //Decrease velocity by 20% on bounce
+    collidingObject.velocity = collidingObject.velocity.scale(1);
+    return normal;
   }
-  normal(incoming: Vector2): Vector2 {
-    throw new Error("Method not implemented.");
+
+  normal(incomingDir: Vector2, incomingPos: Vector2): Vector2 {
+    const inter = this.intersectCircle(new Ray(incomingPos, incomingDir));
+    if (inter == null) {
+      return new Vector2(0, 0);
+      throw new Error(
+        "Tried to get normal with paddle but there was no intersection"
+      );
+    }
+    let normal = inter.subtract(this.arcCenter).normalized();
+    if (normal.dot(incomingDir) > 0) {
+      normal = normal.rotate(Math.PI);
+    }
+    return normal;
   }
 }

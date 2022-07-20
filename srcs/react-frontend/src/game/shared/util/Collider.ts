@@ -33,5 +33,5 @@ export interface ICollider {
   wouldPointCollide(oldPos: Vector2, newPos: Vector2): boolean;
   intersectRay(ray: Ray): Vector2 | null;
   onCollision(collidingObject: any): any;
-  normal(incoming: Vector2): Vector2;
+  normal(incomingDir: Vector2, incomingPos?: Vector2): Vector2;
 }

@@ -37,7 +37,7 @@ export default class WallDrawable extends Drawable implements IGameObject, IColl
     intersectRay(ray: Ray): Vector2 | null {
         return this.wall.intersectRay(ray);
     }
-    onCollision(collidingObject: any): void {
+    onCollision(collidingObject: any): Vector2 {
         return this.wall.onCollision(collidingObject);
     }
     normal(incoming: Vector2): Vector2 {

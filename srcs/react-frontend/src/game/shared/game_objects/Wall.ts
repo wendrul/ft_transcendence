@@ -1,7 +1,7 @@
 // import * as PIXI from "pixi.js";
 // import { Graphics } from "pixi.js";
 import { GraphicalApplication, pixiGraphics } from "../../shared-header";
-import { ICollider, Ray, rayIntersection } from "../util/Collider";
+import { ICollider, Ray, rayIntersection as lineIntersecton } from "../util/Collider";
 import Vector2 from "../util/Vector2";
 import IGameObject from "./IGameObject";
 
@@ -57,7 +57,7 @@ class Wall implements IGameObject, ICollider {
   }
 
   public intersectRay(ray: Ray): Vector2 | null {
-    const inter = rayIntersection(this.colliderRay, ray);
+    const inter = lineIntersecton(this.colliderRay, ray);
 
     if (!inter) return null;
 
@@ -88,7 +88,7 @@ class Wall implements IGameObject, ICollider {
     );
 
     //Decrease velocity by 20% on bounce
-    collidingObject.velocity = collidingObject.velocity.scale(0.8);
+    collidingObject.velocity = collidingObject.velocity.scale(1);
     return normal;
   }
 
