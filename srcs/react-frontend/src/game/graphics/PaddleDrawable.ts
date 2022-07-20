@@ -5,29 +5,25 @@ import Paddle from "../shared/game_objects/Paddle";
 import Drawable from "./Drawable";
 
 export default class PaddleDrawable extends Drawable {
-  private player: Paddle;
+  private paddle: Paddle;
   private color: number = 0x9900ff;
 
   public get phi(): number {
-    return this.player.phi;
+    return this.paddle.phi;
   }
   
   public set phi(v : number) {
-    this.player.phi = v;
+    this.paddle.phi = v;
   }
   
   public get playerNo(): number {
-    return this.player.playerNo;
+    return this.paddle.playerNo;
   }
 
 
-  constructor(app: PIXI.Application, name: String, playerNo: 1 | 2) {
+  constructor(paddle: Paddle, app: PIXI.Application) {
     super(app, true);
-    this.player = new Paddle(name, playerNo, this.app!.renderer.height / 2, this.app!.renderer.width / 2);
-
-    app.ticker.add((delta) => {
-        this.player.update(delta);
-    });
+    this.paddle = paddle;
   }
 
   redraw() {

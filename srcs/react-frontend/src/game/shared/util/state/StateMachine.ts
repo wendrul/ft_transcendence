@@ -6,11 +6,9 @@ export interface IState {
 }
 
 export abstract class StateMachine {
-  currentState: IState;
+  abstract currentState: IState;
 
   constructor() {
-    this.currentState = this.getInitialState();
-    this.currentState.onEnter();
   }
 
   changeState(newState: IState) {
@@ -18,6 +16,4 @@ export abstract class StateMachine {
     this.currentState = newState;
     this.currentState.onEnter();
   }
-
-  abstract getInitialState(): IState;
 }

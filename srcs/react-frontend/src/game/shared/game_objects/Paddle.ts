@@ -1,10 +1,9 @@
 import Vector2 from "../util/Vector2";
-import { pixiGraphics } from "../../shared-header";
-import { GraphicalApplication } from "../../shared-header";
 import { ICollider, Ray } from "../util/Collider";
 import Ball from "./Ball";
+import IGameObject from "./IGameObject";
 
-export default class Paddle implements ICollider {
+export default class Paddle implements ICollider, IGameObject {
   name: String;
 
   rot: number;
@@ -25,17 +24,17 @@ export default class Paddle implements ICollider {
   constructor(
     name: String,
     playerNo: 1 | 2,
-    fieldHeight: number,
-    fieldWidth: number
+    fieldCenterX: number,
+    fieldCenterY: number
   ) {
     this.rot = 0;
     this.name = name;
     this.playerNo = playerNo;
-    let cx = fieldWidth - Paddle.racketRadius + Paddle.fieldSize / 2;
-    if (playerNo == 1) {
-      cx = fieldWidth + Paddle.racketRadius - Paddle.fieldSize / 2;
+    let cx = fieldCenterX - Paddle.racketRadius + Paddle.fieldSize / 2;
+    if (playerNo === 1) {
+      cx = fieldCenterX + Paddle.racketRadius - Paddle.fieldSize / 2;
     }
-    const cy = fieldHeight;
+    const cy = fieldCenterY;
     this.arcCenter = new Vector2(cx, cy);
     const phi = this.playerNo === 2 ? this.phi : this.phi + Math.PI;
     this.pos = this.arcCenter.add(
@@ -55,8 +54,6 @@ export default class Paddle implements ICollider {
         Math.sin(phi) * Paddle.racketRadius
       )
     );
-
-    
   }
 
   wouldPointCollide(oldPos: Vector2, newPos: Vector2): boolean {
@@ -91,24 +88,23 @@ export default class Paddle implements ICollider {
 
   intersectRay(ray: Ray): Vector2 | null {
     const circleInter = this.intersectCircle(ray);
-    // console.log(circleInter);
 
     if (circleInter == null) return null;
-    // console.log(circleInter.dist(this.pos));
-    
+
     const centerToPaddle = this.pos.subtract(this.arcCenter).normalized();
     const centerToInter = circleInter.subtract(this.arcCenter).normalized();
 
     const angleDiff = Math.acos(centerToInter.dot(centerToPaddle));
-    const theta = Math.atan((Paddle.racketSize + Ball.radius) / (2 * Paddle.racketRadius));
-    if (angleDiff > theta) return null;
+    const theta = Math.atan(
+      (Paddle.racketSize + 2 * Ball.radius) / (2 * Paddle.racketRadius)
+    );
 
+    if (angleDiff > theta) return null;
+    
     return circleInter;
   }
 
   onCollision(collidingObject: any) {
-    console.log("collison");
-
     const normal = this.normal(collidingObject.velocity, collidingObject.pos);
     const v = collidingObject.velocity;
     const angle = Math.atan2(normal.cross(v), v.dot(normal)) * 2;
@@ -118,17 +114,17 @@ export default class Paddle implements ICollider {
     );
 
     //Decrease velocity by 20% on bounce
-    collidingObject.velocity = collidingObject.velocity.scale(1);
+    collidingObject.velocity = collidingObject.velocity.scale(0.8);
     return normal;
   }
 
   normal(incomingDir: Vector2, incomingPos: Vector2): Vector2 {
     const inter = this.intersectCircle(new Ray(incomingPos, incomingDir));
     if (inter == null) {
-      return new Vector2(0, 0);
-      throw new Error(
-        "Tried to get normal with paddle but there was no intersection"
-      );
+      return new Vector2(0, 1);
+      // throw new Error(
+      //   "Tried to get normal with paddle but there was no intersection"
+      // );
     }
     let normal = inter.subtract(this.arcCenter).normalized();
     if (normal.dot(incomingDir) > 0) {

@@ -3,13 +3,14 @@ import addKeyListeners from "../util/Interaction";
 import { ICollider, Ray } from "../util/Collider";
 import { GraphicalApplication, pixiGraphics } from "../../shared-header";
 import { cp } from "fs";
+import IGameObject from "./IGameObject";
 
 enum BallStates {
   MOVING,
   BOUNCE_STALL,
 }
 
-class Ball {
+class Ball implements IGameObject {
   pos: Vector2;
   velocity: Vector2;
 
@@ -23,7 +24,7 @@ class Ball {
   static readonly bounceStallDelay = 0.02;
 
   constructor() {
-    this.velocity = new Vector2(3000, -6000);
+    this.velocity = new Vector2(100, 0);
     this.pos = new Vector2(0, 0);
     this.colliders = new Array<ICollider>();
   }
