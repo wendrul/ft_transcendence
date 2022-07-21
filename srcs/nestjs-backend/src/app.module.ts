@@ -3,9 +3,10 @@ import {TypeOrmModule} from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { User } from './users/users.entity';
+import { User } from './users/entities/users.entity';
 import {APP_PIPE} from '@nestjs/core';
-import {FriendRequest} from './users/friendRequest.entity';
+import {FriendRequest} from './users/entities/friendRequest.entity';
+import {LocalFile} from './users/entities/localFiles.entity';
 import { ConfigModule } from '@nestjs/config';
 const cookieSession = require('cookie-session');
 
@@ -19,7 +20,7 @@ const cookieSession = require('cookie-session');
 			username: process.env.POSTGRES_DB_USERNAME,
 			password: process.env.POSTGRES_DB_PASSWORD,
 			database: process.env.POSTGRES_DB_DATABASE,
-			entities: [User, FriendRequest],
+			entities: [User, FriendRequest, LocalFile],
 			synchronize: true
 		}),
 		UsersModule],

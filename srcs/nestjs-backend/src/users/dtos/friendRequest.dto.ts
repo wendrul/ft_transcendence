@@ -1,5 +1,5 @@
 import {Expose, Transform} from "class-transformer";
-import {User} from '../users.entity';
+import {User} from '../entities/users.entity';
 import { ApiProperty } from "@nestjs/swagger"
 
 export class FriendRequestDto {

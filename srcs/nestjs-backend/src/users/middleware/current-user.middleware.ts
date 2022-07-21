@@ -1,4 +1,4 @@
-import {User} from "../users.entity";
+import {User} from "../entities/users.entity";
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { UsersService } from '../users.service';
 import { Request, Response, NextFunction } from "express";

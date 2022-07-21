@@ -12,7 +12,7 @@ import {
 	UseGuards,
 	Req,
 	UseInterceptors,
-	UploadedFiles,
+	UploadedFile,
 } from '@nestjs/common';
 import { diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -23,7 +23,7 @@ import {CreateUserDto} from './dtos/create-user.dto';
 import {UpdateUserDto} from './dtos/update-user.dto';
 import {UserDto} from './dtos/user.dto';
 import {UsersService} from './users.service';
-import {User} from './users.entity';
+import {User} from './entities/users.entity';
 import {AuthService} from './auth.service';
 import {SigninUserDto} from './dtos/signin-user.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -50,14 +50,20 @@ export class UsersController {
 		return user;
 	}
 
-// 	@Post('/avatar')
-// 	@UseGuards(AuthGuardApi)
-// 	@UseInterceptors(FileInterceptor('file', {
-// 		storage: diskStorage({
-// 			destination: '/src/usr/avatars'
-// 		})
-// 	}))
-// 	addAvatar(@CurrentUser() user: User) {}
+	@Post('/avatar')
+	@UseGuards(AuthGuardApi)
+	@UseInterceptors(FileInterceptor('file', {
+		storage: diskStorage({
+			destination: '/usr/src/avatars'
+		})
+	}))
+	addAvatar(@CurrentUser() user: User, @UploadedFile() file: Express.Multer.File) {
+		return this.userService.addAvatar(user.id, {
+			path: file.path,
+			filename: file.originalname,
+			mimetype: file.mimetype
+		});
+	}
 
 	@UseGuards(AuthGuardApi)
 	@Post('/signout')

@@ -1,11 +1,24 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
-import {User} from './users.entity';
+import {LocalFileDto} from './dtos/localFile.dto';
+import {User} from './entities/users.entity';
+import {LocalFilesService} from './localFiles.service';
 
 @Injectable()
 export class UsersService {
-	constructor(@InjectRepository(User) private repo: Repository<User>) {}
+	constructor(
+		@InjectRepository(User) private repo: Repository<User>,
+		private localFilesService: LocalFilesService
+	) {}
+
+	async addAvatar(userId: number, fileData: LocalFileDto) {
+		const avatar = await this.localFilesService.saveLocalFileData(fileData);
+		await this.repo.update(userId, {
+			avatarId: avatar.id,
+			defaultAvatar: false,
+		})
+	}
 
 	async getFriends(user: User) {
 		const t_user = await this.repo.findOne({
