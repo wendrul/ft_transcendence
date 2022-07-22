@@ -15,7 +15,7 @@ import {AcceptFriendRequestDto} from "./dtos/accept-friendRequest.dto";
 import {FriendRequestDto} from "./dtos/friendRequest.dto";
 import {UserDto} from "./dtos/user.dto";
 import {FriendRequestService} from "./friendRequest.service";
-import {User} from './users.entity';
+import {User} from './entities/users.entity';
 
 @Controller('friendRequest')
 export class FriendRequestController {

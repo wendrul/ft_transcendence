@@ -1,8 +1,8 @@
 import {HttpException, HttpStatus, Injectable, NotFoundException} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
-import {FriendRequest} from "./friendRequest.entity";
-import {User} from "./users.entity";
+import {FriendRequest} from "./entities/friendRequest.entity";
+import {User} from "./entities/users.entity";
 import {UsersService} from "./users.service";
 
 @Injectable()
