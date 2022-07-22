@@ -16,7 +16,6 @@ import {
   MDBDropdownLink,
   MDBCollapse
 } from 'mdb-react-ui-kit';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { userActions } from '../../_actions';
@@ -24,9 +23,7 @@ import { userActions } from '../../_actions';
 export default function NavbarComponent() {
 
   const dispatch = useAppDispatch();
-
   const authentication = useAppSelector<any>(state => state.authentication);
-  const [data, setData] = useState(authentication)
 
   const [showBasic, setShowBasic] = useState(false);
   let navigate = useNavigate();
@@ -107,7 +104,7 @@ export default function NavbarComponent() {
             <MDBBtn color='primary'>Search</MDBBtn>
           </form>
           {
-            authentication.loggedIn && 
+            authentication.loggedIn &&
             <MDBNavbarNav className='d-flex input-group w-auto'>
               <MDBNavbarItem>
                 <MDBDropdown>
@@ -116,7 +113,7 @@ export default function NavbarComponent() {
                   </MDBDropdownToggle>
                   <MDBDropdownMenu>
                     <MDBDropdownItem>
-                      <MDBDropdownLink>My Space</MDBDropdownLink>
+                      <MDBDropdownLink href='/profile'>My Space</MDBDropdownLink>
                     </MDBDropdownItem>
                     <MDBDropdownItem>
                       <MDBDropdownLink onClick={logout} >Logout</MDBDropdownLink>

@@ -19,8 +19,8 @@ function whoami() {
         userService.whoami()
             .then(
                 user => {
-                    dispatch(success());
-                    history.push('/');
+                    dispatch(success(user));
+                   // history.push('/profile');
                 },
                 error => {
                     dispatch(failure());
@@ -29,7 +29,7 @@ function whoami() {
     };
 
     function request() { return { type: userConstants.WHOAMI_REQUEST } }
-    function success() { return { type: userConstants.WHOAMI_SUCCESS } }
+    function success(user:any) { return { type: userConstants.WHOAMI_SUCCESS, user } }
     function failure() { return { type: userConstants.WHOAMI_FAILURE } }
 }
 

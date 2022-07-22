@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "./Profile.css";
 
 // Image
@@ -15,17 +15,30 @@ import img_cancel from '../../icon/cancel.png'
 
 import img_medal_color from '../../icon/medal_color.png'
 import img_medal_black from '../../icon/medal_black.png'
+import { useAppSelector } from '../../_helpers/hooks';
 
 
 
-function Profile(){
+function Profile(){ 
+
+	const authentication = useAppSelector<any>(state => state.authentication);
+
+	var dlogin:string;
+	if (authentication.user)
+	{
+		if (authentication.user.login)
+			dlogin = authentication.user.login
+		else
+			dlogin = "default"
+	}
+
 	return (
 		<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
 			<p className="register_btn mb-1 display-2">
 				Ranking #1
 			</p>
 			<p className="register_btn mb-3 display-6">
-				PSEUDO
+				{ authentication.user && authentication.user.login? authentication.user.login : "default" }
 			</p>
 			<div className='row-btn1 mt-3'>
 				<button id='btn-profile'>
@@ -37,7 +50,7 @@ function Profile(){
 					</button>
 				</a>
 			</div>
-
+		
 		<div className="h-px d-flex flex-row mt-4">
 
 			<div className="shadow-lg bd-gr bc-gr rounded d-flex flex-column 
