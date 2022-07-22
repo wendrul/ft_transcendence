@@ -28,9 +28,9 @@ function Profile(){
 	useEffect(() => {
 		document.title = "MyProfil";
 	
-		if(authentication.loggedIn)
-			navigate("/");
-	}, [authentication])
+	//	if(!authentication.loggedIn)
+	//		navigate("/");
+	}, [])
 
 	return (
 		<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
@@ -38,7 +38,7 @@ function Profile(){
 				Ranking #1
 			</p>
 			<p className="register_btn mb-3 display-6">
-				{ authentication.user && authentication.user.login? authentication.user.login : "default" }
+				{ authentication.user && authentication.user.email? authentication.user.email : "default" }
 			</p>
 			<div className='row-btn1 mt-3'>
 				<button id='btn-profile'>
