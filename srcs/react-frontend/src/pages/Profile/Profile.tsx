@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import "./Profile.css";
 
 // Image
@@ -15,18 +15,22 @@ import img_cancel from '../../icon/cancel.png'
 
 import img_medal_color from '../../icon/medal_color.png'
 import img_medal_black from '../../icon/medal_black.png'
+import { useAppSelector } from '../../_helpers/hooks';
+import { useNavigate } from 'react-router-dom';
 
-import axios from 'axios'
 
 
-function Profile(){
-	// axios.get(`http://localhost:3002/profile/id`) 
-	// .then((res:any) =>{
-	// 	console.log(res)	
-	// })
-	// .catch((err:any) =>{
-	// 	console.log(err.response)
-	// })
+function Profile(){ 
+
+	const authentication = useAppSelector<any>(state => state.authentication);
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		document.title = "MyProfil";
+	
+		if(authentication.loggedIn)
+			navigate("/");
+	}, [authentication])
 
 	return (
 		<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
@@ -34,7 +38,7 @@ function Profile(){
 				Ranking #1
 			</p>
 			<p className="register_btn mb-3 display-6">
-				PSEUDO
+				{ authentication.user && authentication.user.login? authentication.user.login : "default" }
 			</p>
 			<div className='row-btn1 mt-3'>
 				<button id='btn-profile'>
@@ -46,7 +50,7 @@ function Profile(){
 					</button>
 				</a>
 			</div>
-
+		
 		<div className="h-px d-flex flex-row mt-4">
 
 			<div className="shadow-lg bd-gr bc-gr rounded d-flex flex-column 

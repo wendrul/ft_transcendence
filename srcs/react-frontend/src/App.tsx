@@ -7,14 +7,14 @@ import FooterComponent from './components/Footer/Footer';
 
 function App() {
   return (
-    <div className="h-100">
-      <NavbarComponent />
-      <div className="t_body h-100">
-        <RoutesHandler>
-        </RoutesHandler>
-      </div>
-	  <FooterComponent />
-    </div>
+        <div className="h-100">
+          <NavbarComponent />
+          <div className="t_body h-100">
+            <RoutesHandler>
+            </RoutesHandler>
+          </div>
+        <FooterComponent />
+        </div>
   );
 }
 

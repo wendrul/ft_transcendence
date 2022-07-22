@@ -60,7 +60,7 @@ export class UsersController {
 // 	addAvatar(@CurrentUser() user: User) {}
 
 	@UseGuards(AuthGuardApi)
-	@Post('/signout')
+	@Get('/signout')
 	signout(@Session() session: any, @CurrentUser() user: User) {
 		this.userService.update(user.id, {status: 'offline'});
 		session.userId = null;
@@ -86,6 +86,22 @@ export class UsersController {
 	async Auth42(@Req() req: any) {
 	}
 
+	@Get('auth/code')
+	async Auth42Check(@Req() req: any, @Session() session: any, @CurrentUser() c_user: User) {
+
+		// const user = await this.userService.create(req.user.email, "", req.user.login);
+		const user = await this.authService.login42(req.user.email, req.user.firstName, req.user.lastName);
+
+		if (c_user) {
+			this.userService.update(c_user.id, {status: 'offline'});
+		}
+
+		session.userId = user.id;
+		this.userService.update(user.id, {status: 'online'});
+		return user;
+	}
+
+
 	@Get('auth/42/callback')
 	@UseGuards(AuthGuard('42'))
 	async Auth42Redirect(@Req() req: any, @Session() session: any, @CurrentUser() c_user: User) {
@@ -105,7 +121,7 @@ export class UsersController {
 	@Post('/signin')
 	async	signin(@Body() body: SigninUserDto, @Session() session: any, @CurrentUser() c_user: User) {
 
-		const user = await this.authService.signin(body.email, body.password, body.login);
+		const user = await this.authService.signin(body.email, body.password);
 
 		if (c_user) {
 			this.userService.update(c_user.id, {status: 'offline'});
