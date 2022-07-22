@@ -1,11 +1,13 @@
 import { userConstants } from '../_constants';
 
 export function authentication(state = {
-  loggedIn: false
+  loggedIn: false,
+  initial: true
 }, action:any) {
   switch (action.type) {
     case userConstants.SIGNUP_REQUEST:
     case userConstants.LOGIN_REQUEST:
+    case userConstants.WHOAMI_REQUEST:
       return {
         loggingIn: true,
         user: action.user

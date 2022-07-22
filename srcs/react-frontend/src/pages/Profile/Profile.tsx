@@ -28,9 +28,9 @@ function Profile(){
 	useEffect(() => {
 		document.title = "MyProfil";
 	
-	//	if(!authentication.loggedIn)
-	//		navigate("/");
-	}, [])
+	if(!authentication.loggedIn && !authentication.loggingIn && !authentication.initial)
+		navigate("/");
+	}, [authentication])
 
 	return (
 		<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
