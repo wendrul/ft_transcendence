@@ -16,9 +16,18 @@ import img_cancel from '../../icon/cancel.png'
 import img_medal_color from '../../icon/medal_color.png'
 import img_medal_black from '../../icon/medal_black.png'
 
+import axios from 'axios'
 
 
 function Profile(){
+	// axios.get(`http://localhost:3002/profile/id`) 
+	// .then((res:any) =>{
+	// 	console.log(res)	
+	// })
+	// .catch((err:any) =>{
+	// 	console.log(err.response)
+	// })
+
 	return (
 		<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
 			<p className="register_btn mb-1 display-2">

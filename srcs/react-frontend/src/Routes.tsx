@@ -5,6 +5,7 @@ import SignIn from './pages/SignIn/SignIn';
 import SignUp from './pages/SignUp/SignUp';
 import History from './pages/History/History';
 import Profile from './pages/Profile/Profile';
+import Dashboard from './pages/Dashboard/Dashboard';
 
 
 class RoutesHandler extends React.Component {
@@ -14,8 +15,9 @@ class RoutesHandler extends React.Component {
         <Route  path ='/' element={<HomePage/>} />
 		<Route  path ='/signin' element={<SignIn/>} />
 		<Route  path ='/signup' element={<SignUp/>} />
-		<Route  path ='/profile' element={<Profile/>} />
+		<Route  path ='/profile/:id' element={<Profile/>} />
 		<Route  path ='/history' element={<History/>} />
+		<Route  path ='/dashboard' element={<Dashboard/>} />
         <Route
           path="*"
           element={
