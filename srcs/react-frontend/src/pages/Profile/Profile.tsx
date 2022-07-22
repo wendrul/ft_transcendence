@@ -28,8 +28,8 @@ function Profile(){
 	useEffect(() => {
 		document.title = "MyProfil";
 	
-		if(authentication.loggedIn)
-			navigate("/");
+		// if(!authentication.loggedIn)
+			// navigate("/");
 	}, [authentication])
 
 	return (
