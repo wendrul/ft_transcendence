@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import "./Profile.css";
 
 // Image
@@ -16,21 +16,21 @@ import img_cancel from '../../icon/cancel.png'
 import img_medal_color from '../../icon/medal_color.png'
 import img_medal_black from '../../icon/medal_black.png'
 import { useAppSelector } from '../../_helpers/hooks';
+import { useNavigate } from 'react-router-dom';
 
 
 
 function Profile(){ 
 
 	const authentication = useAppSelector<any>(state => state.authentication);
+	const navigate = useNavigate();
 
-	var dlogin:string;
-	if (authentication.user)
-	{
-		if (authentication.user.login)
-			dlogin = authentication.user.login
-		else
-			dlogin = "default"
-	}
+	useEffect(() => {
+		document.title = "MyProfil";
+	
+		if(authentication.loggedIn)
+			navigate("/");
+	}, [authentication])
 
 	return (
 		<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
