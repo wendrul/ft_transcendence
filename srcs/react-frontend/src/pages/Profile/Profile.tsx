@@ -38,7 +38,7 @@ function Profile(){
 				Ranking #1
 			</p>
 			<p className="register_btn mb-3 display-6">
-				{ authentication.user && authentication.user.email? authentication.user.email : "default" }
+				{ authentication.user && authentication.user.login? authentication.user.login : "default" }
 			</p>
 			<div className='row-btn1 mt-3'>
 				<button id='btn-profile'>
