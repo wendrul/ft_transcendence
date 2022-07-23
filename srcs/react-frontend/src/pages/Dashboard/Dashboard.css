@@ -27,3 +27,32 @@
 bc-gr2{
 	background-color: #e9ebec;
 }
+
+.dboard-div-scroll{
+	overflow: auto;
+	margin-top: 40px;
+	height: 550px;
+}
+
+.dboard-search{
+	height: 30px;
+	width: 300px;
+
+	display: flex;
+	flex-direction: row-reverse;
+
+	border: solid black 1px;
+	border-radius: 20px;
+}
+
+.img_gear{
+	height: 50px;
+	width: 50px;
+	margin: 5px;
+	transition: transform .7s ease-in-out;
+
+}
+
+.img_gear:hover {
+  transform: rotate(360deg);
+}
