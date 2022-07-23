@@ -28,23 +28,16 @@ bc-gr2{
 	background-color: #e9ebec;
 }
 
+
+
 .dboard-div-scroll{
+	display: flex;
+	flex-direction: row;
 	overflow: auto;
 	margin-top: 40px;
 	height: 550px;
+	width: 700px;
 }
-
-.dboard-search{
-	height: 30px;
-	width: 300px;
-
-	display: flex;
-	flex-direction: row-reverse;
-
-	border: solid black 1px;
-	border-radius: 20px;
-}
-
 .img_gear{
 	height: 50px;
 	width: 50px;
@@ -55,4 +48,28 @@ bc-gr2{
 
 .img_gear:hover {
   transform: rotate(360deg);
+}
+
+.filter{
+	display: flex;
+	flex-direction: column;
+  width: 20%;
+  background-color: white;
+  min-height: 50px;
+
+}
+
+.dboard-tab{
+  width: 80%;
+  overflow: auto;
+	padding: 20px;
+}
+
+.filter-search{
+	width: 100px;
+	height: 30px;
+	padding: 7px;
+	border-radius: 20px;
+	border: solid grey 1px;
+	font-size: 12px;
 }

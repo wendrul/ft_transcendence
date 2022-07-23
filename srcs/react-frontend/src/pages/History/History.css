@@ -47,10 +47,12 @@
 
 .div-score{
 	height: 50px;
-	width: 700px;
+	width: 500px;
 	border: solid 1px black;
 	border-radius: 2px;
-	margin-bottom: 0.5px;
+	margin-left: 10px;
+	margin-right: 10px;
+
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -62,7 +64,7 @@
 	color: white;
 	font-weight: bold;
 	margin: 10px;
-	font-size: 25px;
+	font-size: 20px;
 }
 
 .bc-red{
