@@ -28,13 +28,13 @@ function Profile(){
 	useEffect(() => {
 		document.title = "MyProfil";
 	
-		// if(!authentication.loggedIn)
-			// navigate("/");
-	}, [authentication])
+	//	if(!authentication.loggedIn)
+	//		navigate("/");
+	}, [])
 
 	return (
-		<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
-			<p className="register_btn mb-1 display-2">
+		<div className="bc-gr2 bd d-flex flex-column align-items-center justify-content-center pb-5 ">
+			<p className="register_btn mt-5 mb-1 display-2">
 				Ranking #1
 			</p>
 			<p className="register_btn mb-3 display-6">
@@ -53,7 +53,7 @@ function Profile(){
 		
 		<div className="h-px d-flex flex-row mt-4">
 
-			<div className="shadow-lg bd-gr bc-gr rounded d-flex flex-column 
+			<div className="bg-white shadow-lg rounded d-flex flex-column 
 			align-items-center m-4">
 				<img className='user' src={img_user} alt='user'></img>
 				<p>AVAILABLE</p>
@@ -71,6 +71,7 @@ function Profile(){
 					<img className="row-img2"src={img_prohibition} alt='prohibition'></img>
 					</button>
 				</div>
+
 			</div>
 
 			<div className='d-flex flex-column align-items-center justify-content-center'>
@@ -145,7 +146,7 @@ function Profile(){
 						<p> Spartans, eat well, for tonight we dine in Hades !</p>
 					</div>
 				</div>
-				<div className='achievement bc-gr'>
+				<div className='achievement bg-white'>
 					<div className='d-flex align-items-center justify-content-center'>
 						<img className ='img2' src={img_medal_black} alt='black medal'></img>
 					</div>
@@ -155,7 +156,7 @@ function Profile(){
 					</div>
 				</div>
 			
-				<div className='achievement bc-gr'>
+				<div className='achievement bg-white'>
 					<div className='d-flex align-items-center justify-content-center'>
 							<img className ='img2' src={img_medal_black} alt='black medal'></img>
 						</div>
@@ -168,7 +169,7 @@ function Profile(){
 			</div>
 
 			<div className='d-flex flex-row'>
-				<div className='achievement bc-gr'>
+			<div className='achievement bg-white'>
 					<div className='d-flex align-items-center justify-content-center'>
 						<img className ='img2' src={img_medal_black} alt='black medal'></img>
 					</div>
@@ -178,7 +179,7 @@ function Profile(){
 					</div>
 				</div>
 
-				<div className='achievement bc-gr'>
+				<div className='achievement bg-white'>
 					<div className='d-flex align-items-center justify-content-center'>
 						<img className ='img2' src={img_medal_black} alt='black medal'></img>
 					</div>
@@ -188,7 +189,7 @@ function Profile(){
 					</div>
 				</div>
 
-				<div className='achievement bc-gr'>
+				<div className='achievement bg-white'>
 					<div className='d-flex align-items-center'>
 						<img className ='img2' src={img_medal_black} alt='black medal'></img>
 					</div>
@@ -200,7 +201,7 @@ function Profile(){
 			</div>
 
 			<div className='d-flex flex-row'>
-				<div className='achievement bc-gr'>
+			<div className='achievement bg-white'>
 					<div className='d-flex align-items-center justify-content-center'>
 						<img className ='img2' src={img_medal_black} alt='black medal'></img>
 					</div>
@@ -210,7 +211,7 @@ function Profile(){
 					</div>
 				</div>
 
-				<div className='achievement bc-gr'>
+				<div className='achievement bg-white'>
 					<div className='d-flex align-items-center justify-content-center'>
 						<img className ='img2' src={img_medal_black} alt='black medal'></img>
 					</div>
@@ -220,7 +221,7 @@ function Profile(){
 					</div>
 				</div>
 
-				<div className='achievement bc-gr'>
+				<div className='achievement bg-white'>
 					<div className='d-flex align-items-center justify-content-center'>
 						<img className ='img2' src={img_medal_black} alt='black medal'></img>
 					</div>

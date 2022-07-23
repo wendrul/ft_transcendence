@@ -1,0 +1,29 @@
+.dboard-avatar{
+	width: 200px;
+	height: 230px;
+	background-color: white;
+}
+
+.dboard-btn-sup{
+	width: 150px;
+	height: 30px;
+	font-weight: bold;
+	border: none;
+	border-radius: 3px;
+	color: white;
+	background-color: #1266f1;
+}
+
+.dboard-btn-sin{
+	width: 250px;
+	height: 50px;
+	border: none;
+	font-weight: bold;
+	border-radius: 3px;
+	color: white;
+	background-color: #f19d12;
+}
+
+bc-gr2{
+	background-color: #e9ebec;
+}
