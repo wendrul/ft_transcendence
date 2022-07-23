@@ -7,7 +7,7 @@ services:
     build:
       context: ./srcs/nestjs-backend
       target: development
-    command: npm run start:debug
+    command: npm run start:dev
     ports:
       - 3000:3000
       - 9229:9229
