@@ -1,6 +1,5 @@
 // import * as PIXI from "pixi.js";
 // import { Graphics } from "pixi.js";
-import { GraphicalApplication, pixiGraphics } from "../../shared-header";
 import { ICollider, Ray, rayIntersection as lineIntersecton } from "../util/Collider";
 import Vector2 from "../util/Vector2";
 import IGameObject from "./IGameObject";

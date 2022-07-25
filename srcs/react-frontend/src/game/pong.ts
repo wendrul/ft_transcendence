@@ -6,7 +6,6 @@ import { io } from "socket.io-client";
 
 import addKeyListeners from "./shared/util/Interaction";
 
-import { GraphicalApplication } from "./shared-header"
 import BallDrawable from "./graphics/BallDrawable";
 import PaddleDrawable from "./graphics/PaddleDrawable";
 import WallDrawable from "./graphics/WallDrawable";
@@ -16,7 +15,7 @@ import { GraphicalDebugger } from "./graphics/Debug";
 import Game from "./shared/util/Game";
 import { GameStateMachine } from "./shared/util/state/GameStateMachine";
 
-let app: GraphicalApplication;
+let app: PIXI.Application;
 
 declare global {
   var debugMode: boolean;
@@ -25,7 +24,7 @@ declare global {
 
 let game_starting_for_good = false;
 
-export function gameSetup(instantiatedApp: GraphicalApplication) {
+export function gameSetup(instantiatedApp: PIXI.Application) {
   if (!game_starting_for_good) {
     //Hacky way to avoid running this twice, should be fixed in the future
     game_starting_for_good = true;
@@ -34,12 +33,12 @@ export function gameSetup(instantiatedApp: GraphicalApplication) {
   // fetch("http://localhost:3000").then((s) => console.log(s));
   const socket = io("http://localhost:3000");
   socket.on("gameUpdate", (gameState: any) => {
-    // p.phi = gameState.p1.phi;
-    // p2.phi = gameState.p2.phi;
-    // ball.pos.x = gameState.ballpos.x;
-    // ball.pos.y = gameState.ballpos.y;
-    // ball.velocity.x = gameState.ballvel.x;
-    // ball.velocity.y = gameState.ballvel.y;
+    p.phi = gameState.p1.phi;
+    p2.phi = gameState.p2.phi;
+    ball.pos.x = gameState.ballpos.x;
+    ball.pos.y = gameState.ballpos.y;
+    ball.velocity.x = gameState.ballvel.x;
+    ball.velocity.y = gameState.ballvel.y;
   });
 
   app = instantiatedApp;

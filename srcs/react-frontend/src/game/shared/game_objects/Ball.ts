@@ -1,7 +1,6 @@
 import Vector2 from "../util/Vector2";
 import addKeyListeners from "../util/Interaction";
 import { ICollider, Ray } from "../util/Collider";
-import { GraphicalApplication, pixiGraphics } from "../../shared-header";
 import { cp } from "fs";
 import IGameObject from "./IGameObject";
 
