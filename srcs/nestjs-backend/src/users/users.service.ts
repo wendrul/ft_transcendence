@@ -61,20 +61,22 @@ export class UsersService {
 		return this.repo.findBy({login});
 	}
 
-	async update(id: number, attrs: Partial<User>) {
-		const user = await this.findOne(id);
-		if (!user) {
-			throw new NotFoundException('user not found');
-		}
+	async update(user: User, attrs: Partial<User>) {
+		if (attrs.email && attrs.email != user.email) {
+			
+			const email = await this.findEmail(attrs.email);
 
-		if (attrs.login) {
+			if (email.length) {
+				throw new BadRequestException('email in use');
+			}
+		}
+		if (attrs.login && attrs.login != user.login)  {
 			
 			const login = await this.findLogin(attrs.login);
 
 			if (login.length) {
 				throw new BadRequestException('login in use');
 			}
-
 		}
 
 		Object.assign(user, attrs);

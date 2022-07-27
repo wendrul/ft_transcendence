@@ -1,7 +1,7 @@
 import { userConstants } from '../_constants';
 import { userService } from '../_services';
 import { alertActions } from '.';
-import { history } from '../_helpers';
+import { UpdateUser } from '../interfaces/iUser'
 
 export const userActions = {
     login,
@@ -9,7 +9,7 @@ export const userActions = {
     signout,
     getAll,
     whoami,
-    updateUsername
+    updateProfile
 };
 
 function whoami() {
@@ -20,7 +20,6 @@ function whoami() {
             .then(
                 user => {
                     dispatch(success(user));
-                   // history.push('/profile');
                 },
                 error => {
                     dispatch(failure());
@@ -41,7 +40,6 @@ function login(email:string, password:string) {
             .then(
                 user => {
                     dispatch(success(user));
-                    history.push('/');
                 },
                 error => {
                     dispatch(failure(error));
@@ -63,7 +61,6 @@ function signup(firsName:string, lastName:string, email:string, password:string)
             .then(
                 user => {
                     dispatch(success(user));
-                    history.push('/');
                 },
                 error => {
                     dispatch(failure(error));
@@ -85,7 +82,6 @@ function signout() {
             .then(
                 response => {
                     dispatch(success());
-                    history.push('/');
                 },
                 error => dispatch(failure(error))
             );
@@ -95,15 +91,13 @@ function signout() {
     function failure(error:string) { return { type: userConstants.LOGOUT_FAILURE, error } }
 }
 
-function updateUsername(id:string, username:string) {
+function updateProfile(User: UpdateUser) {
     return (dispatch:any) => {
-        dispatch(request({ username }));
-
-        userService.updateUsername(id, username)
+        dispatch(request({ User }));
+        userService.updateProfile(User)
             .then(
                 user => {
-                    dispatch(success(user));
-                    history.push('/');
+                    dispatch(success(User));
                 },
                 error => {
                     dispatch(failure(error));

@@ -30,12 +30,12 @@ export default function NavbarComponent() {
 
   useEffect(() => {
     dispatch(userActions.whoami());
-    let timerId = setInterval(() => {
+   /* let timerId = setInterval(() => {
       dispatch(userActions.whoami());
     }, 5000)
-    return () => clearInterval(timerId);
+    return () => clearInterval(timerId);*/
   }, [])
-
+  
 	const logout = () => {
     dispatch(userActions.signout());
 	}

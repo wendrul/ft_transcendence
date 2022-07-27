@@ -23,6 +23,7 @@ import { useNavigate } from 'react-router-dom';
 function Profile(){ 
 
 	const authentication = useAppSelector<any>(state => state.authentication);
+	const user = useAppSelector<any>(state => state.user);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -38,7 +39,7 @@ function Profile(){
 				Ranking #1
 			</p>
 			<p className="register_btn mb-3 display-6">
-				{ authentication.user && authentication.user.login? authentication.user.login : "default" }
+				{ user.data && user.data.login? user.data.login : "default" }
 			</p>
 			<div className='row-btn1 mt-3'>
 				<button id='btn-profile'>

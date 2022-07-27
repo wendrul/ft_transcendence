@@ -9,7 +9,7 @@ function App() {
   return (
         <div className="h-100">
           <NavbarComponent />
-          <div className="t_body h-100">
+          <div className="t_body h-75">
             <RoutesHandler>
             </RoutesHandler>
           </div>

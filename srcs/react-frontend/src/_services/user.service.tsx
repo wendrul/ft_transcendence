@@ -1,7 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
-import { json } from 'stream/consumers';
 import config from '../config';
-import { authHeader } from '../_helpers';
+import { UpdateUser } from '../interfaces/iUser'
 
 export const userService = {
     login,
@@ -9,7 +8,7 @@ export const userService = {
     whoami,
     signout,
     signup,
-    updateUsername
+    updateProfile
 };
 
 function whoami() {
@@ -73,20 +72,25 @@ function signout() {
     });       
 }
 
-function updateUsername(id: string, username:string) {
-    return axios.patch(`${config.apiUrl}/users/signin`+ id,
+function updateProfile(user:UpdateUser) {
+    console.log(user)
+    const JSobj = JSON.stringify(user)
+    console.log(JSobj)
+    return axios.patch(`${config.apiUrl}/users/myprofile`,
     {
-        id: id,
-        login: username,
+     //   User
+        login: user?.login,
+        email: user?.email
     }, { 
         withCredentials: true 
-    }).then(handleResponse)
-        .then(user => {
-            // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('user', JSON.stringify(user));
-
-            return user;
-        });
+    }).then((response:any) => {
+        if(response == 400)
+        {
+            const error = response.message || response.statusText;
+            return Promise.reject(error);
+        }
+        return user;
+    })   
 }
 
 function getAll() {
