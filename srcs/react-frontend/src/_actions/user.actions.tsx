@@ -117,8 +117,12 @@ function getAll() {
 
         userService.getAll()
             .then(
-                users => dispatch(success(users)),
-                error => dispatch(failure(error))
+                user => {
+                    dispatch(success(user));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
             );
     };
 

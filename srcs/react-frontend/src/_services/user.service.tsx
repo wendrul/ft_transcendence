@@ -94,10 +94,18 @@ function updateProfile(user:UpdateUser) {
 }
 
 function getAll() {
-    const requestOptions = {
-        method: 'GET'
-    };
-    return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
+    return axios.get(`${config.apiUrl}/users`,)
+    .then((response:any) => {
+        console.log(1)
+        console.log(response.data)
+        console.log(2)
+        if(response == 403)
+        {
+            const error = response.message || response.statusText;
+            return Promise.reject(error);
+        }
+        return response.data;
+    })
 }
 
 function handleResponse(response:any) {

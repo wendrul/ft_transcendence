@@ -8,6 +8,7 @@ import History from './pages/History/History';
 import Profile from './pages/Profile/Profile';
 import CreateRoom from './pages/CreateRoom/CreateRoom';
 import UsernameRedirect from './pages/Username/UsernameRedirect';
+import Room from './pages/Room/Room';
 
 
 class RoutesHandler extends React.Component {
@@ -19,10 +20,12 @@ class RoutesHandler extends React.Component {
         <Route  path ='/' element={<UsernameRedirect component={<HomePage/>} />} />
        {/* <Route  path ='/:code' element={<UsernameRedirect component={<HomePage/>} />} /> */}
         <Route  path ='/username' element={<Username/>} />
-             <Route  path ='/CreateRoom' element={<CreateRoom/>} /> {/* poner el component cuando todo sirva */}
+        <Route  path ='/create_room' element={<CreateRoom/>} /> {/* poner el component cuando todo sirva */}
+        <Route  path ='/room/:uuid' element={<Room/>} /> {/* poner el component cuando todo sirva */}
         <Route  path ='/signin' element={<UsernameRedirect component={<SignIn/>} />} />
         <Route  path ='/signup' element={<UsernameRedirect component={<SignUp/>} />} />
         <Route  path ='/profile' element={<UsernameRedirect component={<Profile/>} />} />
+        <Route  path ='/profile/:uuid' element={<UsernameRedirect component={<Profile/>} />} />
         <Route  path ='/history' element={<UsernameRedirect component={<History/>} />} />
         <Route
           path="*"
