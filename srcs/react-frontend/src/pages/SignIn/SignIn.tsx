@@ -44,8 +44,8 @@ function SignIn() {
   return (
 	<>
 		{ !authentication.loggedIn && 
-			<div className="p-5 row bd-highlight justify-content-center">
-				<div className="p-2 d-flex flex-column bd-highlight col-example col-md-6 align-items-center justify-content-center h-100">
+			<div className="p-5 bd-highlight justify-content-center d-flex">
+				<div className="p-2 d-flex flex-column bd-highlight col-example col-md-6 align-items-center justify-content-center h-100 w-100">
 					<div className="d-flex flex-column align-items-center justify-content-center w-75 pb-5 mb-3">
 						<p className="register_btn mb-3">
 							If you don't have an account 

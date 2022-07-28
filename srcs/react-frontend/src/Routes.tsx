@@ -6,7 +6,7 @@ import SignUp from './pages/SignUp/SignUp';
 import Username from './pages/Username/Username';
 import History from './pages/History/History';
 import Profile from './pages/Profile/Profile';
-import { useAppSelector } from './_helpers/hooks';
+import CreateRoom from './pages/CreateRoom/CreateRoom';
 import UsernameRedirect from './pages/Username/UsernameRedirect';
 
 
@@ -17,8 +17,9 @@ class RoutesHandler extends React.Component {
     return (
       <Routes>
         <Route  path ='/' element={<UsernameRedirect component={<HomePage/>} />} />
-        <Route  path ='/:code' element={<UsernameRedirect component={<HomePage/>} />} />
+       {/* <Route  path ='/:code' element={<UsernameRedirect component={<HomePage/>} />} /> */}
         <Route  path ='/username' element={<Username/>} />
+             <Route  path ='/CreateRoom' element={<CreateRoom/>} /> {/* poner el component cuando todo sirva */}
         <Route  path ='/signin' element={<UsernameRedirect component={<SignIn/>} />} />
         <Route  path ='/signup' element={<UsernameRedirect component={<SignUp/>} />} />
         <Route  path ='/profile' element={<UsernameRedirect component={<Profile/>} />} />

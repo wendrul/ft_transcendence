@@ -9,11 +9,11 @@ function App() {
   return (
         <div className="h-100">
           <NavbarComponent />
-          <div className="t_body h-75">
+          <div className="t_body h-100">
             <RoutesHandler>
             </RoutesHandler>
           </div>
-        <FooterComponent />
+       {/* <FooterComponent /> */} 
         </div>
   );
 }

@@ -82,7 +82,7 @@ export default function NavbarComponent() {
                     <MDBDropdownLink>Users connected</MDBDropdownLink>
                   </MDBDropdownItem>
                   <MDBDropdownItem>
-                    <MDBDropdownLink>Friends connected</MDBDropdownLink>
+                    <MDBDropdownLink href='/CreateRoom'>Create Room</MDBDropdownLink>
                   </MDBDropdownItem>
                   <MDBDropdownItem>
                     <MDBDropdownLink>Quick game</MDBDropdownLink>

@@ -21,7 +21,6 @@ function Username() {
 
 	useEffect(() => {
 		document.title = "Username";
-    console.log(userData);
 		if (!userData.updated && !userData.updating && !authentication.initial && 
       ((!authentication.loggedIn && !authentication.loggingIn) 
       || (authentication.loggedIn && userData.data?.login)))
@@ -32,15 +31,6 @@ function Username() {
 		if(user && Object.keys(user).length === 0)
       setUser(userData.data);
 	}, [authentication])
-
-  useEffect(() => {
-		if (userData.updated)
-    {
-      alert("HOLA");
-      navigate("/profile");
-    }
-	}, [userData])
-
 
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -54,8 +44,8 @@ function Username() {
   return (
     <>
       { authentication.loggedIn && 
-        <div className="p-5 row bd-highlight justify-content-center">
-          <div className="p-2 d-flex flex-column bd-highlight col-example col-md-6 align-items-center justify-content-center h-100">
+        <div className="p-5 bd-highlight justify-content-center d-flex">
+          <div className="p-2 d-flex flex-column bd-highlight col-example col-md-6 align-items-center justify-content-center h-100 w-100">
             <div className="d-flex flex-column align-items-center justify-content-center w-75 pb-5 mb-2">
               <p className="register_btn mb-3">
                   create your username
