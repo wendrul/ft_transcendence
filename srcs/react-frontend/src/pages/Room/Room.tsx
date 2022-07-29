@@ -46,7 +46,6 @@ function Room() {
 
 	useEffect(() => {
 		document.title = "Room";
-    console.log(uuid);
 	}, [])
 
   return (

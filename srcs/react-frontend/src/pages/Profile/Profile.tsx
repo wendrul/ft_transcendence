@@ -16,26 +16,21 @@ import img_cancel from '../../icon/cancel.png'
 import img_medal_color from '../../icon/medal_color.png'
 import img_medal_black from '../../icon/medal_black.png'
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { userActions } from '../../_actions';
 
 function Profile(){ 
 	const dispatch = useAppDispatch();
 	const authentication = useAppSelector<any>(state => state.authentication);
 	const user = useAppSelector<any>(state => state.user);
-	const users = useAppSelector<any>(state => state.users);
 	const navigate = useNavigate();
-
-	const { uuid } = useParams();
-
+	const users = useAppSelector<any>(state => state.users);
 
 	useEffect(() => {
-		dispatch(userActions.getAll());
+
 	if(!authentication.loggedIn && !authentication.loggingIn && !authentication.initial)
 		navigate("/");
 	}, [authentication])
-	console.log(uuid)
-	console.log(users.items)
 
 	return (
 		<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">

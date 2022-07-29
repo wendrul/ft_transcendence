@@ -5,6 +5,7 @@ import { UpdateUser } from '../interfaces/iUser'
 export const userService = {
     login,
     getAll,
+    getById,
     whoami,
     signout,
     signup,
@@ -12,7 +13,6 @@ export const userService = {
 };
 
 function whoami() {
-    console.log(`${config.apiUrl}`)
     return axios.get(`${config.apiUrl}/users/whoami`,
     { 
         withCredentials: true
@@ -93,12 +93,21 @@ function updateProfile(user:UpdateUser) {
     })   
 }
 
+function getById(id: any) {
+    return axios.get(`${config.apiUrl}/users/${id}`,)
+    .then((response:any) => {
+        if(response == 403 || response == 404)
+        {
+            const error = response.message || response.statusText;
+            return Promise.reject(error);
+        }
+        return response.data;
+    })
+}
+
 function getAll() {
     return axios.get(`${config.apiUrl}/users`,)
     .then((response:any) => {
-        console.log(1)
-        console.log(response.data)
-        console.log(2)
         if(response == 403)
         {
             const error = response.message || response.statusText;

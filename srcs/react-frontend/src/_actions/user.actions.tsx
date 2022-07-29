@@ -8,6 +8,7 @@ export const userActions = {
     signup,
     signout,
     getAll,
+    getById,
     whoami,
     updateProfile
 };
@@ -109,6 +110,27 @@ function updateProfile(User: UpdateUser) {
     function request(user:any) { return { type: userConstants.UPDATE_REQUEST, user } }
     function success(user:any) { return { type: userConstants.UPDATE_SUCCESS, user } }
     function failure(error:any) { return { type: userConstants.UPDATE_FAILURE, error } }
+}
+
+function getById(id : any) {
+    return (dispatch:any) => {
+        dispatch(request());
+
+        userService.getById(id)
+            .then(
+                user => {
+                    console.log(user);
+                    dispatch(success(user));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            );
+    };
+
+    function request() { return { type: userConstants.GETOTHER_REQUEST } }
+    function success(users:any) { return { type: userConstants.GETOTHER_SUCCESS, users } }
+    function failure(error:any) { return { type: userConstants.GETOTHER_FAILURE, error } }
 }
 
 function getAll() {

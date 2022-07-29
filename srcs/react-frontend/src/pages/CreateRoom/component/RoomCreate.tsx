@@ -27,7 +27,7 @@ function RoomCreate(props: { active: boolean }) {
 
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-    console.log(room);
+
 	//	dispatch(userActions.signup(firstName, lastName, email, password));
 	}
 
