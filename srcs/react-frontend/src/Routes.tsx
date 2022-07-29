@@ -8,7 +8,6 @@ import History from './pages/History/History';
 import Profile from './pages/Profile/Profile';
 import Dashboard from './pages/Dashboard/Dashboard';
 
-
 class RoutesHandler extends React.Component {
   render() {
     return (

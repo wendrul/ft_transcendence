@@ -82,7 +82,11 @@ export default function NavbarComponent() {
                     <MDBDropdownLink>Users connected</MDBDropdownLink>
                   </MDBDropdownItem>
                   <MDBDropdownItem>
-                    <MDBDropdownLink>Friends connected</MDBDropdownLink>
+                    <MDBDropdownLink> 
+											<a className='text-dark' href={window.location.origin + '/friend'}>
+												Friends connected
+											</a>
+										</MDBDropdownLink>
                   </MDBDropdownItem>
                   <MDBDropdownItem>
                     <MDBDropdownLink>Quick game</MDBDropdownLink>

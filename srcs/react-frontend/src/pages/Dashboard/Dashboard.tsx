@@ -131,16 +131,7 @@ function Dashboard(){
 					<div className='div-score bc-red'>
 						<h3> LOSE 10 - 3 PSEUDO #2 25/12/2002 14:43 </h3>
 					</div>						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
+							
 						</div>
 
 

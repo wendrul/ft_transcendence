@@ -19,6 +19,18 @@ import { useAppSelector } from '../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
 
 
+function userView (){
+	return (
+		<h1> user view</h1>
+	);
+}
+
+function ownerView (){
+	return (
+		<h1> owner view</h1>
+	);
+}
+
 
 function Profile(){ 
 
@@ -53,7 +65,9 @@ function Profile(){
 		
 		<div className="h-px d-flex flex-row mt-4">
 
-			<div className="bg-white shadow-lg rounded d-flex flex-column 
+			{/* Different view */}
+
+			{/* <div className="bg-white shadow-lg rounded d-flex flex-column 
 			align-items-center m-4">
 				<img className='user' src={img_user} alt='user'></img>
 				<p>AVAILABLE</p>
@@ -72,7 +86,7 @@ function Profile(){
 					</button>
 				</div>
 
-			</div>
+			</div> */}
 
 			<div className='d-flex flex-column align-items-center justify-content-center'>
 
