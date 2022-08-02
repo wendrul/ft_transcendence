@@ -6,7 +6,6 @@ import SignUp from './pages/SignUp/SignUp';
 import Username from './pages/Username/Username';
 import History from './pages/History/History';
 import Profile from './pages/Profile/Profile';
-import Dashboard from './pages/Dashboard/Dashboard';
 import Profileuuid from './pages/Profile/Profileuuid';
 import EditProfile from './pages/Profile/EditProfile';
 import CreateRoom from './pages/CreateRoom/CreateRoom';
@@ -31,11 +30,10 @@ class RoutesHandler extends React.Component {
         <Route  path ='/profile' element={<UsernameRedirect component={<Profile/>} />} />
         <Route  path ='/edit_profile' element={<UsernameRedirect component={<EditProfile/>} />} />
         <Route  path ='/history' element={<UsernameRedirect component={<History/>} />} />
-        <Route  path ='/dashboard' element={<UsernameRedirect component={<Dashboard/>} />} />
         <Route
           path="*"
           element={
-              <p>There's nothing here!</p>
+              <p>404 Error</p>
           }
         />
       </Routes>
