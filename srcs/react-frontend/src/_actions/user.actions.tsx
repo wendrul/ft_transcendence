@@ -1,15 +1,16 @@
 import { userConstants } from '../_constants';
 import { userService } from '../_services';
 import { alertActions } from '.';
-import { history } from '../_helpers';
+import { UpdateUser } from '../interfaces/iUser'
 
 export const userActions = {
     login,
     signup,
     signout,
     getAll,
+    getById,
     whoami,
-    updateUsername
+    updateProfile
 };
 
 function whoami() {
@@ -20,7 +21,6 @@ function whoami() {
             .then(
                 user => {
                     dispatch(success(user));
-                   // history.push('/profile');
                 },
                 error => {
                     dispatch(failure());
@@ -41,7 +41,6 @@ function login(email:string, password:string) {
             .then(
                 user => {
                     dispatch(success(user));
-                    history.push('/');
                 },
                 error => {
                     dispatch(failure(error));
@@ -63,7 +62,6 @@ function signup(firsName:string, lastName:string, email:string, password:string)
             .then(
                 user => {
                     dispatch(success(user));
-                    history.push('/');
                 },
                 error => {
                     dispatch(failure(error));
@@ -85,7 +83,6 @@ function signout() {
             .then(
                 response => {
                     dispatch(success());
-                    history.push('/');
                 },
                 error => dispatch(failure(error))
             );
@@ -95,15 +92,13 @@ function signout() {
     function failure(error:string) { return { type: userConstants.LOGOUT_FAILURE, error } }
 }
 
-function updateUsername(id:string, username:string) {
+function updateProfile(User: UpdateUser) {
     return (dispatch:any) => {
-        dispatch(request({ username }));
-
-        userService.updateUsername(id, username)
+        dispatch(request({ User }));
+        userService.updateProfile(User)
             .then(
                 user => {
-                    dispatch(success(user));
-                    history.push('/');
+                    dispatch(success(User));
                 },
                 error => {
                     dispatch(failure(error));
@@ -117,14 +112,39 @@ function updateUsername(id:string, username:string) {
     function failure(error:any) { return { type: userConstants.UPDATE_FAILURE, error } }
 }
 
+function getById(id : any) {
+    return (dispatch:any) => {
+        dispatch(request());
+
+        userService.getById(id)
+            .then(
+                user => {
+                    console.log(user);
+                    dispatch(success(user));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            );
+    };
+
+    function request() { return { type: userConstants.GETOTHER_REQUEST } }
+    function success(users:any) { return { type: userConstants.GETOTHER_SUCCESS, users } }
+    function failure(error:any) { return { type: userConstants.GETOTHER_FAILURE, error } }
+}
+
 function getAll() {
     return (dispatch:any) => {
         dispatch(request());
 
         userService.getAll()
             .then(
-                users => dispatch(success(users)),
-                error => dispatch(failure(error))
+                user => {
+                    dispatch(success(user));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
             );
     };
 

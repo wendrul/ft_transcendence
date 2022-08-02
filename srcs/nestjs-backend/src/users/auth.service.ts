@@ -17,7 +17,7 @@ export class AuthService {
 		}
 
 		const user = await this.usersService.create(email, "",  firstName, lastName);
-		this.usersService.update(user.id, {user42: true});
+		this.usersService.update(user, {user42: true});
 
 		return user;
 	}

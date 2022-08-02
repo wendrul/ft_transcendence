@@ -15,34 +15,23 @@ import img_cancel from '../../icon/cancel.png'
 
 import img_medal_color from '../../icon/medal_color.png'
 import img_medal_black from '../../icon/medal_black.png'
-import { useAppSelector } from '../../_helpers/hooks';
+import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
-
-
-function userView (){
-	return (
-		<h1> user view</h1>
-	);
-}
-
-function ownerView (){
-	return (
-		<h1> owner view</h1>
-	);
-}
-
+import { userActions } from '../../_actions';
+import { MDBIcon } from 'mdb-react-ui-kit';
 
 function Profile(){ 
-
+	const dispatch = useAppDispatch();
 	const authentication = useAppSelector<any>(state => state.authentication);
+	const user = useAppSelector<any>(state => state.user);
 	const navigate = useNavigate();
+	const users = useAppSelector<any>(state => state.users);
 
 	useEffect(() => {
-		document.title = "MyProfil";
-	
-	//	if(!authentication.loggedIn)
-	//		navigate("/");
-	}, [])
+
+	if(!authentication.loggedIn && !authentication.loggingIn && !authentication.initial)
+		navigate("/");
+	}, [authentication])
 
 	return (
 		<div className="bc-gr2 bd d-flex flex-column align-items-center justify-content-center pb-5 ">
@@ -50,7 +39,7 @@ function Profile(){
 				Ranking #1
 			</p>
 			<p className="register_btn mb-3 display-6">
-				{ authentication.user && authentication.user.login? authentication.user.login : "default" }
+				{ user.data && user.data.login? user.data.login : "default" }
 			</p>
 			<div className='row-btn1 mt-3'>
 				<button id='btn-profile'>
@@ -69,6 +58,13 @@ function Profile(){
 
 			{/* <div className="bg-white shadow-lg rounded d-flex flex-column 
 			align-items-center m-4">
+				<div className='d-flex justify-content-end'>
+				<form action="/edit_profile" className='d-flex justify-content-end'>
+					<button className="row-but2 border border-dark d-flex flex-row ">
+						<MDBIcon className="row-img2" fas icon="user-edit" size='lg'/>
+					</button>
+				</form>
+				</div>
 				<img className='user' src={img_user} alt='user'></img>
 				<p>AVAILABLE</p>
 				<div className="d-flex flex-row m-3 mb-1">

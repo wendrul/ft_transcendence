@@ -1,19 +1,18 @@
 import axios, { AxiosResponse } from 'axios';
-import { json } from 'stream/consumers';
 import config from '../config';
-import { authHeader } from '../_helpers';
+import { UpdateUser } from '../interfaces/iUser'
 
 export const userService = {
     login,
     getAll,
+    getById,
     whoami,
     signout,
     signup,
-    updateUsername
+    updateProfile
 };
 
 function whoami() {
-    console.log(`${config.apiUrl}`)
     return axios.get(`${config.apiUrl}/users/whoami`,
     { 
         withCredentials: true
@@ -73,27 +72,51 @@ function signout() {
     });       
 }
 
-function updateUsername(id: string, username:string) {
-    return axios.patch(`${config.apiUrl}/users/signin`+ id,
+function updateProfile(user:UpdateUser) {
+    console.log(user)
+    const JSobj = JSON.stringify(user)
+    console.log(JSobj)
+    return axios.patch(`${config.apiUrl}/users/myprofile`,
     {
-        id: id,
-        login: username,
+     //   User
+        firstName: user?.firstName,
+        lastName: user?.lastName,
+        login: user?.login,
+       // email: user?.email
     }, { 
         withCredentials: true 
-    }).then(handleResponse)
-        .then(user => {
-            // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('user', JSON.stringify(user));
+    }).then((response:any) => {
+        if(response == 400)
+        {
+            const error = response.message || response.statusText;
+            return Promise.reject(error);
+        }
+        return user;
+    })   
+}
 
-            return user;
-        });
+function getById(id: any) {
+    return axios.get(`${config.apiUrl}/users/${id}`,)
+    .then((response:any) => {
+        if(response == 403 || response == 404)
+        {
+            const error = response.message || response.statusText;
+            return Promise.reject(error);
+        }
+        return response.data;
+    })
 }
 
 function getAll() {
-    const requestOptions = {
-        method: 'GET'
-    };
-    return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
+    return axios.get(`${config.apiUrl}/users`,)
+    .then((response:any) => {
+        if(response == 403)
+        {
+            const error = response.message || response.statusText;
+            return Promise.reject(error);
+        }
+        return response.data;
+    })
 }
 
 function handleResponse(response:any) {

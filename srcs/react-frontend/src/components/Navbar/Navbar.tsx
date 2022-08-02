@@ -30,12 +30,12 @@ export default function NavbarComponent() {
 
   useEffect(() => {
     dispatch(userActions.whoami());
-    let timerId = setInterval(() => {
+   /* let timerId = setInterval(() => {
       dispatch(userActions.whoami());
     }, 5000)
-    return () => clearInterval(timerId);
+    return () => clearInterval(timerId);*/
   }, [])
-
+  
 	const logout = () => {
     dispatch(userActions.signout());
 	}
@@ -82,11 +82,7 @@ export default function NavbarComponent() {
                     <MDBDropdownLink>Users connected</MDBDropdownLink>
                   </MDBDropdownItem>
                   <MDBDropdownItem>
-                    <MDBDropdownLink> 
-											<a className='text-dark' href={window.location.origin + '/friend'}>
-												Friends connected
-											</a>
-										</MDBDropdownLink>
+                    <MDBDropdownLink href='/create_room'>Create Room</MDBDropdownLink>
                   </MDBDropdownItem>
                   <MDBDropdownItem>
                     <MDBDropdownLink>Quick game</MDBDropdownLink>
