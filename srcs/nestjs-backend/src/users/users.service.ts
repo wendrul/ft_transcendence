@@ -12,6 +12,24 @@ export class UsersService {
 		private localFilesService: LocalFilesService
 	) {}
 
+	async turnOffTwoFactorAuthentication(userId: number) {
+		return this.repo.update(userId, {
+			twoFactorAuthenticationFlag: false
+		});
+	}
+
+	async turnOntTwoFactorAuthentication(userId: number) {
+		return this.repo.update(userId, {
+			twoFactorAuthenticationFlag: true	
+		});
+	}
+
+	async setTwoFactorAuthenticationSecret(secret: string, userId: number) {
+		return this.repo.update(userId, {
+			twoFactorAuthenticationSecret: secret
+		});
+	}
+
 	async addAvatar(userId: number, fileData: LocalFileDto) {
 		const avatar = await this.localFilesService.saveLocalFileData(fileData);
 		await this.repo.update(userId, {
