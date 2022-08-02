@@ -55,21 +55,8 @@ function Dashboard(){
 							<div className='d-flex justify-content-center mt-5'>
 								<input className='filter-search' type="text" placeholder="Search.."/>
 							</div>
-							<div className='mt-2'>
-								<h4 className='ms-3 mt-2 mb-0'>Status</h4>
-								<input className='ms-3 me-1' type="radio" name='status'/>
-								<label>connected</label>
-							</div>
 							<div>
-								<input className='ms-3 me-1' type="radio" name='status'/>
-								<label>playing</label>
-							</div>
-							<div>
-								<input className='ms-3 me-1' type="radio" name='status'/>
-								<label>offline</label>
-							</div>								
-							<div>
-								<h4 className='ms-3 mt-2 mb-0'>Rank</h4>
+								<h4 className='ms-3 mt-4 mb-0'>Rank</h4>
 								<input className='ms-3 me-1' type="radio" name='rank'/>
 								<label>highest rank</label>
 							</div>
