@@ -12,6 +12,12 @@ import CreateRoom from './pages/CreateRoom/CreateRoom';
 import UsernameRedirect from './pages/Username/UsernameRedirect';
 import Room from './pages/Room/Room';
 
+import {
+  MDBBtn,
+  MDBRow,
+  MDBCol
+} from 'mdb-react-ui-kit';
+
 
 class RoutesHandler extends React.Component {
   
@@ -33,7 +39,9 @@ class RoutesHandler extends React.Component {
         <Route
           path="*"
           element={
-              <p>404 Error</p>
+							<div className="d-flex justify-content-center align-items-center mt-4">
+              	<h1>404 Error</h1>
+							</div>
           }
         />
       </Routes>
