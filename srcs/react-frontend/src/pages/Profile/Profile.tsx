@@ -18,6 +18,7 @@ import img_medal_black from '../../icon/medal_black.png'
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
 import { userActions } from '../../_actions';
+import { MDBIcon } from 'mdb-react-ui-kit';
 
 function Profile(){ 
 	const dispatch = useAppDispatch();
@@ -55,6 +56,13 @@ function Profile(){
 
 			<div className="shadow-lg bd-gr bc-gr rounded d-flex flex-column 
 			align-items-center m-4">
+				<div className='d-flex justify-content-end'>
+				<form action="/edit_profile" className='d-flex justify-content-end'>
+					<button className="row-but2 border border-dark d-flex flex-row ">
+						<MDBIcon className="row-img2" fas icon="user-edit" size='lg'/>
+					</button>
+				</form>
+				</div>
 				<img className='user' src={img_user} alt='user'></img>
 				<p>AVAILABLE</p>
 				<div className="d-flex flex-row m-3 mb-1">

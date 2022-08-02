@@ -79,8 +79,10 @@ function updateProfile(user:UpdateUser) {
     return axios.patch(`${config.apiUrl}/users/myprofile`,
     {
      //   User
+        firstName: user?.firstName,
+        lastName: user?.lastName,
         login: user?.login,
-        email: user?.email
+       // email: user?.email
     }, { 
         withCredentials: true 
     }).then((response:any) => {

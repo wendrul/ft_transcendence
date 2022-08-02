@@ -7,6 +7,7 @@ import Username from './pages/Username/Username';
 import History from './pages/History/History';
 import Profile from './pages/Profile/Profile';
 import Profileuuid from './pages/Profile/Profileuuid';
+import EditProfile from './pages/Profile/EditProfile';
 import CreateRoom from './pages/CreateRoom/CreateRoom';
 import UsernameRedirect from './pages/Username/UsernameRedirect';
 import Room from './pages/Room/Room';
@@ -27,6 +28,7 @@ class RoutesHandler extends React.Component {
         <Route  path ='/signup' element={<UsernameRedirect component={<SignUp/>} />} />
         <Route  path ='/profile/:uuid' element={<UsernameRedirect component={<Profileuuid/>} />} />
         <Route  path ='/profile' element={<UsernameRedirect component={<Profile/>} />} />
+        <Route  path ='/edit_profile' element={<UsernameRedirect component={<EditProfile/>} />} />
         <Route  path ='/history' element={<UsernameRedirect component={<History/>} />} />
         <Route
           path="*"
