@@ -56,9 +56,9 @@ function RoomCreate(props: { active: boolean }) {
               <p className="register_btn mb-3">
                 type
               </p>
-              <MDBRadio name='inlineRadio' id='inlineRadio1' onChange={(event: ChangeEvent<HTMLInputElement>) => setRoom({...room, ranking: "classic"})} label='Classic' defaultChecked inline
+              <MDBRadio name='inlineRadio' id='inlineRadio1' onChange={(event: ChangeEvent<HTMLInputElement>) => setRoom({...room, type: "classic"})} label='Classic' defaultChecked inline
               />
-              <MDBRadio name='inlineRadio' id='inlineRadio2' onChange={(event: ChangeEvent<HTMLInputElement>) => setRoom({...room, ranking: "power-up"})} label='Power-up' inline
+              <MDBRadio name='inlineRadio' id='inlineRadio2' onChange={(event: ChangeEvent<HTMLInputElement>) => setRoom({...room, type: "power-up"})} label='Power-up' inline
               />
             </div>
             <div className="register_btn mb-3">
@@ -75,13 +75,6 @@ function RoomCreate(props: { active: boolean }) {
             
                 labelClass='text-center w-100'
               />
-            </div>
-            <div className="register_btn mb-3">
-              <p className="register_btn mb-3">
-                Ranking
-              </p>
-              <MDBRadio name='rankingRadio' id='rankingRadio1' onChange={(event: ChangeEvent<HTMLInputElement>) => setRoom({...room, type: "lower"})} defaultChecked label='Lower' inline />
-              <MDBRadio name='rankingRadio' id='rankingRadio2' onChange={(event: ChangeEvent<HTMLInputElement>) => setRoom({...room, type: "higher"})} label='Higher' inline />
             </div>
             <MDBInput className='mb-4 text-center' onChange={handleChangeNameRoom} type='text' label='Create Room Name' labelClass='text-center w-100' required />
             <MDBCheckbox name='flexCheck' value={ room.isprivate == false? "true":"false" } id='flexCheckDefault' onChange={handlePrivate} label='Private Room?' />

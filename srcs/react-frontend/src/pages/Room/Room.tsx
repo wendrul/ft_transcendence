@@ -39,9 +39,8 @@ function Room() {
     owner: "corozco",
     type: "Classic",
     password: "3fCs",
-    private: true,
-    score: "9",
-    ranking: "Low"
+    private: false,
+    score: "9"
   })
 
 	useEffect(() => {
@@ -70,7 +69,7 @@ function Room() {
           </MDBListGroupItem>
         </div>
         <div className="col-xs-12 col-md-4">
-          <div className="w-100"></div>
+          <div className="w-100">nani</div>
         </div>
       </MDBCardBody>
     </MDBCard>
