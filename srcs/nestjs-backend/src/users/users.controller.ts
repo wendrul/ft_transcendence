@@ -13,6 +13,7 @@ import {
 	Req,
 	UseInterceptors,
 	UploadedFile,
+	Res,
 } from '@nestjs/common';
 import { diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -27,7 +28,8 @@ import {User} from './entities/users.entity';
 import {AuthService} from './auth.service';
 import {SigninUserDto} from './dtos/signin-user.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiTags } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger';
+import { TwoFactorGuard } from 'src/guards/twoFactor.guard';
 
 @ApiTags('Users')
 @Controller('users')
@@ -37,6 +39,12 @@ export class UsersController {
 		private userService: UsersService,
 		private authService: AuthService
 	) {}
+
+	@Get('/test')
+	@UseGuards(TwoFactorGuard)
+	test(@Session() session: any) {
+		console.log(session.twoFactor);
+	}
 
 	@Get('/friends')
 	@UseGuards(AuthGuardApi)
@@ -70,11 +78,12 @@ export class UsersController {
 	signout(@Session() session: any, @CurrentUser() user: User) {
 		this.userService.update(user, {status: 'offline'});
 		session.userId = null;
+		session.twoFactor = null;
 	}
 
 	@Post('/signup')
 	async signup(@Body() body: CreateUserDto, @Session() session: any, @CurrentUser() c_user: User) {
-		
+		session.twoFactor = null;	
 		const user = await this.authService.signup(body.email, body.password, body.firstName, body.lastName);
 		
 		if (c_user) {
@@ -112,11 +121,15 @@ export class UsersController {
 	@UseGuards(AuthGuard('42'))
 	async Auth42Redirect(@Req() req: any, @Session() session: any, @CurrentUser() c_user: User) {
 
-		// const user = await this.userService.create(req.user.email, "", req.user.login);
 		const user = await this.authService.login42(req.user.email, req.user.firstName, req.user.lastName);
 
 		if (c_user) {
 			this.userService.update(c_user, {status: 'offline'});
+		}
+
+		if (user.twoFactorAuthenticationFlag) {
+			session.twoFactor = user.id;
+			return user;
 		}
 
 		session.userId = user.id;
@@ -128,9 +141,15 @@ export class UsersController {
 	async	signin(@Body() body: SigninUserDto, @Session() session: any, @CurrentUser() c_user: User) {
 
 		const user = await this.authService.signin(body.email, body.password);
-
+//		const user = await this.authService.signin(body.email, body.password, body.login);
+		session.twoFactor = null;
 		if (c_user) {
 			this.userService.update(c_user, {status: 'offline'});
+		}
+
+		if (user.twoFactorAuthenticationFlag) {
+			session.twoFactor = user.id;
+			return user;
 		}
 
 		session.userId = user.id;

@@ -55,4 +55,10 @@ export class User {
 
 	@Column({ default: true })
 	defaultAvatar: boolean;
+
+	@Column({ nullable: true})
+	twoFactorAuthenticationSecret?: string;
+
+	@Column({ default: false })
+	twoFactorAuthenticationFlag: boolean;
 }

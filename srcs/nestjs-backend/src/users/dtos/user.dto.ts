@@ -25,4 +25,9 @@ export class UserDto {
 	@Expose()
 	@ApiProperty()
 	status: string;
+
+	@Expose()
+	@ApiProperty()
+	twoFactorAuthenticationFlag: boolean;
+
 }

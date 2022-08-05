@@ -18,8 +18,25 @@ export class LocalFilesController {
 		private usersService: UsersService,
 	) {}
 
+	@Get('/path/:id')
+	async getFilePathByUserId(@Param('id') id: string) {
+		const user = await this.usersService.findOne(parseInt(id));
+		if (!user) {
+			throw new NotFoundException('user not found');
+		}
+
+		if (user.defaultAvatar) {
+			return ('/usr/src/avatars/default.jpg');
+		}
+		else {
+			const file = await this.localFilesService.getFileById(user.avatarId);
+
+			return file.path;
+		}
+	}
+
 	@Get('/:id')
-	async getFileById(@Param('id') id: string, @Res({ passthrough: true }) response: Response) {
+	async getFileByUserId(@Param('id') id: string, @Res({ passthrough: true }) response: Response) {
 		const user = await this.usersService.findOne(parseInt(id));
 		if (!user) {
 			throw new NotFoundException('user not found');

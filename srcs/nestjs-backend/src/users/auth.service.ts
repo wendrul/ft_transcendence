@@ -2,12 +2,22 @@ import {UsersService} from './users.service';
 import {randomBytes, scrypt as _scrypt} from 'crypto';
 import {promisify} from 'util';
 import {BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
+import {JwtService} from '@nestjs/jwt';
 
 const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class AuthService {
-	constructor(private usersService: UsersService) {}
+	constructor(
+		private usersService: UsersService,
+		private jwtService: JwtService,
+	) {}
+
+	getCookieWithJwtToken(userId: number) {
+		const payload = { userId };	
+		const token = this.jwtService.sign(payload);
+		return `Authentication=${token}; HttpOnly; Path=\; Max-Age=6000`;
+	}
 
 	async login42(email: string, firstName: string, lastName: string) {
 		const users = await this.usersService.findEmail(email);	

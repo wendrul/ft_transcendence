@@ -12,17 +12,30 @@ import {FriendRequestService} from './friendRequest.service';
 import {FriendRequestController} from './friendRequest.controller';
 import {LocalFilesService} from './localFiles.service';
 import {LocalFilesController} from './localFiles.controller';
+import {TwoFactorAuthenticationController} from './twoFactorAuthentication.controller';
+import {TwoFactorAuthecticationService} from './twoFactorAuthentication.service';
+import {JwtModule} from '@nestjs/jwt';
+import {JwtStrategy} from './jwt.strategy';
 
 @Module({
 	imports: [
 		TypeOrmModule.forFeature([User]),
 		TypeOrmModule.forFeature([FriendRequest]),
 		TypeOrmModule.forFeature([LocalFile]),
+		JwtModule.registerAsync({
+			useFactory: async () => ({
+				secret: process.env.AUTH42_CLIENTSECRET,
+				signOptions: {
+					expiresIn: '6000s',
+				},
+			}),
+		})
 	],
 	controllers: [
 		UsersController,
 		FriendRequestController,
 		LocalFilesController,
+		TwoFactorAuthenticationController,
 	],
   providers: [
 		UsersService,
@@ -30,6 +43,8 @@ import {LocalFilesController} from './localFiles.controller';
 		FriendRequestService,
 		LocalFilesService,
 		Auth42Strategy,
+		TwoFactorAuthecticationService,
+		JwtStrategy,
 	]
 })
 
