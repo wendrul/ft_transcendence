@@ -11,6 +11,7 @@ import EditProfile from './pages/Profile/EditProfile';
 import CreateRoom from './pages/CreateRoom/CreateRoom';
 import UsernameRedirect from './pages/Username/UsernameRedirect';
 import Room from './pages/Room/Room';
+import WebChat from './pages/WebChat/WebChat';
 
 import {
   MDBBtn,
@@ -36,6 +37,7 @@ class RoutesHandler extends React.Component {
         <Route  path ='/profile' element={<UsernameRedirect component={<Profile/>} />} />
         <Route  path ='/edit_profile' element={<UsernameRedirect component={<EditProfile/>} />} />
         <Route  path ='/history' element={<UsernameRedirect component={<History/>} />} />
+        <Route  path ='/web_chat' element={<WebChat/>} />
         <Route
           path="*"
           element={
