@@ -1,18 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
-import {
-	MDBBtn,
-	MDBRow,
-	MDBCol,
-  MDBRadio,
-  MDBRange,
-	MDBInput,
-  MDBCheckbox,
-  MDBTabs,
-  MDBTabsItem,
-  MDBTabsLink,
-  MDBTabsContent,
-  MDBTabsPane
-  } from 'mdb-react-ui-kit';
+import React, { useState, useEffect } from 'react';
 import "./CreateRoom.css";
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';

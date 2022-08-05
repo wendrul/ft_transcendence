@@ -1,22 +1,6 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useEffect } from 'react';
 import {
-	MDBBtn,
-	MDBRow,
-	MDBCol,
-  MDBRadio,
-  MDBRange,
-	MDBInput,
-  MDBCheckbox,
-  MDBTabs,
-  MDBTabsItem,
-  MDBTabsLink,
-  MDBTabsContent,
-  MDBTabsPane,
-  MDBListGroupItem,
-  MDBCard,
-  MDBCardBody,
-  MDBCardTitle,
-  MDBCardText
+	MDBRange
   } from 'mdb-react-ui-kit';
 import "./Room.css";
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';

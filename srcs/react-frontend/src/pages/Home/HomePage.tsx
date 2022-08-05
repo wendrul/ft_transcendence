@@ -1,9 +1,4 @@
 import { useEffect } from 'react';
-import {
-  MDBBtn,
-  MDBRow,
-  MDBCol
-} from 'mdb-react-ui-kit';
 
 import "./HomePage.css";
 import { useSearchParams } from 'react-router-dom';
@@ -49,6 +44,10 @@ function userView(){
 
 function HomePage(){
 	const authentication = useAppSelector<any>(state => state.authentication);
+
+	useEffect(() => {
+		document.title = "Home";
+	}, [])
 
 	return(
 		<div className='d-flex flex-row'>
