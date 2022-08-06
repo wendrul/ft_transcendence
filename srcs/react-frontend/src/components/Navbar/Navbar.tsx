@@ -1,3 +1,13 @@
+/* ******** */
+/* 
+  Errores con la redireccion,
+  primer clic no sirve,
+  3 clic no sirve, buscar el por que
+  ¿Implemento mejor funcion en el dispacth
+  que busque el usuario?
+*/
+/* ******** */
+
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import {
   MDBContainer,
@@ -19,11 +29,13 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { userActions } from '../../_actions';
+import { user } from '../../_reducers/user.reducer';
 
 export default function NavbarComponent() {
 
   const dispatch = useAppDispatch();
   const authentication = useAppSelector<any>(state => state.authentication);
+  const users = useAppSelector<any>(state => state.users);
 
   const [showBasic, setShowBasic] = useState(false);
   let navigate = useNavigate();
@@ -44,7 +56,16 @@ export default function NavbarComponent() {
 
   const onSerch = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-    console.log(userLogin)
+    dispatch(userActions.getAll());
+    console.log(users);
+    let Item = users?.items?.map((obj:any) => obj).filter((value:any) => {
+      return value?.login === userLogin ;
+    });
+    if (Item.length === 1)
+    {
+      navigate("/profile/" + Item[0].id)
+      window.location.reload();
+    }
 	}
 
   const handleChangeUserLogin = function(event: ChangeEvent<HTMLInputElement>) {
