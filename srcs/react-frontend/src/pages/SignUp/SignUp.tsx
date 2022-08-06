@@ -9,6 +9,7 @@ import "./SignUp.css";
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
 import { userActions } from '../../_actions';
+import AlertPage from '../../components/Alerts/Alert';
 
 function SignUp() {
 	const dispatch = useAppDispatch();
@@ -77,6 +78,7 @@ function SignUp() {
                 <MDBBtn type='submit' className='mb-4' block>
                   Sign Up
                 </MDBBtn>
+                { alert && <AlertPage type={alert.type} text={alert.message} /> }
               </form>
               <div className='text-center'>
                 <p className="register_btn mb-3">
