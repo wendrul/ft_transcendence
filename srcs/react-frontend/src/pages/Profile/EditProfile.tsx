@@ -1,3 +1,11 @@
+/************************************/
+/*
+  -Problema, al estar actualizando,
+  si hay error (login in use) u otro,
+  te dirige directamente a la paguna
+  username (MIRAR ESTO)
+*/
+/************************************/
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import {
 	MDBBtn,
@@ -8,6 +16,7 @@ import {
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
 import { userActions } from '../../_actions';
+import AlertPage from '../../components/Alerts/Alert';
 
 function EditProfile() {
 	const dispatch = useAppDispatch();
@@ -74,6 +83,7 @@ function EditProfile() {
                 <MDBBtn type='submit' className='mb-4' block>
                   Save
                 </MDBBtn>
+                { alert && <AlertPage type={alert.type} text={alert.message} /> }
               </form>
             </div>
           </div>
