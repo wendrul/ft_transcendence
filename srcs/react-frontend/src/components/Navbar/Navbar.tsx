@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import {
   MDBContainer,
   MDBNavbar,
@@ -28,6 +28,8 @@ export default function NavbarComponent() {
   const [showBasic, setShowBasic] = useState(false);
   let navigate = useNavigate();
 
+  const [userLogin, setUserLogin] = useState("");
+
   useEffect(() => {
     dispatch(userActions.whoami());
    /* let timerId = setInterval(() => {
@@ -42,7 +44,14 @@ export default function NavbarComponent() {
 
   const onSerch = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
+    console.log(userLogin)
 	}
+
+  const handleChangeUserLogin = function(event: ChangeEvent<HTMLInputElement>) {
+    setUserLogin(event?.currentTarget?.value);
+  }
+
+
 
   return (
     <MDBNavbar expand='lg' light bgColor='light'>
@@ -66,7 +75,7 @@ export default function NavbarComponent() {
               </MDBNavbarLink>
             </MDBNavbarItem>*/}
             <MDBNavbarItem>
-              <MDBNavbarLink href='#'>Webchat</MDBNavbarLink>
+              <MDBNavbarLink href='/web_chat'>Webchat</MDBNavbarLink>
             </MDBNavbarItem>
 
             <MDBNavbarItem>
@@ -100,7 +109,7 @@ export default function NavbarComponent() {
            */}
           </MDBNavbarNav>
           <form className='d-flex input-group w-auto' onSubmit={onSerch}>
-            <input type='search' className='form-control' placeholder='User ID' aria-label='Search' />
+            <input type='search' className='form-control' onChange={handleChangeUserLogin} placeholder='User ID' aria-label='Search' />
             <MDBBtn color='primary'>Search</MDBBtn>
           </form>
           {
