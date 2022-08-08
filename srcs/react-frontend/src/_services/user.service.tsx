@@ -82,6 +82,7 @@ function updateProfile(user:UpdateUser) {
         firstName: user?.firstName,
         lastName: user?.lastName,
         login: user?.login,
+       // twoFactorAuthenticationFlag: user?.twoFactorAuthenticationFlag,
        // email: user?.email
     }, { 
         withCredentials: true 
