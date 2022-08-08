@@ -4,6 +4,9 @@
   si hay error (login in use) u otro,
   te dirige directamente a la paguna
   username (MIRAR ESTO)
+
+
+  -Avatar aun no conectado
 */
 /************************************/
 import React, { useState, useEffect, ChangeEvent } from 'react';
@@ -12,7 +15,8 @@ import {
 	MDBRow,
 	MDBCol,
 	MDBInput,
-  MDBSwitch
+  MDBSwitch,
+  MDBFile
   } from 'mdb-react-ui-kit';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
@@ -91,7 +95,8 @@ function EditProfile() {
                      <MDBInput id='form3Example2' onChange={handleChangeLastName} defaultValue={userData.data.lastName} label='Last name'/>
                   </MDBCol>
                 </MDBRow>
-                <MDBInput className='mb-4' onChange={handleChangeLogin} type='text' id='form3Example4' defaultValue={userData.data.login} label='login'/>
+                <MDBInput className='mb-3' onChange={handleChangeLogin} type='text' id='form3Example4' defaultValue={userData.data.login} label='login'/>
+                <MDBFile className='mb-4' label='Avatar' id='customFile' />
                 <MDBSwitch checked={boolTwo} id='flexSwitchCheckDefault' label='Two Factor Authentication' onChange={handletest} />
                 <br />
                 <MDBBtn type='submit' className='mb-4' block>
