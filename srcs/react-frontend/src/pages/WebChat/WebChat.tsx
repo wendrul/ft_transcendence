@@ -136,8 +136,8 @@ function WebChat() {
     <MDBCard className=""  >
       <MDBCardBody>
         <div className="row">
-          <div className="col">
-              <div style={{ width: 240 }}>
+      		<div className="col">
+              <div style={{ width: 200 }}>
                 <Sidenav defaultOpenKeys={['1']}>
                   <Sidenav.Body>
                     <Nav activeKey="1">
@@ -163,15 +163,15 @@ function WebChat() {
               </div>
             </div>
 
-            <div className="col col-lg-2 pe3 ">
-            <div style={{ width: 240 }}>
+            <div className="col col-lg-2 pe3 ml-3">
+            <div style={{ width: 200}}>
               <Sidenav defaultOpenKeys={['1']}>
                 <Sidenav.Body>
                   <Nav activeKey="1">
                     <Nav.Menu eventKey="1" title="Friends" >
                       <Nav.Item eventKey="1-1">Ericc</Nav.Item>
                     </Nav.Menu>
-                    <Nav.Menu eventKey="2" title="Users Conected">
+                    <Nav.Menu eventKey="2" title="Users Connected">
                       <Nav.Item eventKey="2-1">Quimera</Nav.Item>
                       <Nav.Item eventKey="2-2">lobos</Nav.Item>
                       <Nav.Item eventKey="2-3">Personas</Nav.Item>
