@@ -1,10 +1,6 @@
 /* ******** */
 /* 
-  Errores con la redireccion,
-  primer clic no sirve,
-  3 clic no sirve, buscar el por que
-  ¿Implemento mejor funcion en el dispacth
-  que busque el usuario?
+  carga primero una pagina que no deberia, mirar esto en el redux, tal vez hay problema
 */
 /* ******** */
 
@@ -44,6 +40,7 @@ export default function NavbarComponent() {
 
   useEffect(() => {
     dispatch(userActions.whoami());
+    dispatch(userActions.getAll());
    /* let timerId = setInterval(() => {
       dispatch(userActions.whoami());
     }, 5000)
