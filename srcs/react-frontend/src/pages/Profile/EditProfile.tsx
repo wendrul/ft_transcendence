@@ -11,7 +11,8 @@ import {
 	MDBBtn,
 	MDBRow,
 	MDBCol,
-	MDBInput
+	MDBInput,
+  MDBSwitch
   } from 'mdb-react-ui-kit';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
@@ -25,8 +26,10 @@ function EditProfile() {
   const userData = useAppSelector<any>(state => state.user);
 	const alert = useAppSelector<any>(state => state.alert);
 
-
   const [user, setUser] = useState({});
+  const [boolTwo, SetBoolTwo] = useState(userData.data.twoFactorAuthenticationFlag);
+  const toggleSwitch = () => SetBoolTwo((previousState:boolean) => !previousState);
+
 
 	useEffect(() => {
 		document.title = "Edit Profile";
@@ -41,9 +44,8 @@ function EditProfile() {
 
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-	//	dispatch(userActions.updateProfile(firstName, lastName, login));
-  dispatch(userActions.updateProfile(user));
-  //  navigate("/profile");
+    dispatch(userActions.updateProfile(user));
+    navigate("/profile");
 	}
 
   const handleChangeFirstName = function(event: ChangeEvent<HTMLInputElement>) {
@@ -57,6 +59,16 @@ function EditProfile() {
   const handleChangeLogin = function(event: ChangeEvent<HTMLInputElement>) {
     setUser({...user, login: event?.currentTarget?.value});
 	}
+
+  const handletest = function(event: ChangeEvent<HTMLInputElement>) {
+    console.log(event)
+    console.log(boolTwo)
+    toggleSwitch()
+    setUser({...user, twoFactorAuthenticationFlag: !boolTwo});
+	}
+
+
+
 
 
   return (
@@ -80,6 +92,8 @@ function EditProfile() {
                   </MDBCol>
                 </MDBRow>
                 <MDBInput className='mb-4' onChange={handleChangeLogin} type='text' id='form3Example4' defaultValue={userData.data.login} label='login'/>
+                <MDBSwitch checked={boolTwo} id='flexSwitchCheckDefault' label='Two Factor Authentication' onChange={handletest} />
+                <br />
                 <MDBBtn type='submit' className='mb-4' block>
                   Save
                 </MDBBtn>
