@@ -5,6 +5,9 @@ import Wall from "../game_objects/Wall";
 import Vector2 from "./Vector2";
 
 export default class Game {
+  public static width : number = 1000;
+  public static height : number = 600;
+
   private static dt = 1000.0 / 60.0;
 
   private gameObjects: Array<IGameObject> = [];
@@ -16,7 +19,7 @@ export default class Game {
   public get paddle1() : Paddle {
     return this._paddle1;
   }
-  private set paddle1(v : Paddle) {
+  public set paddle1(v : Paddle) {
     this._paddle1 = v;
   }
   
@@ -24,7 +27,7 @@ export default class Game {
   public get paddle2() : Paddle {
     return this._paddle2;
   }
-  private set paddle2(v : Paddle) {
+  public set paddle2(v : Paddle) {
     this._paddle2 = v;
   }
   
@@ -33,7 +36,7 @@ export default class Game {
   public get ball() : Ball {
     return this._ball;
   }
-  private set ball(v : Ball) {
+  public set ball(v : Ball) {
     this._ball = v;
   }
   
@@ -47,11 +50,11 @@ export default class Game {
   }
   
 
-  constructor(fieldWidth: number, fieldHeight: number) {
+  constructor() {
     this.gameTime = performance.now();
 
-    this.fieldWidth = fieldWidth;
-    this.fieldHeight = fieldHeight;
+    this.fieldWidth = Game.width;
+    this.fieldHeight = Game.height;
     this._paddle1 = new Paddle("John", 1, this.fieldWidth / 2, this.fieldHeight / 2);
     this._paddle2 = new Paddle("Jim", 2, this.fieldWidth / 2, this.fieldHeight / 2);
   

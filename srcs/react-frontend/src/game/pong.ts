@@ -33,7 +33,7 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
   // fetch("http://localhost:3000").then((s) => console.log(s));
   const socket = io("http://localhost:3000");
   socket.on("gameUpdate", (gameState: any) => {
-    p.phi = gameState.p1.phi;
+    p1.phi = gameState.p1.phi;
     p2.phi = gameState.p2.phi;
     ball.pos.x = gameState.ballpos.x;
     ball.pos.y = gameState.ballpos.y;
@@ -43,13 +43,13 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
 
   app = instantiatedApp;
 
-  const game = new Game(app.renderer.width, app.renderer.height);
+  const game = new Game();
 
-  const p = new PaddleDrawable(game.paddle1, app);
+  const p1 = new PaddleDrawable(game.paddle1, app);
   const p2 = new PaddleDrawable(game.paddle2, app);
 
-  addKeyListeners("w").press = () => (p.phi += 0.05);
-  addKeyListeners("s").press = () => (p.phi -= 0.05);
+  addKeyListeners("w").press = () => (p1.phi += 0.05);
+  addKeyListeners("s").press = () => (p1.phi -= 0.05);
   addKeyListeners("o").press = () => (p2.phi += 0.05);
   addKeyListeners("l").press = () => (p2.phi -= 0.05);
 
@@ -61,7 +61,7 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
   globalThis.debugTool = new GraphicalDebugger(app);
 
   const ball = new BallDrawable(game.ball, app);
-  game.walls.forEach((w) => new WallDrawable(w, app))
+  game.walls.forEach((w) => new WallDrawable(w, app));
 
   const gameStateMachine = new GameStateMachine(game);
 
@@ -70,21 +70,44 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
   gameLoop(game);
 
   game_starting_for_good = true;
-  let elapsed = 0;
-  PIXI.Ticker.shared.add((delta) => {
-    elapsed += delta / 60;
-    if (elapsed > 0.03) {
-      // console.log(elapsed);
-
-      elapsed = 0;
-      socket.emit("gameUpdate", {
-        p1: { phi: p.phi },
+  let t = performance.now();
+  let elapsed = t;
+  function coms() {
+    const dt = performance.now() - t;
+    t = performance.now();
+    if (t - elapsed > 3000) {
+      console.log(t - elapsed);
+      
+      elapsed = t;
+      const send = {
+        time: t,
+        p1: { phi: p1.phi },
         p2: { phi: p2.phi },
         ballpos: { x: ball.pos.x, y: ball.pos.y },
         ballvel: { x: ball.velocity.x, y: ball.velocity.y },
-      });
+      };
+      socket.emit("gameUpdate", send);
     }
-  });
+    setTimeout(() => coms(), 10);
+  }
+  requestAnimationFrame(() => coms());
+  // PIXI.Ticker.shared.add((delta) => {
+  //   elapsed += delta / 60;
+  //   if (elapsed > 0.03) {
+  //     // console.log(elapsed);
+
+  //     elapsed = 0;
+  //     const send = {
+  //       p1: { phi: p.phi },
+  //       p2: { phi: p2.phi },
+  //       ballpos: { x: ball.pos.x, y: ball.pos.y },
+  //       ballvel: { x: ball.velocity.x, y: ball.velocity.y },
+  //       ball: ball,
+  //       name: "etie"
+  //     };
+  //     socket.emit("gameUpdate", send);
+  //   }
+  // });
 }
 
 function gameLoop(game: Game) {

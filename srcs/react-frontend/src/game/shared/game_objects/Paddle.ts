@@ -43,7 +43,6 @@ export default class Paddle implements ICollider, IGameObject {
         Math.sin(phi) * Paddle.racketRadius
       )
     );
-    console.log(`Created player ${this.playerNo}`);
   }
 
   update(dt: number) {
