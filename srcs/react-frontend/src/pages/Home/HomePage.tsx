@@ -45,8 +45,14 @@ function userView(){
 function HomePage(){
 	const authentication = useAppSelector<any>(state => state.authentication);
 
+	const [params, setSearchParams] = useSearchParams();
+	params.get("__firebase_request_key")
+
 	useEffect(() => {
 		document.title = "Home";
+		console.log(1)
+		console.log(params.get("code"));
+		console.log(2)
 	}, [])
 
 	return(
