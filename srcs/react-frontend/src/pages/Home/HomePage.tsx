@@ -50,9 +50,9 @@ function HomePage(){
 
 	useEffect(() => {
 		document.title = "Home";
-		console.log(1)
-		console.log(params.get("code"));
-		console.log(2)
+		console.log();
+		if (params.get("code"))
+			console.log(params.get("code"))
 	}, [])
 
 	return(

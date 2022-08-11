@@ -8,6 +8,7 @@ export const userService = {
     getById,
     whoami,
     signout,
+    auth42,
     signup,
     updateProfile
 };
@@ -27,6 +28,22 @@ function whoami() {
 }
 
 function login(email:string, password:string) {
+    return axios.post(`${config.apiUrl}/users/signin`,
+    {
+        email: email,
+        password: password
+    }, { 
+        withCredentials: true 
+    }).then(handleResponse)
+        .then(user => {
+            // store user details and jwt token in local storage to keep user logged in between page refreshes
+            localStorage.setItem('user', JSON.stringify(user));
+
+            return user;
+        });
+}
+
+function auth42(email:string, password:string) { // toca cambiarlo
     return axios.post(`${config.apiUrl}/users/signin`,
     {
         email: email,

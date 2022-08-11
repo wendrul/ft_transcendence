@@ -7,6 +7,7 @@ export const userActions = {
     login,
     signup,
     signout,
+    auth42,
     getAll,
     getById,
     whoami,
@@ -31,6 +32,27 @@ function whoami() {
     function request() { return { type: userConstants.WHOAMI_REQUEST } }
     function success(user:any) { return { type: userConstants.WHOAMI_SUCCESS, user } }
     function failure() { return { type: userConstants.WHOAMI_FAILURE } }
+}
+
+function auth42(email:string, password:string) {
+    return (dispatch:any) => {
+        dispatch(request({ email }));
+
+        userService.auth42(email, password)
+            .then(
+                user => {
+                    dispatch(success(user));
+                },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                }
+            );
+    };
+
+    function request(user:any) { return { type: userConstants.AUTH42_REQUEST, user } }
+    function success(user:any) { return { type: userConstants.AUTH42_SUCCESS, user } }
+    function failure(error:any) { return { type: userConstants.AUTH42_FAILURE, error } }
 }
 
 function login(email:string, password:string) {
