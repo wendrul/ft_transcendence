@@ -34,7 +34,9 @@ export class UsersService {
 		const avatar = await this.localFilesService.saveLocalFileData(fileData);
 		await this.repo.update(userId, {
 			avatarId: avatar.id,
+			avatarPath: avatar.path,
 			defaultAvatar: false,
+			avatar: avatar,
 		})
 	}
 

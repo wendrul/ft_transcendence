@@ -13,7 +13,6 @@ import {
 	Req,
 	UseInterceptors,
 	UploadedFile,
-	Res,
 } from '@nestjs/common';
 import { diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';

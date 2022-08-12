@@ -51,6 +51,9 @@ export class User {
 	avatar?: LocalFile;
 
 	@Column({ nullable: true })
+	avatarPath?: string; 
+
+	@Column({ nullable: true })
 	avatarId?: number;
 
 	@Column({ default: true })
