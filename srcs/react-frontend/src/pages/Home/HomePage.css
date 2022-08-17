@@ -1,59 +1,75 @@
-.t_home * > .sign_label {
-    font-weight: 900;
-    font-size: 62px;
-    color: black;
+.dboard-avatar{
+	width: 200px;
+	height: 230px;
+	background-color: white;
 }
 
-.t_home * > .logo_nest {
-    width: 604px;
-    height: 294px;
+.dboard-btn-sup{
+	width: 150px;
+	height: 30px;
+	font-weight: bold;
+	border: none;
+	border-radius: 3px;
+	color: white;
+	background-color: #1266f1;
 }
 
-.t_home * > .register_btn {
-    font-weight: 400;
-    font-size: 20px;
-    color: black;
+.dboard-btn-sin{
+	width: 250px;
+	height: 50px;
+	border: none;
+	font-weight: bold;
+	border-radius: 3px;
+	color: white;
+	background-color: #f19d12;
 }
 
-.t_home * > .form_input {
-    background: #ececec;
-    font-family: 'Inter';
-    font-style: italic;
-    font-weight: 400;
-    font-size: 22px;
-    line-height: 36px;
-    border-width: 0px;
-    border-radius: 10px;
+bc-gr2{
+	background-color: #e9ebec;
 }
 
-.t_home * > .form_input:focus {
-    transition: all .1s linear;
-    border-color: #aaaaaa;
-    box-shadow: inset 0px 0px 0px 1px #aaaaaa;
-    border-width: 1px;
+
+
+.dboard-div-scroll{
+	display: flex;
+	flex-direction: row;
+	overflow: auto;
+	margin-top: 40px;
+	height: 550px;
+	width: 700px;
+}
+.img_gear{
+	height: 50px;
+	width: 50px;
+	margin: 5px;
+	transition: transform .7s ease-in-out;
+
 }
 
-.t_home * > .recover_password {
-    color: black;
+.img_gear:hover {
+  transform: rotate(360deg);
 }
 
-.t_home * > .sign_in_button {
-    width: 300px;
-    font-weight: bolder;
+.filter{
+	display: flex;
+	flex-direction: column;
+  width: 20%;
+  background-color: white;
+  min-height: 50px;
+
 }
 
-.t_home * > .line_or_login {
-    width: 100%; height: 20px; border-bottom: 1px solid #564A4A; text-align: center;
-    opacity: 30%;
-    margin: auto;
+.dboard-tab{
+  width: 80%;
+  overflow: auto;
+	padding: 20px;
 }
 
-.t_home * > .line_or_login > span {
-    background: #d9d9c9;
-
-    /* Chrome 10-25, Safari 5.1-6 */
-    background: -webkit-linear-gradient(to right, rgba(217, 217, 201, 0.5), rgba(217, 201, 217, 0.5));
-  
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background: linear-gradient(to right, rgba(217, 217, 201, 0.5), rgba(217, 201, 217, 0.5))
+.filter-search{
+	width: 100px;
+	height: 30px;
+	padding: 7px;
+	border-radius: 20px;
+	border: solid grey 1px;
+	font-size: 12px;
 }

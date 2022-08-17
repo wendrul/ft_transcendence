@@ -67,7 +67,7 @@ export class TwoFactorAuthenticationController {
 
 		session.userId = session.twoFactor;
 
-		this.usersService.update(user.id, {status: 'online'});
+		this.usersService.update(user, {status: 'online'});
 
 		return user;
 	}

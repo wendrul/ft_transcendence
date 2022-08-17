@@ -27,7 +27,7 @@ export class AuthService {
 		}
 
 		const user = await this.usersService.create(email, "",  firstName, lastName);
-		this.usersService.update(user.id, {user42: true});
+		this.usersService.update(user, {user42: true});
 
 		return user;
 	}
@@ -52,14 +52,11 @@ export class AuthService {
 		return user;
 	}
 
-	async signin(email: string, password: string, login: string) {
+	async signin(email: string, password: string) {
 
 		if (email) {
 			var [user] = await this.usersService.findEmail(email);
-		} else if (login) {
-			var [user] = await this.usersService.findLogin(login);
 		}
-
 		if (!user){
 			throw new NotFoundException('user not found');
 		}

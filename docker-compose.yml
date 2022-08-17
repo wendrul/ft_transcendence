@@ -11,31 +11,12 @@ services:
       target: development
     command: npm run start:dev
     ports:
-      - 3000:3000
+      - 3002:3000
       - 9229:9229
     networks:
       - transcendence-net
     volumes:
       - ./srcs/nestjs-backend:/usr/src/app
-      - /usr/src/app/node_modules
-      - ./srcs/avatars:/usr/src/avatars
-    restart: unless-stopped
-  
-  react:
-    depends_on:
-      - nestjs
-    container_name: react_frontend_dev
-    image: react_frontend_dev:1.0.0
-    build:
-      context: ./srcs/react-frontend
-      target: development
-    command: npm run start
-    ports:
-      - 3005:3000
-    networks:
-      - transcendence-net
-    volumes:
-      - ./srcs/react-frontend:/usr/src/app
       - /usr/src/app/node_modules
       - ./srcs/avatars:/usr/src/avatars
     restart: unless-stopped
