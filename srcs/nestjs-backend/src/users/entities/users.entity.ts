@@ -1,7 +1,10 @@
+import {Channel} from "src/chat/entities/channels.entity";
+import {Message} from "src/chat/entities/messages.entity";
 import {
 	Column,
 	Entity,
 	JoinColumn,
+	ManyToMany,
 	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
@@ -64,4 +67,22 @@ export class User {
 
 	@Column({ default: false })
 	twoFactorAuthenticationFlag: boolean;
+
+	//Chat
+	
+	@OneToMany(() => Channel, (channel) => channel.owner)
+	ownedChannels: Channel[];	
+
+	@ManyToMany(() => Channel, (channel) => channel.admins)
+	adminChannels: Channel[];
+
+	@ManyToMany(() => Channel, (channel) => channel.usesrs)
+	channels: Channel[];
+
+	@OneToMany(() => Message, (message) => message.sender)
+	sentMessages: Message[];
+
+	@OneToMany(() => Message, (message) => message.reciverUser)
+	recivedMessages: Message[];
+
 }
