@@ -34,11 +34,11 @@ function whoami() {
     function failure() { return { type: userConstants.WHOAMI_FAILURE } }
 }
 
-function auth42(email:string, password:string) {
+function auth42(Token:string) {
     return (dispatch:any) => {
-        dispatch(request({ email }));
+        dispatch(request({ Token }));
 
-        userService.auth42(email, password)
+        userService.auth42(Token)
             .then(
                 user => {
                     dispatch(success(user));

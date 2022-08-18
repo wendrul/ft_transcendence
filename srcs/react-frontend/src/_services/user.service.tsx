@@ -43,11 +43,10 @@ function login(email:string, password:string) {
         });
 }
 
-function auth42(email:string, password:string) { // toca cambiarlo
-    return axios.post(`${config.apiUrl}/users/signin`,
+function auth42(Token:string) { // toca cambiarlo
+    return axios.post(`${config.apiUrl}/users/authApi42`,
     {
-        email: email,
-        password: password
+        token: Token,
     }, { 
         withCredentials: true 
     }).then(handleResponse)

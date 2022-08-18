@@ -121,6 +121,7 @@ export class UsersController {
 	@UseGuards(AuthGuard('42'))
 	async Auth42Redirect(@Req() req: any, @Session() session: any, @CurrentUser() c_user: User) {
 
+		console.log(req)
 		const user = await this.authService.login42(req.user.email, req.user.firstName, req.user.lastName);
 
 		if (c_user) {
@@ -136,6 +137,13 @@ export class UsersController {
 		this.userService.update(user, {status: 'online'});
 		return user;
 	}
+
+
+	@Post('/authApi42')
+	async	authApi42(@Body() token: any) {
+		console.log(token);
+	} 
+
 
 	@Post('/signin')
 	async	signin(@Body() body: SigninUserDto, @Session() session: any, @CurrentUser() c_user: User) {
