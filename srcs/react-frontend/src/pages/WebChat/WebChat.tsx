@@ -135,9 +135,8 @@ function WebChat() {
   return (
     <MDBCard className=""  >
       <MDBCardBody>
-        <div className="row">
-          <div className="col">
-              <div style={{ width: 240 }}>
+        <div className="d-flex flex-row">
+      	<div className="webchatChan">
                 <Sidenav defaultOpenKeys={['1']}>
                   <Sidenav.Body>
                     <Nav activeKey="1">
@@ -160,18 +159,45 @@ function WebChat() {
                     </Nav>
                   </Sidenav.Body>
                 </Sidenav>
-              </div>
             </div>
 
-            <div className="col col-lg-2 pe3 ">
-            <div style={{ width: 240 }}>
+						<div className='webchatDisplay'>
+							<div className='webchatDisplayMsg'>
+								<div className='webchatDisplayMsgUser'>
+									<p className='d-flex justify-content-left'>CreepyUser:</p>
+									<p className='d-flex justify-content-left'> Hi</p>
+									<p className='d-flex justify-content-left'> Are you there ?</p>
+									<p className='d-flex justify-content-left'> ???</p>
+									<p className='d-flex justify-content-left'> Answer me please..</p>
+									<p className='d-flex justify-content-left'> I know where you living !!!</p>
+									<p className='d-flex justify-content-left'> I'm sorry...</p>
+									<p className='d-flex justify-content-left'> I love you.</p>
+									<p className='d-flex justify-content-left'> I don't want to scare you.</p>
+									<p className='d-flex justify-content-left'> ANSWER ME !!!!!!!!</p>
+									<p className='d-flex justify-content-left'> ANSWER ME !!!!!!!!</p>
+									<p className='d-flex justify-content-left'> ANSWER ME !!!!!!!!</p>
+									<p className='d-flex justify-content-left'> ANSWER ME !!!!!!!!</p>
+									<p className='d-flex justify-content-left'> ANSWER ME !!!!!!!!</p>
+									<p className='d-flex justify-content-left'> ANSWER ME !!!!!!!!</p>
+									<p className='d-flex justify-content-left'> ANSWER ME !!!!!!!!</p>
+									<p className='d-flex justify-content-left'> ANSWER ME !!!!!!!!</p>
+									<p className='d-flex justify-content-left'> ANSWER ME !!!!!!!!</p>
+									<p className='d-flex justify-content-left'> ANSWER ME !!!!!!!!</p>
+								</div>
+							</div>
+							<div className='webchatDisplayMsgBar'>
+								<input className='webchatDisplayMsgBarInput' type="text" placeholder="Send message..."/>
+							</div>
+						</div>
+
+            <div className="webchatUser">
               <Sidenav defaultOpenKeys={['1']}>
                 <Sidenav.Body>
                   <Nav activeKey="1">
                     <Nav.Menu eventKey="1" title="Friends" >
                       <Nav.Item eventKey="1-1">Ericc</Nav.Item>
                     </Nav.Menu>
-                    <Nav.Menu eventKey="2" title="Users Conected">
+                    <Nav.Menu eventKey="2" title="Users Connected">
                       <Nav.Item eventKey="2-1">Quimera</Nav.Item>
                       <Nav.Item eventKey="2-2">lobos</Nav.Item>
                       <Nav.Item eventKey="2-3">Personas</Nav.Item>
@@ -184,8 +210,6 @@ function WebChat() {
                   </Nav>
                 </Sidenav.Body>
               </Sidenav>
-            </div>
-
           </div>
         </div>
       </MDBCardBody>
