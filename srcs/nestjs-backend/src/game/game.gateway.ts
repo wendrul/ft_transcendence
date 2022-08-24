@@ -8,7 +8,7 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 // import Ball from qq"./shared/game_objects/Ball"
-import Game from './shared/util/Game';
+// import Game from './shared/util/Game';
 
 @WebSocketGateway({
   cors: {
@@ -21,10 +21,10 @@ export class GameGateway
 {
   @WebSocketServer()
   server;
-  game: Game;
+  // game: Game;
 
   constructor() {
-    this.game = new Game();
+    // this.game = new Game();
     Logger.debug("Hey");
   }
 

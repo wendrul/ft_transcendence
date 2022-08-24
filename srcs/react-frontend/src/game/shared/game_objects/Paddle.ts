@@ -4,9 +4,7 @@ import Ball from "./Ball";
 import IGameObject from "./IGameObject";
 
 export default class Paddle implements ICollider, IGameObject {
-  name: String;
-
-  rot: number;
+  name: string;
 
   playerNo: 1 | 2;
 
@@ -22,12 +20,11 @@ export default class Paddle implements ICollider, IGameObject {
   static readonly racketRadius = 600;
 
   constructor(
-    name: String,
+    name: string,
     playerNo: 1 | 2,
     fieldCenterX: number,
     fieldCenterY: number
   ) {
-    this.rot = 0;
     this.name = name;
     this.playerNo = playerNo;
     let cx = fieldCenterX - Paddle.racketRadius + Paddle.fieldSize / 2;
@@ -130,5 +127,9 @@ export default class Paddle implements ICollider, IGameObject {
       normal = normal.rotate(Math.PI);
     }
     return normal;
+  }
+
+  reset() {
+    this.phi = 0;
   }
 }

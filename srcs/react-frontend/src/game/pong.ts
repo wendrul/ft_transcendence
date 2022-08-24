@@ -62,8 +62,9 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
 
   const ball = new BallDrawable(game.ball, app);
   game.walls.forEach((w) => new WallDrawable(w, app));
+  new WallDrawable(game.leftGoal, app, 0x00ffff);
+  new WallDrawable(game.rightGoal, app, 0x00ffff);
 
-  const gameStateMachine = new GameStateMachine(game);
 
   console.log("Finished Game setup");
 
@@ -76,7 +77,7 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
     const dt = performance.now() - t;
     t = performance.now();
     if (t - elapsed > 3000) {
-      console.log(t - elapsed);
+      // console.log(t - elapsed);
       
       elapsed = t;
       const send = {
@@ -108,6 +109,8 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
   //     socket.emit("gameUpdate", send);
   //   }
   // });
+  const gameStateMachine = new GameStateMachine(game);
+
 }
 
 function gameLoop(game: Game) {

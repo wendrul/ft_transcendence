@@ -11,8 +11,8 @@ enum BallStates {
 }
 
 class Ball implements IGameObject {
-  pos: Vector2;
-  velocity: Vector2;
+  pos!: Vector2;
+  velocity!: Vector2;
 
   state: BallStates = BallStates.MOVING;
   enteringState: boolean = false;
@@ -24,8 +24,7 @@ class Ball implements IGameObject {
   static readonly bounceStallDelay = 0.02;
 
   constructor() {
-    this.velocity = new Vector2(100, 0);
-    this.pos = new Vector2(Game.width / 2, Game.height / 2);
+    this.reset();
     this.colliders = new Array<ICollider>();
   }
 
@@ -107,6 +106,11 @@ class Ball implements IGameObject {
       return chosenCollider;
     }
     return null;
+  }
+
+  public reset() {
+    this.pos = new Vector2(Game.width / 2, Game.height / 2);
+    this.velocity = new Vector2(0,0);
   }
 }
 

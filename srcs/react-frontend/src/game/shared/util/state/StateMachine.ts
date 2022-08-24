@@ -1,5 +1,6 @@
 export interface IState {
   name: string;
+  data: any;
   onEnter: () => void;
   onExit: () => void;
   onUpdate: (dt: number) => void;
