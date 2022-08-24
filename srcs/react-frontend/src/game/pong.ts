@@ -33,12 +33,12 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
   // fetch("http://localhost:3000").then((s) => console.log(s));
   const socket = io("http://localhost:3000");
   socket.on("gameUpdate", (gameState: any) => {
-    p1.phi = gameState.p1.phi;
-    p2.phi = gameState.p2.phi;
-    ball.pos.x = gameState.ballpos.x;
-    ball.pos.y = gameState.ballpos.y;
-    ball.velocity.x = gameState.ballvel.x;
-    ball.velocity.y = gameState.ballvel.y;
+    game.paddle1.phi = gameState.p1.phi;
+    game.paddle2.phi = gameState.p2.phi;
+    game.ball.pos.x = gameState.ballpos.x;
+    game.ball.pos.y = gameState.ballpos.y;
+    game.ball.velocity.x = gameState.ballvel.x;
+    game.ball.velocity.y = gameState.ballvel.y;
   });
 
   app = instantiatedApp;
@@ -48,10 +48,10 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
   const p1 = new PaddleDrawable(game.paddle1, app);
   const p2 = new PaddleDrawable(game.paddle2, app);
 
-  addKeyListeners("w").press = () => (p1.phi += 0.05);
-  addKeyListeners("s").press = () => (p1.phi -= 0.05);
-  addKeyListeners("o").press = () => (p2.phi += 0.05);
-  addKeyListeners("l").press = () => (p2.phi -= 0.05);
+  addKeyListeners("w").press = () => (game.paddle1.phi += 0.05);
+  addKeyListeners("s").press = () => (game.paddle1.phi -= 0.05);
+  addKeyListeners("o").press = () => (game.paddle2.phi += 0.05);
+  addKeyListeners("l").press = () => (game.paddle2.phi -= 0.05);
 
   const i_listener = addKeyListeners("i");
   i_listener.press = () => {
@@ -81,10 +81,10 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
       elapsed = t;
       const send = {
         time: t,
-        p1: { phi: p1.phi },
-        p2: { phi: p2.phi },
-        ballpos: { x: ball.pos.x, y: ball.pos.y },
-        ballvel: { x: ball.velocity.x, y: ball.velocity.y },
+        p1: { phi: game.paddle1.phi },
+        p2: { phi: game.paddle2.phi },
+        ballpos: { x: game.ball.pos.x, y: game.ball.pos.y },
+        ballvel: { x: game.ball.velocity.x, y: game.ball.velocity.y },
       };
       socket.emit("gameUpdate", send);
     }

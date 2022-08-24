@@ -3,6 +3,7 @@ import addKeyListeners from "../util/Interaction";
 import { ICollider, Ray } from "../util/Collider";
 import { cp } from "fs";
 import IGameObject from "./IGameObject";
+import Game from "../util/Game";
 
 enum BallStates {
   MOVING,
@@ -24,7 +25,7 @@ class Ball implements IGameObject {
 
   constructor() {
     this.velocity = new Vector2(100, 0);
-    this.pos = new Vector2(0, 0);
+    this.pos = new Vector2(Game.width / 2, Game.height / 2);
     this.colliders = new Array<ICollider>();
   }
 

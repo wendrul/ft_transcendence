@@ -35,19 +35,19 @@ export default class WallDrawable extends Drawable implements IGameObject, IColl
         this.wall.update(dt);
     }
 
-    public get pos(): Vector2 {
+    private get pos(): Vector2 {
         return this.wall.pos;
     }
-    public get width(): number {
+    private get width(): number {
         return this.wall.width;
     }
-    public get height(): number {
+    private get height(): number {
         return this.wall.height;
     }
-    public get colliderSide(): string {
+    private get colliderSide(): string {
         return this.wall.colliderSide;
     }
-    public get colliderRay(): Ray {
+    private get colliderRay(): Ray {
         return this.wall.colliderRay;
     }
 

@@ -14,30 +14,20 @@ export default class BallDrawable extends Drawable {
     constructor(ball: Ball, app: PIXI.Application) {
         super(app, true);
         this.ball = ball;
-        this.pos = new Vector2(app.renderer.width / 2, app.renderer.height / 2);
 
         this.addKListener(); //garbage
     }
 
-    public get pos() : Vector2 {
+    private get pos() : Vector2 {
         return this.ball.pos;
     }
-    public set pos(v : Vector2) {
-        this.ball.pos = v;
-    }
-    // static readonly States = States;
-    public get velocity() : Vector2 {
-        return this.ball.velocity;
-    }
 
-    public get colliders() : Array<ICollider> {
-        return this.ball.colliders;
+    private get velocity() : Vector2 {
+        return this.ball.velocity;
     }
 
     redraw() {
         this.gfx!.clear();
-
-        //add squishing
 
         this.gfx!.moveTo(this.pos.x, this.pos.y)
           .beginFill(0xfffffff)

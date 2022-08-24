@@ -8,19 +8,6 @@ export default class PaddleDrawable extends Drawable {
   private paddle: Paddle;
   private color: number = 0x9900ff;
 
-  public get phi(): number {
-    return this.paddle.phi;
-  }
-  
-  public set phi(v : number) {
-    this.paddle.phi = v;
-  }
-  
-  public get playerNo(): number {
-    return this.paddle.playerNo;
-  }
-
-
   constructor(paddle: Paddle, app: PIXI.Application) {
     super(app, true);
     this.paddle = paddle;
@@ -30,7 +17,7 @@ export default class PaddleDrawable extends Drawable {
     this.gfx!.clear();
 
     this.drawRacket(
-      this.phi,
+      this.paddle.phi,
       this.app!.renderer.width / 2,
       this.app!.renderer.height / 2
     );
@@ -40,7 +27,7 @@ export default class PaddleDrawable extends Drawable {
     const theta = Math.atan(Paddle.racketSize / (2 * Paddle.racketRadius));
     let cx = fieldx - Paddle.racketRadius + Paddle.fieldSize / 2;
     const cy = fieldy;
-    if (this.playerNo === 1) {
+    if (this.paddle.playerNo === 1) {
       phi += Math.PI;
       cx = fieldx + Paddle.racketRadius - Paddle.fieldSize / 2;
     }
