@@ -1,4 +1,3 @@
-import MenuState from "./MenuState";
 import SearchingState from "./SearchingState";
 import RunningState from "./RunningState";
 import ScoringState from "./ScoringState";
@@ -11,7 +10,6 @@ export class GameStateMachine extends StateMachine {
     currentState: IState;
     private game: Game;
 
-    private menuState!: IState;
     private searchingState!: IState;
     private runningState!: IState;
     private scoringState!: IState;
@@ -23,12 +21,11 @@ export class GameStateMachine extends StateMachine {
 
         this.game = game;
 
-        this.currentState = this.menuState;
+        this.currentState = this.searchingState;
         this.currentState.onEnter();
     }
     
     private initStates() : void {
-        this.menuState = new MenuState();
         this.searchingState = new SearchingState();
         this.runningState = new RunningState(this.game);
         this.scoringState = new ScoringState();
