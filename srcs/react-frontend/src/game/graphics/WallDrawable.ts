@@ -9,7 +9,7 @@ import addKeyListeners from "../shared/util/Interaction";
 import { ICollider, Ray } from "../shared/util/Collider";
 import IGameObject from "../shared/game_objects/IGameObject";
 
-export default class WallDrawable extends Drawable implements IGameObject, ICollider {
+export default class WallDrawable extends Drawable {
     private wall: Wall;
     private color: number;
 
@@ -17,22 +17,6 @@ export default class WallDrawable extends Drawable implements IGameObject, IColl
         super(app, true);
         this.wall = wall;
         this.color = color;
-    }
-    
-    wouldPointCollide(oldPos: Vector2, newPos: Vector2): boolean {
-        return this.wall.wouldPointCollide(oldPos, newPos);
-    }
-    intersectRay(ray: Ray): Vector2 | null {
-        return this.wall.intersectRay(ray);
-    }
-    onCollision(collidingObject: any): Vector2 {
-        return this.wall.onCollision(collidingObject);
-    }
-    normal(incoming: Vector2): Vector2 {
-        return this.wall.normal(incoming);
-    }
-    update(dt: number): void {
-        this.wall.update(dt);
     }
 
     private get pos(): Vector2 {
