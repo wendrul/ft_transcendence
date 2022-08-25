@@ -1,11 +1,11 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
 	Param,
 	Patch,
 	Post,
-	Query,
 	UseGuards
 } from "@nestjs/common";
 import {AuthGuardApi} from "src/guards/auth.guard";
@@ -16,6 +16,8 @@ import {FriendRequestDto} from "./dtos/friendRequest.dto";
 import {UserDto} from "./dtos/user.dto";
 import {FriendRequestService} from "./friendRequest.service";
 import {User} from './entities/users.entity';
+import {CreateFriendRequestDto} from "./dtos/create-friendRequest.dto";
+import {FriendUserDto} from "./dtos/friendUser.dto";
 
 @Controller('friendRequest')
 export class FriendRequestController {
@@ -26,13 +28,20 @@ export class FriendRequestController {
 	@Post('/create')
 	@UseGuards(AuthGuardApi)
 	@Serialize(FriendRequestDto)
-	create(@CurrentUser() user: User, @Query('email') email: string) {
-		return this.friendRequestService.create(user, email);	
+	create(@CurrentUser() user: User, @Body() body: CreateFriendRequestDto) {
+		return this.friendRequestService.create(user, body.login);	
+	}
+
+	@Get('/friendData/:login')
+	@UseGuards(AuthGuardApi)
+	@Serialize(FriendUserDto)
+	getFriendData(@CurrentUser() user: User, @Param('login') login: string) {
+		return this.friendRequestService.getFriendData(user, login);
 	}
 
 	@Get('/friends')
 	@UseGuards(AuthGuardApi)
-	@Serialize(UserDto)
+	@Serialize(FriendUserDto)
 	getFriends(@CurrentUser() user: User) {
 		return this.friendRequestService.getFriends(user);
 	}
@@ -58,5 +67,12 @@ export class FriendRequestController {
 	@Get('/:id')
 	find(@Param('id') id: string) {
 		return this.friendRequestService.find(parseInt(id));
+	}
+
+	@Delete('/:login')
+	@UseGuards(AuthGuardApi)
+	@Serialize(FriendRequestDto)
+	deleteFriend(@CurrentUser() user: User, @Param('login') login: string) {
+		return this.friendRequestService.removeFriend(user, login);
 	}
 }
