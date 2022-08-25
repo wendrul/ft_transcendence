@@ -17,7 +17,6 @@ export function user(state = {
     case userConstants.SIGNUP_SUCCESS:
     case userConstants.WHOAMI_SUCCESS:
     case userConstants.LOGIN_SUCCESS:
-    case userConstants.WHOAMI_REQUEST:
       return {...state,
         data: action.user
       };

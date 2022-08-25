@@ -13,13 +13,6 @@ import UsernameRedirect from './pages/Username/UsernameRedirect';
 import Room from './pages/Room/Room';
 import WebChat from './pages/WebChat/WebChat';
 
-import {
-  MDBBtn,
-  MDBRow,
-  MDBCol
-} from 'mdb-react-ui-kit';
-
-
 class RoutesHandler extends React.Component {
   
   render() {
