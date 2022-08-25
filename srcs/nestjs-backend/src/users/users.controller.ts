@@ -13,6 +13,8 @@ import {
 	Req,
 	UseInterceptors,
 	UploadedFile,
+	Redirect,
+	Res,
 } from '@nestjs/common';
 import { diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -118,7 +120,7 @@ export class UsersController {
 
 	@Get('auth/42/callback')
 	@UseGuards(AuthGuard('42'))
-	async Auth42Redirect(@Req() req: any, @Session() session: any, @CurrentUser() c_user: User) {
+	async Auth42Redirect(@Res() res:any, @Req() req: any, @Session() session: any, @CurrentUser() c_user: User) {
 
 		console.log(req)
 		const user = await this.authService.login42(req.user.email, req.user.firstName, req.user.lastName);
@@ -129,12 +131,11 @@ export class UsersController {
 
 		if (user.twoFactorAuthenticationFlag) {
 			session.twoFactor = user.id;
-			return user;
 		}
 
 		session.userId = user.id;
 		this.userService.update(user, {status: 'online'});
-		return user;
+		res.redirect('http://localhost:3000');
 	}
 
 
