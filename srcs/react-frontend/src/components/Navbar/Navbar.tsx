@@ -58,7 +58,7 @@ export default function NavbarComponent() {
     let Item = users?.items?.map((obj:any) => obj).filter((value:any) => {
       return value?.login === userLogin ;
     });
-    if (Item.length === 1)
+    if (Item?.length === 1)
     {
       navigate("/profile/" + Item[0].id)
       window.location.reload();
