@@ -12,14 +12,38 @@ export class FriendRequestService {
 		private usersService: UsersService
 	) {}
 
-	async create(user: User, email: string) {
-		const reciver = await this.usersService.findEmail(email);
+	async create(user: User, login: string) {
+		const reciver = await this.usersService.findLogin(login);
 		if (reciver.length === 0) {
 			throw new NotFoundException('user not found');
 		}
 
 		if (reciver[0].id === user.id) {
 			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+		}
+
+		const pending = await this.repo.find({
+			relations: ["reciver", "sender"],
+			where: {
+				sender: user,
+				reciver: reciver[0],
+				status: "pending"
+			}
+		});
+		if (pending.length) {
+			throw new HttpException('Still one request friend pending', HttpStatus.FORBIDDEN);
+		}
+
+		const accepted = await this.repo.find({
+			relations: ["reciver", "sender"],
+			where: {
+				sender: user,
+				reciver: reciver[0],
+				status: "accepted"
+			}
+		});
+		if (accepted.length) {
+			throw new HttpException('User is alread your friend', HttpStatus.FORBIDDEN);
 		}
 
 		const request = this.repo.create();

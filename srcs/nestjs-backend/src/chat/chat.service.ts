@@ -32,7 +32,7 @@ export class ChatService {
 
 		//search the channel by name
 		const channels = await this.channelRepo.find({
-			relations: ['usersRelations', 'usersRelations.user', 'adminRelations', 'adminRelations.user'],
+			relations: ['usersRelations', 'usersRelations.user', 'adminRelations', 'adminRelations.user', 'owner'],
 			where: {
 				name: name,
 			}

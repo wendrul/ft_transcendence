@@ -12,10 +12,12 @@ import {CurrentUser} from "src/users/decorators/current-user.decorator";
 import {UserDto} from "src/users/dtos/user.dto";
 import {User} from "src/users/entities/users.entity";
 import {ChatService} from "./chat.service";
+import {ChannelDto} from "./dtos/channel.dto";
 import {ChannelMessageDto} from "./dtos/channelMessage.dto";
 import {CreateChannelDto} from "./dtos/create-channel.dto";
 import {CreateMessageDto} from "./dtos/create-message.dto";
 import {JoinChannelDto} from "./dtos/join-channel.dto";
+import {RelationsDto} from "./dtos/relations.dto";
 import {SetAdminDto} from "./dtos/set-admin.dto";
 import {UserMessageDto} from "./dtos/userMessage.dto";
 
@@ -33,6 +35,7 @@ export class ChatController {
 		return message;
 	}
 
+	@Serialize(ChannelMessageDto)
 	@Post('/createMessageForChannel/:id')
 	@UseGuards(AuthGuardApi)
 	async createMessageForChannel(@CurrentUser() user: User, @Param('id') id: string, @Body() body: CreateMessageDto) {
@@ -40,6 +43,7 @@ export class ChatController {
 		return message;
 	}
 
+	@Serialize(ChannelDto)
 	@Post('/createChannel')
 	@UseGuards(AuthGuardApi)
 	async createChannel(@CurrentUser() user: User, @Body() body: CreateChannelDto) {
@@ -47,9 +51,10 @@ export class ChatController {
 		return channel;	
 	}
 
-	@Post('/joinChannel/:name')
+	@Serialize(RelationsDto)
+	@Post('/joinChannel')
 	@UseGuards(AuthGuardApi)
-	async joinChannel(@CurrentUser() user: User, @Body() body: JoinChannelDto, @Param('name') name: string) {
+	async joinChannel(@CurrentUser() user: User, @Body() body: JoinChannelDto) {
 
 		let password: string;
 		if (!body.password) {
@@ -59,10 +64,11 @@ export class ChatController {
 			password = body.password;
 		}
 
-		const channel = await this.chatService.joinChannel(user, name, password);
+		const channel = await this.chatService.joinChannel(user, body.name, password);
 		return channel;
 	}
 
+	@Serialize(RelationsDto)
 	@Post('/setAdmin')
 	@UseGuards(AuthGuardApi)
 	async setAdmin(@CurrentUser() user: User, @Body() body: SetAdminDto) {
@@ -70,6 +76,7 @@ export class ChatController {
 		return admin;
 	}
 
+	@Serialize(ChannelDto)
 	@Get('/channelData/:name')
 	@UseGuards(AuthGuardApi)
 	async getChannelData(@CurrentUser() user: User, @Param('name') name: string) {
