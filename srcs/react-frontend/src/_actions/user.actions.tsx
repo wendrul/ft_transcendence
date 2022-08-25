@@ -114,13 +114,13 @@ function signout() {
     function failure(error:string) { return { type: userConstants.LOGOUT_FAILURE, error } }
 }
 
-function updateProfile(User: UpdateUser) {
+function updateProfile(user: UpdateUser) {
     return (dispatch:any) => {
-        dispatch(request({ User }));
-        userService.updateProfile(User)
+        dispatch(request(user));
+        userService.updateProfile(user)
             .then(
                 user => {
-                    dispatch(success(User));
+                    dispatch(success(user));
                 },
                 error => {
                     dispatch(failure(error));

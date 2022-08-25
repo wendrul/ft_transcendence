@@ -12,8 +12,7 @@ export function user(state = {
       };
     case userConstants.UPDATE_REQUEST:
       return {...state,
-        updating: true,
-        data: action.user
+        updating: true
       };
     case userConstants.SIGNUP_SUCCESS:
     case userConstants.WHOAMI_SUCCESS:
@@ -36,10 +35,9 @@ export function user(state = {
         data: null
       };
     case userConstants.UPDATE_FAILURE:
-      return {
+      return {...state,
         updated: false,
-        updating: false,
-        data: action.user
+        updating: false
       };
     default:
       return state

@@ -20,7 +20,7 @@ import {
   } from 'mdb-react-ui-kit';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
-import { userActions } from '../../_actions';
+import { alertActions, userActions } from '../../_actions';
 import AlertPage from '../../components/Alerts/Alert';
 
 function EditProfile() {
@@ -48,8 +48,9 @@ function EditProfile() {
 
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
+    dispatch(alertActions.clear());
     dispatch(userActions.updateProfile(user));
-    navigate("/profile");
+   // navigate("/profile");
 	}
 
   const handleChangeFirstName = function(event: ChangeEvent<HTMLInputElement>) {
@@ -71,7 +72,7 @@ function EditProfile() {
     setUser({...user, twoFactorAuthenticationFlag: !boolTwo});
 	}
 
-
+  
 
 
 
@@ -89,20 +90,24 @@ function EditProfile() {
               <form onSubmit={onSubmit}>
                 <MDBRow className='mb-4'>
                   <MDBCol>
-                    <MDBInput id='form3Example1' onChange={handleChangeFirstName} defaultValue={userData.data.firstName} label='First name'/>
+                    <MDBInput onChange={handleChangeFirstName} defaultValue={userData.data.firstName} label='First name'/>
                   </MDBCol>
                   <MDBCol>
-                     <MDBInput id='form3Example2' onChange={handleChangeLastName} defaultValue={userData.data.lastName} label='Last name'/>
+                     <MDBInput onChange={handleChangeLastName} defaultValue={userData.data.lastName} label='Last name'/>
                   </MDBCol>
                 </MDBRow>
-                <MDBInput className='mb-3' onChange={handleChangeLogin} type='text' id='form3Example4' defaultValue={userData.data.login} label='login'/>
-                <MDBFile className='mb-4' label='Avatar' id='customFile' />
-                <MDBSwitch checked={boolTwo} id='flexSwitchCheckDefault' label='Two Factor Authentication' onChange={handletest} />
+                <MDBInput className='mb-3' onChange={handleChangeLogin} type='text' defaultValue={userData.data.login} label='login'/>
+                <MDBFile className='mb-4' label='Avatar' />
+                <MDBSwitch checked={boolTwo} label='Two Factor Authentication' onChange={handletest} />
                 <br />
                 <MDBBtn type='submit' className='mb-4' block>
                   Save
                 </MDBBtn>
-                { alert && <AlertPage type={alert.type} text={alert.message} /> }
+                {
+                  alert && alert.message?.map((value: any, key: number) => {
+                      return <AlertPage key={key} type={alert.type} text={value} />
+                    })
+                }
               </form>
             </div>
           </div>

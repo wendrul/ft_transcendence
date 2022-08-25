@@ -78,7 +78,11 @@ function SignUp() {
                 <MDBBtn type='submit' className='mb-4' block>
                   Sign Up
                 </MDBBtn>
-                { alert && <AlertPage type={alert.type} text={alert.message} /> }
+                {
+                  alert && alert.message?.map((value: any, key: number) => {
+                      return <AlertPage key={key} type={alert.type} text={value} />
+                    })
+                }
               </form>
               <div className='text-center'>
                 <p className="register_btn mb-3">
