@@ -1,6 +1,6 @@
 import {Expose, Transform} from "class-transformer";
 
-export class MessageDto {
+export class UserMessageDto {
 	
 	@Expose()
 	id: number;

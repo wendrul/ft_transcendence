@@ -12,8 +12,12 @@ import {CurrentUser} from "src/users/decorators/current-user.decorator";
 import {UserDto} from "src/users/dtos/user.dto";
 import {User} from "src/users/entities/users.entity";
 import {ChatService} from "./chat.service";
+import {ChannelMessageDto} from "./dtos/channelMessage.dto";
+import {CreateChannelDto} from "./dtos/create-channel.dto";
 import {CreateMessageDto} from "./dtos/create-message.dto";
-import {MessageDto} from "./dtos/message.dto";
+import {JoinChannelDto} from "./dtos/join-channel.dto";
+import {SetAdminDto} from "./dtos/set-admin.dto";
+import {UserMessageDto} from "./dtos/userMessage.dto";
 
 @Controller('chat')
 export class ChatController {
@@ -21,14 +25,65 @@ export class ChatController {
 		private chatService: ChatService,
 	) {}
 
-	@Serialize(MessageDto)
+	@Serialize(UserMessageDto)
 	@Post('/createMessageForUser/:id')
 	@UseGuards(AuthGuardApi)
 	async createMessage(@CurrentUser() user: User, @Param('id') id: string, @Body() body: CreateMessageDto) {
-
 		const message = await this.chatService.createMessageForUser(body.content, user, parseInt(id));
-
 		return message;
+	}
+
+	@Post('/createMessageForChannel/:id')
+	@UseGuards(AuthGuardApi)
+	async createMessageForChannel(@CurrentUser() user: User, @Param('id') id: string, @Body() body: CreateMessageDto) {
+		const message = await this.chatService.createMessageForChannel(body.content, user, parseInt(id));
+		return message;
+	}
+
+	@Post('/createChannel')
+	@UseGuards(AuthGuardApi)
+	async createChannel(@CurrentUser() user: User, @Body() body: CreateChannelDto) {
+		const channel = await this.chatService.createChannel(body.userLogins, body.access, body.password, body.name, user)
+		return channel;	
+	}
+
+	@Post('/joinChannel/:name')
+	@UseGuards(AuthGuardApi)
+	async joinChannel(@CurrentUser() user: User, @Body() body: JoinChannelDto, @Param('name') name: string) {
+
+		let password: string;
+		if (!body.password) {
+			password = null;
+		}
+		else {
+			password = body.password;
+		}
+
+		const channel = await this.chatService.joinChannel(user, name, password);
+		return channel;
+	}
+
+	@Post('/setAdmin')
+	@UseGuards(AuthGuardApi)
+	async setAdmin(@CurrentUser() user: User, @Body() body: SetAdminDto) {
+		const admin = await this.chatService.setAdmin(user, body.name, body.login);
+		return admin;
+	}
+
+	@Get('/channelData/:name')
+	@UseGuards(AuthGuardApi)
+	async getChannelData(@CurrentUser() user: User, @Param('name') name: string) {
+		const channel = await this.chatService.getChannel(user, name);
+		return channel;
+	}
+
+	@Serialize(ChannelMessageDto)
+	@Get('/getChannelMessages/:name')
+	@UseGuards(AuthGuardApi)
+	async getChannelMessages(@CurrentUser() user: User, @Param('name') name: string) {
+		const messages = await this.chatService.getChannelMessages(user, name);
+
+		return messages;
 	}
 
 	@Serialize(UserDto)
@@ -40,7 +95,7 @@ export class ChatController {
 		return users;
 	}
 
-	@Serialize(MessageDto)
+	@Serialize(UserMessageDto)
 	@Get('/getMessagesWith/:id')
 	@UseGuards(AuthGuardApi)
 	async getConversation(@CurrentUser() user: User, @Param('id') id: string) {

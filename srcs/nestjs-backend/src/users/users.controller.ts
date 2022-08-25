@@ -91,7 +91,9 @@ export class UsersController {
 
 		session.userId = user.id;
 
-		this.userService.update(user, {status: 'online'});
+		const login: string = "User" + user.id.toString();
+
+		this.userService.update(user, {status: 'online', login: login});
 		return user;
 	}
 

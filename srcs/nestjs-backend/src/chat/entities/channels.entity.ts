@@ -2,26 +2,30 @@ import {User} from "src/users/entities/users.entity";
 import {
 	Column,
 	Entity,
-	ManyToMany,
 	ManyToOne,
 	OneToMany,
 	PrimaryGeneratedColumn,
 } from "typeorm";
+import {AdminsInChannels} from "./adminsInChannels.entity";
 import {Message} from "./messages.entity";
+import {UsersInChannels} from "./usersInChannels.entity";
 
 @Entity()
 export class Channel {
 	@PrimaryGeneratedColumn()
 	id: number;
 
+	@Column()
+	name: string;
+
 	@ManyToOne(() => User, (user) => user.ownedChannels)
 	owner: User;
 
-	@ManyToMany(() => User, (user) => user.adminChannels)
-	admins: User[];
+	@OneToMany(() => AdminsInChannels, (adminsInChannels) => adminsInChannels.channel)
+	adminRelations: AdminsInChannels[];
 
-	@ManyToMany(() => User, (user) => user.channels)
-	usesrs: User[];
+	@OneToMany(() => UsersInChannels, (usersInChannels) => usersInChannels.channel)
+	usersRelations: UsersInChannels[];
 
 	@OneToMany(() => Message, (message) => message.reciverChannel)
 	messages: Message[];

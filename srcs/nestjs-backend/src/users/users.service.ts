@@ -81,6 +81,10 @@ export class UsersService {
 		return this.repo.findBy({login});
 	}
 
+	findOneLogin(login: string) {
+		return this.repo.findOneBy({login});
+	}
+
 	async update(user: User, attrs: Partial<User>) {
 	/*	console.log(111)
 		console.log(attrs)
