@@ -34,7 +34,6 @@ export class FriendRequestController {
 	@UseGuards(AuthGuardApi)
 	@Serialize(UserDto)
 	getFriends(@CurrentUser() user: User) {
-		console.log('hola');
 		return this.friendRequestService.getFriends(user);
 	}
 

@@ -1,5 +1,6 @@
 import { Expose } from 'class-transformer';
 import { ApiProperty } from "@nestjs/swagger"
+import {LocalFile} from '../entities/localFiles.entity';
 
 export class UserDto {
 	@Expose()
@@ -29,5 +30,8 @@ export class UserDto {
 	@Expose()
 	@ApiProperty()
 	twoFactorAuthenticationFlag: boolean;
+
+	@Expose()
+	avatarPath: string;
 
 }
