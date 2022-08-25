@@ -13,7 +13,7 @@ export default class Game {
   static deathCooldown = 3000;
 
 
-  private static dt = 1000.0 / 60.0;
+  private static dt = 1000.0 / 120.0;
 
   /* Logic */
   leftGoal: Wall;

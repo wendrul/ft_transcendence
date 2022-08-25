@@ -44,10 +44,27 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
   app = instantiatedApp;
 
   const game = new Game();
-
+/*DRAWABLES */
   const p1 = new PaddleDrawable(game.paddle1, app);
   const p2 = new PaddleDrawable(game.paddle2, app);
+  const players = {
+    "player1": game.paddle1,
+    "player2": game.paddle2
+  }
+  const ball = new BallDrawable(game.ball, app);
+  game.walls.forEach((w) => new WallDrawable(w, app));
+  new WallDrawable(game.leftGoal, app, 0x00ffff);
+  new WallDrawable(game.rightGoal, app, 0x00ffff);
+/* DRAWABLES */
 
+  app.stage.interactive= true;
+  app.stage.on("pointermove", (e) => {
+    const pos = e.data.global
+    for (const pKey of ["player1", "player2"]) {
+      const p = players[pKey as keyof typeof players];
+      p.target = pos;
+    }
+  })
   addKeyListeners("w").press = () => (game.paddle1.phi += 0.05);
   addKeyListeners("s").press = () => (game.paddle1.phi -= 0.05);
   addKeyListeners("o").press = () => (game.paddle2.phi += 0.05);
@@ -59,12 +76,6 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
   };
   globalThis.debugMode = false;
   globalThis.debugTool = new GraphicalDebugger(app);
-
-  const ball = new BallDrawable(game.ball, app);
-  game.walls.forEach((w) => new WallDrawable(w, app));
-  new WallDrawable(game.leftGoal, app, 0x00ffff);
-  new WallDrawable(game.rightGoal, app, 0x00ffff);
-
 
   console.log("Finished Game setup");
 

@@ -2,6 +2,8 @@ import Vector2 from "../util/Vector2";
 import { ICollider, Ray } from "../util/Collider";
 import Ball from "./Ball";
 import IGameObject from "./IGameObject";
+import Game from "../util/Game";
+import { Utils } from "../util/Utils";
 
 export default class Paddle implements ICollider, IGameObject {
   name: string;
@@ -13,6 +15,17 @@ export default class Paddle implements ICollider, IGameObject {
   arcCenter: Vector2;
 
   pos: Vector2;
+
+  private _target!: Vector2;
+  public static maxAngle: number = (40 * Math.PI) / 360;
+  public get target(): Vector2 {
+    return this._target;
+  }
+  public set target(v: Vector2) {
+    this._target = v;
+  }
+
+  private FTBO_K = 0.00005;
 
   static readonly racketSize = 100;
   static readonly racketWidth = 10;
@@ -29,6 +42,7 @@ export default class Paddle implements ICollider, IGameObject {
     this.playerNo = playerNo;
     let cx = fieldCenterX - Paddle.racketRadius + Paddle.fieldSize / 2;
     if (playerNo === 1) {
+      this.FTBO_K *= -1;
       cx = fieldCenterX + Paddle.racketRadius - Paddle.fieldSize / 2;
     }
     const cy = fieldCenterY;
@@ -40,6 +54,7 @@ export default class Paddle implements ICollider, IGameObject {
         Math.sin(phi) * Paddle.racketRadius
       )
     );
+    this.target = this.pos;
   }
 
   update(dt: number) {
@@ -50,6 +65,13 @@ export default class Paddle implements ICollider, IGameObject {
         Math.sin(phi) * Paddle.racketRadius
       )
     );
+    this.updatePos(dt);
+  }
+
+  private updatePos(dt: number) {
+    const diff = this.pos.y - this.target.y;
+    this.phi -= this.FTBO_K * diff * dt;
+    this.phi = Utils.clamp(this.phi, -Paddle.maxAngle, +Paddle.maxAngle);
   }
 
   wouldPointCollide(oldPos: Vector2, newPos: Vector2): boolean {
@@ -96,7 +118,7 @@ export default class Paddle implements ICollider, IGameObject {
     );
 
     if (angleDiff > theta) return null;
-    
+
     return circleInter;
   }
 
