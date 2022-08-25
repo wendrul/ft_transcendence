@@ -104,7 +104,7 @@ function EditProfile() {
                   Save
                 </MDBBtn>
                 {
-                  alert && alert.message?.map((value: any, key: number) => {
+                  alert && alert.message && alert.message?.map((value: any, key: number) => {
                       return <AlertPage key={key} type={alert.type} text={value} />
                     })
                 }

@@ -62,11 +62,7 @@ function SignIn() {
 								Sign in
 								{ authentication.loggingIn &&  <SpinnerPage className="spinner-border spinner-border-sm ms-2" /> }
 							</MDBBtn>
-							{
-								alert && alert.message?.map((value: any, key: number) => {
-									return <AlertPage key={key} type={alert.type} text={value} />
-								})
-							}
+							{ alert && <AlertPage type={alert.type} text={alert.message} /> }
 						</form>
 						<div className='text-center'>
 								<p className="register_btn mb-3">

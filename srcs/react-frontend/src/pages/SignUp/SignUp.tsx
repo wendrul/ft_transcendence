@@ -8,7 +8,7 @@ import {
 import "./SignUp.css";
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
-import { userActions } from '../../_actions';
+import { alertActions, userActions } from '../../_actions';
 import AlertPage from '../../components/Alerts/Alert';
 
 function SignUp() {
@@ -31,6 +31,7 @@ function SignUp() {
 
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
+    dispatch(alertActions.clear());
 		dispatch(userActions.signup(firstName, lastName, email, password));
 	}
 
@@ -79,7 +80,7 @@ function SignUp() {
                   Sign Up
                 </MDBBtn>
                 {
-                  alert && alert.message?.map((value: any, key: number) => {
+                  alert && alert.message && alert.message?.map((value: any, key: number) => {
                       return <AlertPage key={key} type={alert.type} text={value} />
                     })
                 }
