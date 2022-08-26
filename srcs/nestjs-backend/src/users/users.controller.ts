@@ -165,11 +165,14 @@ export class UsersController {
 		this.userService.update(user, {status: 'online'});
 
 		return user;
-	} 
+	}
 
 	@Get('/:id')
 	async findUserById(@Param('id') id: string) {
-		const user = await this.userService.findOne(parseInt(id));
+		if (Number(id))
+			var user = await this.userService.findOne(parseInt(id));
+		else
+			var user = await this.userService.findOneLogin(id);
 		if (!user) {
 			throw new NotFoundException('user not found');
 		}

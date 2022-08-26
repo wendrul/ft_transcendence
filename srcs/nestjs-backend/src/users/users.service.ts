@@ -63,15 +63,12 @@ export class UsersService {
 		return this.repo.findOneBy({id});
 	}
 
-	// auth42Login(req) {
-	// 	if (!req.user) {
-	// 	  return 'No user from 42'
-	// 	}
-	// 	return {
-	// 	  message: 'User Info from 42',
-	// 	  user: req.user
-	// 	}
-	//   }
+	findOneLogin(login: string) {
+		if (!login) {
+			return null;
+		}
+		return this.repo.findOneBy({login});
+	}
 
 	findEmail(email: string) {
 		return this.repo.findBy({email});
