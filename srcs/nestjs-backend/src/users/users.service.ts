@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
 import {LocalFileDto} from './dtos/localFile.dto';
+import {BlockedUser} from './entities/blockedUsers.entity';
 import {User} from './entities/users.entity';
 import {LocalFilesService} from './localFiles.service';
 
@@ -9,8 +10,61 @@ import {LocalFilesService} from './localFiles.service';
 export class UsersService {
 	constructor(
 		@InjectRepository(User) private repo: Repository<User>,
+		@InjectRepository(BlockedUser) private blockRepo: Repository<BlockedUser>,
 		private localFilesService: LocalFilesService
 	) {}
+
+	async blockUser(user: User, login: string) {
+
+		const toBlock = await this.findOneLogin(login);	
+		if (!toBlock) {
+			throw new NotFoundException('User not found');
+		}
+
+		if (toBlock.id === user.id) {
+			throw new BadRequestException("Can't block yourself");
+		}
+
+		const blocked = await this.blockRepo.findOne({
+			relations: ["blocked", "blocker"],	
+			where: {
+				blocked: toBlock,
+				blocker: user
+			}
+		});
+
+		if (blocked) {
+			throw new BadRequestException('User already blocked');
+		}
+
+		const blockedUser = this.blockRepo.create({blocked: toBlock, blocker: user});
+		// blockedUser.blocked = toBlock;
+		// blockedUser.blocker = user;
+		return this.blockRepo.save(blockedUser);
+	}
+
+	async unblockUser(user: User, login: string) {
+
+		const toUnblock = await this.findOneLogin(login);	
+		if (!toUnblock) {
+			throw new NotFoundException('User not found');
+		}
+
+		const blockedUser = await this.blockRepo.findOne({
+			relations: ["blocked", "blocker"],	
+			where: {
+				blocked: toUnblock,
+				blocker: user
+			}
+		});
+		
+		if (!blockedUser) {
+			throw new BadRequestException('User was not blocked');
+		}
+
+		return this.blockRepo.remove(blockedUser);
+
+	}
 
 	async turnOffTwoFactorAuthentication(userId: number) {
 		return this.repo.update(userId, {

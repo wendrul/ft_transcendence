@@ -7,6 +7,7 @@ import {
 } from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {randomBytes, scrypt as _scrypt} from "crypto";
+import {BlockedUser} from "src/users/entities/blockedUsers.entity";
 import {User} from "src/users/entities/users.entity";
 import {UsersService} from "src/users/users.service";
 import {Repository} from "typeorm";
@@ -25,6 +26,7 @@ export class ChatService {
 		@InjectRepository(Channel) private channelRepo: Repository<Channel>,
 		@InjectRepository(UsersInChannels) private usersInChannelsRepo: Repository<UsersInChannels>,
 		@InjectRepository(AdminsInChannels) private adminsInChannelsRepo: Repository<AdminsInChannels>,
+		@InjectRepository(BlockedUser) private blockRepo: Repository<BlockedUser>,
 		private userService: UsersService,
 	) {}
 
@@ -231,6 +233,22 @@ export class ChatService {
 		if (!reciver) {
 			throw new NotFoundException('reciver not found');
 		}	
+
+		if (reciver.id === user.id) {
+			throw new BadRequestException("Can't send message to yourself");
+		}
+
+		const blocked = await this.blockRepo.findOne({
+			relations: ["blocked", "blocker"],
+			where: {
+				blocked: user,
+				blocker: reciver
+			}
+		});
+
+		if (blocked) {
+			throw new BadRequestException('You have been blocked by this user');	
+		}
 
 		const	message = this.messageRepo.create({content});
 		message.sender = user;

@@ -7,6 +7,7 @@ import {ChatService} from './chat.service';
 import {CurrentUserMiddleware} from "src/users/middleware/current-user.middleware";
 import {UsersService} from "src/users/users.service";
 import {User} from 'src/users/entities/users.entity';
+import {BlockedUser} from 'src/users/entities/blockedUsers.entity';
 import {LocalFile} from 'src/users/entities/localFiles.entity';
 import {LocalFilesService} from "src/users/localFiles.service";
 import {UsersInChannels} from './entities/usersInChannels.entity';
@@ -20,6 +21,7 @@ import {AdminsInChannels} from  './entities/adminsInChannels.entity';
 		TypeOrmModule.forFeature([LocalFile]),
 		TypeOrmModule.forFeature([AdminsInChannels]),
 		TypeOrmModule.forFeature([UsersInChannels]),
+		TypeOrmModule.forFeature([BlockedUser]),
 	],
 	controllers: [
 		ChatController,

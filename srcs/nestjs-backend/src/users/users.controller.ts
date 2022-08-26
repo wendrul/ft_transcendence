@@ -57,6 +57,18 @@ export class UsersController {
 		return user;
 	}
 
+	@Post('/block/:login')
+	@UseGuards(AuthGuardApi)
+	blockUser(@CurrentUser() user: User, @Param('login') login: string) {
+		return this.userService.blockUser(user, login);
+	}
+
+	@Post('/unblock/:login')
+	@UseGuards(AuthGuardApi)
+	unblockUser(@CurrentUser() user: User, @Param('login') login: string) {
+		return this.userService.unblockUser(user, login);
+	}
+
 	@Post('/avatar')
 	@UseGuards(AuthGuardApi)
 	@UseInterceptors(FileInterceptor('file', {

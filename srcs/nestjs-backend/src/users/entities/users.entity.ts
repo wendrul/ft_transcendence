@@ -10,6 +10,7 @@ import {
 	OneToOne,
 	PrimaryGeneratedColumn,
 } from "typeorm";
+import {BlockedUser} from "./blockedUsers.entity";
 import {FriendRequest} from "./friendRequest.entity";
 import {LocalFile} from "./localFiles.entity";
 
@@ -68,6 +69,14 @@ export class User {
 
 	@Column({ default: false })
 	twoFactorAuthenticationFlag: boolean;
+
+	//blocks
+
+	@OneToMany(() => BlockedUser, (blockedUser) => blockedUser.blocker)
+	blockedUsers: BlockedUser[];
+
+	@OneToMany(() => BlockedUser, (blockedUser) => blockedUser.blocked)
+	blockedBy: BlockedUser[];
 
 	//Chat
 	
