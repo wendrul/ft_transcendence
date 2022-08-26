@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import "./CreateRoom.css";
-import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
-import { useNavigate } from 'react-router-dom';
+//import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
+//import { useNavigate } from 'react-router-dom';
 import RoomCreate from './component/RoomCreate';
 
 function CreateRoom() {
-	const dispatch = useAppDispatch();
-	const navigate = useNavigate();
-	const authentication = useAppSelector<any>(state => state.authentication);
-	const alert = useAppSelector<any>(state => state.alert);
 
 	useEffect(() => {
 		document.title = "CreateRoom";
@@ -17,13 +13,13 @@ function CreateRoom() {
 
   const [basicActive, setBasicActive] = useState('tab1');
 
-  const handleBasicClick = (value: string) => {
+/*  const handleBasicClick = (value: string) => {
     if (value === basicActive) {
       return;
     }
     setBasicActive(value);
   };
-
+*/
   return (
     <>
       { 1 &&

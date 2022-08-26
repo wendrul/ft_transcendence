@@ -28,11 +28,6 @@ function SignIn() {
 		dispatch(userActions.login(email, password));
 	}
 
-	const button42 = () => {
-		navigate("http://10.18.198.173:3002/users/auth/42/callback")
-	}
-
-
 	const handleChangeEmail = function(event: ChangeEvent<HTMLInputElement>) {
 		setEmail(event?.currentTarget?.value);
 	}

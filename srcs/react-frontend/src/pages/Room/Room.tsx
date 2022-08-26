@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
 	MDBRange
   } from 'mdb-react-ui-kit';
 import "./Room.css";
-import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
+/*import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { useNavigate} from 'react-router-dom';
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";*/
 import img_pen from '../../icon/pen.png'
 import img_cross from '../../icon/cancel.png'
-import { render } from '@testing-library/react';
+//import { render } from '@testing-library/react';
 
 
 
@@ -106,10 +106,10 @@ class Room extends React.Component<IProps, IState>{
 			<div className="RoomDiv1 shadow">
 				<div className='bg-white d-flex align-items-center flex-column p-3 h-100 w-25' >
 					<button className ="RoomButtonPen" onClick={this.buttonHandler} >
-						{this.state.view ? swap_img = <img className ="RoomImgPen" src={img_pen}></img>
-						: swap_img = <img className ="RoomImgPen" src={img_cross}></img>}
+						{ this.state.view ? swap_img = <img className ="RoomImgPen" src={img_pen}></img>
+						: swap_img = <img className ="RoomImgPen" src={img_cross}></img> }
 					</button>
-					{this.state.view ? viewData() : viewEdit()}
+					{ this.state.view ? viewData() : viewEdit() }
 				</div>
 
 			 	<div className='w-75 bc-blue d-flex justify-content-center align-items-center flex-column h-100'>
