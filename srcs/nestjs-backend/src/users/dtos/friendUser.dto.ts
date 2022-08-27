@@ -2,7 +2,7 @@ import { Expose } from 'class-transformer';
 import { ApiProperty } from "@nestjs/swagger"
 import {LocalFile} from '../entities/localFiles.entity';
 
-export class UserDto {
+export class FriendUserDto {
 	@Expose()
 	@ApiProperty()
 	id: number;
@@ -30,4 +30,9 @@ export class UserDto {
 	@Expose()
 	@ApiProperty()
 	avatarPath: string;
+
+	@Expose()
+	@ApiProperty()
+	status: string;
+
 }

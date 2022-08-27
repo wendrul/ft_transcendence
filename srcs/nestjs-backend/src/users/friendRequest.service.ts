@@ -1,4 +1,4 @@
-import {HttpException, HttpStatus, Injectable, NotFoundException} from "@nestjs/common";
+import {BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {FriendRequest} from "./entities/friendRequest.entity";
@@ -12,13 +12,91 @@ export class FriendRequestService {
 		private usersService: UsersService
 	) {}
 
-	async create(user: User, email: string) {
-		const reciver = await this.usersService.findEmail(email);
+	async getFriendData(user: User, login: string) {
+
+		let friend: User;
+
+		const friends = await this.getFriends(user);
+
+		for (let i = 0; i < friends.length; i++) {
+			if (login === friends[i].login) {
+				friend = friends[i];
+			}	
+		}
+
+		if (friend) {
+			return friend;
+		} else {
+			throw new BadRequestException('User is not your friend');
+		}
+
+	}
+
+	async removeFriend(user: User, login: string) {
+
+		const friend = await this.usersService.findOneLogin(login);	
+		if (!friend) {
+			throw new NotFoundException('user not found');
+		}
+		
+		let friendRequest = await this.repo.find({
+			relations: ["sender", "reciver"],
+			where: {
+				sender: user,
+				reciver: friend,
+				status: "accepted"
+			}
+		});
+
+		if (friendRequest.length) {
+			return this.repo.remove(friendRequest[0]);
+		}
+
+		friendRequest = await this.repo.find({
+			relations: ["sender", "reciver"],
+			where: {
+				sender: friend,
+				reciver: user,
+				status: "accepted"
+			}
+		});
+
+		if (friendRequest.length) {
+			return this.repo.remove(friendRequest[0]);
+		} else {
+			throw new BadRequestException('User is not your friend');
+		}
+	}
+
+	async create(user: User, login: string) {
+		const reciver = await this.usersService.findLogin(login);
 		if (reciver.length === 0) {
 			throw new NotFoundException('user not found');
 		}
 
 		if (reciver[0].id === user.id) {
+			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+		}
+
+		const pending = await this.repo.find({
+			relations: ["reciver", "sender"],
+			where: {
+				sender: user,
+				reciver: reciver[0],
+			}
+		});
+		if (pending.length) {
+			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+		}
+
+		const accepted = await this.repo.find({
+			relations: ["reciver", "sender"],
+			where: {
+				sender: reciver[0],
+				reciver: user,
+			}
+		});
+		if (accepted.length) {
 			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 		}
 
@@ -43,8 +121,15 @@ export class FriendRequestService {
 			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 		}
 
-		friendRequest.status = status;
-		return this.repo.save(friendRequest);
+		if (status === "accepted") {
+			friendRequest.status = status;
+			return this.repo.save(friendRequest);
+		}
+		if (status === "rejected") {
+			return this.repo.remove(friendRequest);
+		}
+
+		throw new BadRequestException('status not allowed');
 	}
 
 	async getFriends(user: User) {

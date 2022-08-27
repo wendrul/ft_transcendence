@@ -1,14 +1,16 @@
+import {AdminsInChannels} from "src/chat/entities/adminsInChannels.entity";
 import {Channel} from "src/chat/entities/channels.entity";
 import {Message} from "src/chat/entities/messages.entity";
+import {UsersInChannels} from "src/chat/entities/usersInChannels.entity";
 import {
 	Column,
 	Entity,
 	JoinColumn,
-	ManyToMany,
 	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
 } from "typeorm";
+import {BlockedUser} from "./blockedUsers.entity";
 import {FriendRequest} from "./friendRequest.entity";
 import {LocalFile} from "./localFiles.entity";
 
@@ -68,16 +70,24 @@ export class User {
 	@Column({ default: false })
 	twoFactorAuthenticationFlag: boolean;
 
+	//blocks
+
+	@OneToMany(() => BlockedUser, (blockedUser) => blockedUser.blocker)
+	blockedUsers: BlockedUser[];
+
+	@OneToMany(() => BlockedUser, (blockedUser) => blockedUser.blocked)
+	blockedBy: BlockedUser[];
+
 	//Chat
 	
 	@OneToMany(() => Channel, (channel) => channel.owner)
 	ownedChannels: Channel[];	
 
-	@ManyToMany(() => Channel, (channel) => channel.admins)
-	adminChannels: Channel[];
+	@OneToMany(() => AdminsInChannels, (AdminsInChannels) => AdminsInChannels.user)
+	adminChannelRelations: AdminsInChannels[];	
 
-	@ManyToMany(() => Channel, (channel) => channel.usesrs)
-	channels: Channel[];
+	@OneToMany(() => UsersInChannels, (usersInChannels) => usersInChannels.user)
+	channelRelations: UsersInChannels[];
 
 	@OneToMany(() => Message, (message) => message.sender)
 	sentMessages: Message[];
