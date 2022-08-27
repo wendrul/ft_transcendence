@@ -7,41 +7,71 @@ interface IProps{
 }
 
 interface IState{
-	type?: string;
+	type: string;
 }
+
+function oneChannel(){
+	return(
+		<div className='d-flex flex-row border-bottom m-3 justify-content-between'>
+		<div className='d-flex flex-row '>
+			<p> Channel name</p>
+		</div>
+		<div>
+		<button>Chat</button>
+		<button className='bg-danger'>Delete</button>
+		</div>
+	</div>
+	);
+}
+
 
 function ViewPublic(){
 	return(
-		<div className='d-flex flex-row border-bottom m-3'>
-		<div>
-			<p> Public channel</p>
-		</div>
-		<div className='mx-2'>
-
-		<Popup trigger={<button className="button"> + </button>} modal>
-			<div className='channelPopup'>
-				<form className='d-flex flex-column align-items-center justify-content-center'>
-
-					<div>
-						<input type="text" name="type" placeholder='Channel name'/>
-					</div>
-
-					<input type="submit" value="Envoyer" />
-				</form>
+		<>
+		<div className='d-flex flex-row m-3'>
+			<div>
+				<p> Public channel</p>
 			</div>
-		</Popup>
+			<div className='mx-2'>
 
-		</div>
-	</div> );
+				<Popup trigger={<button className="button"> + </button>} modal>
+					<div className='channelPopup'>
+						<form className='d-flex flex-column align-items-center justify-content-center'>
+
+							<div>
+								<input type="text" name="type" placeholder='Channel name'/>
+							</div>
+
+							<input type="submit" value="Submit"/>
+						</form>
+					</div>
+				</Popup>
+			</div>
+	</div> 
+	
+	<div id="allChannel">
+		{oneChannel()}
+		{oneChannel()}
+		{oneChannel()}
+		{oneChannel()}
+		{oneChannel()}
+		{oneChannel()}
+		{oneChannel()}
+		{oneChannel()}
+
+	</div>
+	</>
+	);
 }
 
 function ViewProtect(){
 	return(
-		<div className='d-flex flex-row border-bottom m-3'>
-		<div>
-			<p> Protected channel</p>
-		</div>
-		<div className='mx-2'>
+		<>
+		<div className='d-flex flex-row m-3'>
+			<div>
+				<p> Protect channel</p>
+			</div>
+			<div className='mx-2'>
 
 		<Popup trigger={<button className="button"> + </button>} modal>
 			<div className='channelPopup'>
@@ -62,8 +92,24 @@ function ViewProtect(){
 			</div>
 		</Popup>
 
-		</div>
-	</div> );
+
+
+			</div>
+	</div> 
+	
+	<div id="allChannel">
+		{oneChannel()}
+		{oneChannel()}
+		{oneChannel()}
+		{oneChannel()}
+		{oneChannel()}
+		{oneChannel()}
+		{oneChannel()}
+		{oneChannel()}
+
+	</div>
+	</>
+	);
 }
 
 class Channel extends React.Component<IProps, IState>{
