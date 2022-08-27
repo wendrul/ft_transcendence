@@ -17,7 +17,7 @@ function oneChannel(){
 			<p> Channel name</p>
 		</div>
 		<div>
-		<button>Chat</button>
+		<button onClick={() => window.open(window.location.origin + '/chat_room')}>Chat</button>
 		<button className='bg-danger'>Delete</button>
 		</div>
 	</div>

@@ -40,7 +40,21 @@ class Friend extends React.Component<IProps, IState>{
 				</div>
 				<div className='webchatDiv3_1_2'>
 					<input className='mx-3' type="text" placeholder="search user"/>
-				</div>
+
+					{/* RESULTAT SEARCH */}
+					{/* <div className='FriendSearch'>
+						<div>
+							<p> user1</p>
+						</div>
+						<div>
+							<button> Chat</button>
+							<button> Block</button>
+							<button> Unblock</button>
+						</div>
+					</div> */}
+
+				</div> 
+
 			</div>
 
 			<div className='webchatDiv3_2'>

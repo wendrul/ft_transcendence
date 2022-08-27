@@ -21,7 +21,8 @@ const oneUser = (s: string) => {{
 			<p> {s} user</p>
 		</div>
 		<div>
-		<button>Chat</button>
+		<button> Play</button>
+		<button onClick={() => window.open(window.location.origin + '/chat_room')}>Chat</button>
 		<button className='bg-danger'>Delete</button>
 		</div>
 	</div>

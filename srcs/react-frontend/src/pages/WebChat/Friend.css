@@ -18,3 +18,11 @@
  background-color: #e9e9f2;
  border-radius: 20px;
 }
+
+.FriendSearch{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 400px;
+	background-color: blue;
+}

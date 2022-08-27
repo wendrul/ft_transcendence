@@ -42,7 +42,9 @@
 }
 
 .webchatDiv3_1_2{
-	height: 40%;
+	display: flex;
+	flex-direction: row;
+	height: 30%;
 }
 
 
