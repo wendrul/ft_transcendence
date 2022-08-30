@@ -79,14 +79,6 @@ export class UsersService {
 	}
 
 	async update(user: User, attrs: Partial<User>) {
-	/*	console.log(111)
-		console.log(attrs)
-		console.log(attrs.firstName?.length)
-		if (attrs.login?.length == 0 
-			|| attrs.firstName?.length == 0 
-			|| attrs.lastName?.length == 0 ) {
-				throw new BadRequestException('Empty');
-			}*/
 		if (attrs.email && attrs.email != user.email) {
 			
 			const email = await this.findEmail(attrs.email);
@@ -96,11 +88,13 @@ export class UsersService {
 			}
 		}
 		if (attrs.login && attrs.login != user.login)  {
+			if (Number(attrs.login))
+				throw new BadRequestException(['login in a number']);
 			
 			const login = await this.findLogin(attrs.login);
-
+			
 			if (login.length) {
-				throw new BadRequestException('login in use');
+				throw new BadRequestException(['login in use']);
 			}
 		}
 		Object.assign(user, attrs);
