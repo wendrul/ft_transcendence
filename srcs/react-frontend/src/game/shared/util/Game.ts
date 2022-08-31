@@ -10,7 +10,7 @@ export default class Game {
   public static width: number = 1000;
   public static height: number = 600;
   public static respawnCooldown = 1500;
-  static deathCooldown = 3000;
+  public static deathCooldown = 3000;
 
 
   private static ballStartSpeed = 200;
@@ -22,13 +22,25 @@ export default class Game {
   lastLoser: string;
   scoreboard = { left: 0, right: 0};
 
+  
+
+  
+
   /* class variables */
   private gameObjects: Array<IGameObject> = [];
   private gameTime: number;
-
+  private _currentFrame : number;
   private _paddle1: Paddle;
+  private _paddle2: Paddle;
+
   fieldHeight: number;
   fieldWidth: number;
+  public get currentFrame() : number {
+    return this._currentFrame;
+  }
+  private set currentFrame(v : number) {
+    this._currentFrame = v;
+  }
   public get paddle1(): Paddle {
     return this._paddle1;
   }
@@ -36,7 +48,6 @@ export default class Game {
     this._paddle1 = v;
   }
 
-  private _paddle2: Paddle;
   public get paddle2(): Paddle {
     return this._paddle2;
   }
@@ -60,8 +71,11 @@ export default class Game {
     this._walls = v;
   }
 
+  public updateEvents: Function[] = [];
+
   constructor() {
     this.gameTime = performance.now();
+    this._currentFrame = 0;
 
     this.fieldWidth = Game.width;
     this.fieldHeight = Game.height;
@@ -96,13 +110,18 @@ export default class Game {
     this.ball.colliders.push(this.paddle1, this.paddle2);
 
     this.gameObjects.push(this.paddle1, this.paddle2, this.ball, ...this.walls);
+    this.gameLoop();
   }
 
-  public update() {
+  private update() {
     const newTime = performance.now();
     let timeElapsed = newTime - this.gameTime;
 
     while (timeElapsed > Game.dt) {
+      this.currentFrame += 1;
+      for (const updateEvent of this.updateEvents) {
+        updateEvent(this.currentFrame);
+      }
       for (const object of this.gameObjects) {
         object.update(Game.dt / 10);
       }
@@ -129,5 +148,10 @@ export default class Game {
     else if (this.lastLoser === "left") {
       this.ball.velocity = this.paddle1.pos.subtract(this.ball.pos).normalized().scale(Game.ballStartSpeed);
     }
+  }
+
+  private gameLoop() {
+    this.update();
+    setTimeout(() => this.gameLoop(), 5);
   }
 }

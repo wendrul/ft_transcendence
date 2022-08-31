@@ -41,12 +41,12 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
     game.ball.pos.y = gameState.ballpos.y;
     game.ball.velocity.x = gameState.ballvel.x;
     game.ball.velocity.y = gameState.ballvel.y;
+    console.log("updated");
+  
   });
   socket.on("assignController", (settings) => {
+    console.log(settings);
     controlable  = settings.control;
-  });
-  socket.on("ping", (data) => {
-    // console.log(`ping: ${performance.now() - data.t}`)
   });
 
   let controlable : string[] = [];
@@ -88,32 +88,44 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
 
   console.log("Finished Game setup");
 
-  gameLoop(game);
   HUD(game, app);
+
+  game.updateEvents.push((frame: number) => {
+    if(frame % 6 == 0) {
+      for (const pkey of controlable) {
+        const p = players[pkey as keyof typeof players];
+        socket.emit('inputUpdate', {
+          target: {x: p.target.x, y: p.target.y}
+        });
+      }
+      
+    }
+
+  });
 
   game_starting_for_good = true;
   let t = performance.now();
   let elapsed = t;
-  function coms() {
-    const dt = performance.now() - t;
-    t = performance.now();
-    if (t - elapsed > 30) {
-      // console.log(t - elapsed);
+  // function coms() {
+  //   const dt = performance.now() - t;
+  //   t = performance.now();
+  //   if (t - elapsed > 30) {
+  //     // console.log(t - elapsed);
       
-      elapsed = t;
-      const send = {
-        time: t,
-        p1: { target: {x: game.paddle1.target.x, y: game.paddle1.target.y}},
-        p2: { target: {x: game.paddle2.target.x, y: game.paddle2.target.y}},
-        ballpos: { x: game.ball.pos.x, y: game.ball.pos.y },
-        ballvel: { x: game.ball.velocity.x, y: game.ball.velocity.y },
-      };
-      socket.emit("gameUpdate", send);
-      socket.emit("ping", {t: performance.now()});
-    }
-    setTimeout(() => coms(), 10);
-  }
-  requestAnimationFrame(() => coms());
+  //     elapsed = t;
+  //     const send = {
+  //       time: t,
+  //       p1: { target: {x: game.paddle1.target.x, y: game.paddle1.target.y}},
+  //       p2: { target: {x: game.paddle2.target.x, y: game.paddle2.target.y}},
+  //       ballpos: { x: game.ball.pos.x, y: game.ball.pos.y },
+  //       ballvel: { x: game.ball.velocity.x, y: game.ball.velocity.y },
+  //     };
+  //     socket.emit("gameUpdate", send);
+  //     socket.emit("ping", {t: performance.now()});
+  //   }
+  //   setTimeout(() => coms(), 10);
+  // }
+  // requestAnimationFrame(() => coms());
   // PIXI.Ticker.shared.add((delta) => {
   //   elapsed += delta / 60;
   //   if (elapsed > 0.03) {
@@ -140,9 +152,4 @@ function HUD(game: Game, app: PIXI.Application) {
   scoreBoard.textGfx.anchor.x = 0.5;
   scoreBoard.textGfx.x = Game.width / 2;
   scoreBoard.textGfx.y = 30;
-}
-
-function gameLoop(game: Game) {
-  game.update();
-  requestAnimationFrame(() => gameLoop(game));
 }

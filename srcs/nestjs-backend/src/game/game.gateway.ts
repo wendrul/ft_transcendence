@@ -7,8 +7,8 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
+import GameRoom from './GameRoom';
 // import Ball from qq"./shared/game_objects/Ball"
-import Game from './shared/util/Game';
 
 @WebSocketGateway({
   cors: {
@@ -21,7 +21,7 @@ export class GameGateway
 {
   @WebSocketServer()
   server;
-  game: Game;
+  room : GameRoom;
   settings = {
     p1: null,
     p2: null,
@@ -29,47 +29,24 @@ export class GameGateway
   serverside_settings = {spectators: []}
 
   constructor() {
-    this.game = new Game();
-    Logger.debug("Hey");
   }
 
-  handleConnection(client: any, ...args: any[]) {
-    if (this.settings.p1 == null) {
-      this.settings.p1 = client.id;
-      client.emit('assignController', {control: ["player1"]});
-    } 
-    else if (this.settings.p2 == null) {
-      this.settings.p2 == client.id;
-      client.emit('assignController', {control: ["player2"]});
-    }
-    else {
-      this.serverside_settings.spectators.push(client.id)
-      client.emit('assignController', {control: []});
-    }
+  handleConnection(client: any, ...args: any[]) { 
+    this.room.connection(client)
   }
+
   handleDisconnect(client: any) {
-    if (client.id == this.settings.p1) {
-      this.settings.p1 = null;
-    }
-    if (client.id == this.settings.p2) {
-      this.settings.p2 = null;
-    }
-    if (this.serverside_settings.spectators.includes(client.id))
-      this.serverside_settings.spectators; // remove spec
-    // Logger.debug("Disconnected")
-    // Logger.debug(Object.keys(client.client))
-    // Logger.debug(client.client.id)
-    // Logger.debug(client.id)
-    // throw new Error('Method not implemented.');
+    this.room.disconnect(client);
   }
   afterInit(server: any) {
-    Logger.debug("oi");
+    this.room = new GameRoom(this.server);
+    Logger.debug("Created server game object");
     // throw new Error('Method not implemented.');
   }
-  @SubscribeMessage('ping')
+  @SubscribeMessage('inputUpdate')
   handlePing(client, data)
   {
-    client.emit('ping', data);
+    this.room.onClientInput(client, data);
   }
 
   @SubscribeMessage('gameUpdate')
@@ -80,12 +57,12 @@ export class GameGateway
     // this.game.ball.pos.x = data.ballpos.x;
     // this.game.ball.pos.y = data.ballpos.y;
 
-    const t = performance.now();
-    this.server.emit('gameUpdate', {
-      ...data,
-      timestamp: performance.now(),
-      ping: 13
-    });
+    // const t = performance.now();
+    // this.server.emit('gameUpdate', {
+    //   ...data,
+    //   timestamp: performance.now(),
+    //   ping: 13
+    // });
 
     // let ball = new Ball();
   }
