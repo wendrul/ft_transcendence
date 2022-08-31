@@ -14,13 +14,6 @@ import Room from './pages/Room/Room';
 import WebChat from './pages/WebChat/WebChat';
 import ChatRoom from './pages/WebChat/ChatRoom';
 
-import {
-  MDBBtn,
-  MDBRow,
-  MDBCol
-} from 'mdb-react-ui-kit';
-
-
 class RoutesHandler extends React.Component {
   
   render() {

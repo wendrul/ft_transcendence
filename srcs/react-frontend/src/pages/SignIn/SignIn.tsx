@@ -28,11 +28,6 @@ function SignIn() {
 		dispatch(userActions.login(email, password));
 	}
 
-	const button42 = () => {
-		navigate("http://10.18.198.173:3002/users/auth/42/callback")
-	}
-
-
 	const handleChangeEmail = function(event: ChangeEvent<HTMLInputElement>) {
 		setEmail(event?.currentTarget?.value);
 	}
@@ -68,7 +63,7 @@ function SignIn() {
 								<p className="register_btn mb-3">
 									or sign up with
 								</p>
-								<a href="https://api.intra.42.fr/oauth/authorize?client_id=54f6a3af3e3305e12141732bad34a8d6ee64cc79358730d8cbaea90a0420b5e1&redirect_uri=http%3A%2F%2Flocalhost%3A3000&response_type=code" className="btn mx-1 light">
+								<a href="http://localhost:3002/users/auth42" className="btn mx-1 light">
 									<svg width="22" height="22" viewBox="0 0 1024 1024">
 										<path d="M210.8 335.2l-174.8 174.8v142l175.2 0.8 174.8 1.2 1.2 87.2 0.8 86.8h172v-316h-350l352-352h-176l-175.2 175.2z"></path>
 										<path d="M636 246c0 47.2 1.2 86 2.8 86s41.2-38.4 88-84.8l85.2-85.2v176l-176 176 0.8 86 1.2 86 87.2 1.2 86.8 0.8v-174l176-176v-178h-352v86z"></path>

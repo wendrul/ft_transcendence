@@ -6,7 +6,7 @@ import {
   } from 'mdb-react-ui-kit';
 import "./Username.css";
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
-import { userActions } from '../../_actions';
+import { alertActions, userActions } from '../../_actions';
 import { useNavigate } from 'react-router-dom';
 import AlertPage from '../../components/Alerts/Alert';
 
@@ -31,6 +31,10 @@ function Username() {
 		if(user && Object.keys(user).length === 0)
       setUser(userData.data);
 	}, [authentication])
+
+  useEffect(() => {
+    dispatch(alertActions.clear());
+	}, [])
 
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();

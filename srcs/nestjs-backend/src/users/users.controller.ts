@@ -13,6 +13,8 @@ import {
 	Req,
 	UseInterceptors,
 	UploadedFile,
+	Redirect,
+	Res,
 } from '@nestjs/common';
 import { diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -132,8 +134,9 @@ export class UsersController {
 
 	@Get('auth/42/callback')
 	@UseGuards(AuthGuard('42'))
-	async Auth42Redirect(@Req() req: any, @Session() session: any, @CurrentUser() c_user: User) {
+	async Auth42Redirect(@Res() res:any, @Req() req: any, @Session() session: any, @CurrentUser() c_user: User) {
 
+		console.log(req)
 		const user = await this.authService.login42(req.user.email, req.user.firstName, req.user.lastName);
 
 		if (c_user) {
@@ -142,13 +145,19 @@ export class UsersController {
 
 		if (user.twoFactorAuthenticationFlag) {
 			session.twoFactor = user.id;
-			return user;
 		}
 
 		session.userId = user.id;
 		this.userService.update(user, {status: 'online'});
-		return user;
+		res.redirect('http://localhost:3000');
 	}
+
+
+	@Post('/authApi42')
+	async	authApi42(@Body() token: any) {
+		console.log(token);
+	} 
+
 
 	@Post('/signin')
 	async	signin(@Body() body: SigninUserDto, @Session() session: any, @CurrentUser() c_user: User) {
@@ -170,11 +179,14 @@ export class UsersController {
 		this.userService.update(user, {status: 'online'});
 
 		return user;
-	} 
+	}
 
 	@Get('/:id')
 	async findUserById(@Param('id') id: string) {
-		const user = await this.userService.findOne(parseInt(id));
+		if (Number(id))
+			var user = await this.userService.findOne(parseInt(id));
+		else
+			var user = await this.userService.findOneLogin(id);
 		if (!user) {
 			throw new NotFoundException('user not found');
 		}

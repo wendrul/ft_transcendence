@@ -25,15 +25,15 @@ function guestView(){
 	);
 }
 
-function userView(){
-
+function UserView(){
+	const user = useAppSelector<any>(state => state.user);
 	return (
 		<>
 		<div className="d-flex flex-row mt-4">
 			<div className="dboard-avatar shadow-lg rounded d-flex flex-column align-items-center m-4">
 				<img className='user' src={img_user} alt='user'></img>
 				<h3 className='text-dark mt-4'> Ranking #1</h3>
-				<h5 className='text-dark'> Pseudo</h5>
+				<h5 className='text-dark'> { user.data.login } </h5>
 			</div>
 		</div>
 		<button className='m-3 dboard-btn-sin bg-warning display-6'>PLAY !</button>
@@ -59,7 +59,7 @@ function HomePage(){
 		<div className='d-flex flex-row'>
 
 			<div className='bc-gr2 d-flex flex-column align-items-center justify-content-center w-25'>
-				{authentication.loggedIn ? userView() : guestView()}
+				{authentication.loggedIn ? UserView() : guestView()}
 			</div>
 
 			<div className='bc-blue d-flex flex-row align-items-center justify-content-center border-start border-2 border-dark w-75'>

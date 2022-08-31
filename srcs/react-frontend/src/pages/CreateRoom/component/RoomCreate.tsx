@@ -7,14 +7,15 @@ import {
   MDBCheckbox,
   MDBTabsPane
   } from 'mdb-react-ui-kit';
-import { useAppDispatch, useAppSelector } from '../../../_helpers/hooks';
-import { useNavigate } from 'react-router-dom';
+
+//import { useAppDispatch, useAppSelector } from '../../../_helpers/hooks';
+//import { useNavigate } from 'react-router-dom';
 
 function RoomCreate(props: { active: boolean }) {
-	const dispatch = useAppDispatch();
+/*	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const authentication = useAppSelector<any>(state => state.authentication);
-	const alert = useAppSelector<any>(state => state.alert);
+	const alert = useAppSelector<any>(state => state.alert); */
 
   const [room, setRoom] = useState({
     name: '',
@@ -44,7 +45,7 @@ function RoomCreate(props: { active: boolean }) {
   }
 
   const handlePrivate = function(event: ChangeEvent<HTMLInputElement>) {
-    setRoom({...room, isprivate: event?.currentTarget?.value == "true"? true: false })
+    setRoom({...room, isprivate: event?.currentTarget?.value === "true"? true: false })
   }
 
   return (
@@ -77,7 +78,7 @@ function RoomCreate(props: { active: boolean }) {
               />
             </div>
             <MDBInput className='mb-4 text-center' onChange={handleChangeNameRoom} type='text' label='Create Room Name' labelClass='text-center w-100' required />
-            <MDBCheckbox name='flexCheck' value={ room.isprivate == false? "true":"false" } id='flexCheckDefault' onChange={handlePrivate} label='Private Room?' />
+            <MDBCheckbox name='flexCheck' value={ room.isprivate === false? "true":"false" } id='flexCheckDefault' onChange={handlePrivate} label='Private Room?' />
             {
               room.isprivate &&
               <MDBInput className='text-center' onChange={handleChangePasswordRoom} type='text' label='Password'labelClass='text-center w-100'required />

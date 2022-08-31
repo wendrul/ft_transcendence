@@ -8,7 +8,7 @@ import {
 import "./SignUp.css";
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
-import { userActions } from '../../_actions';
+import { alertActions, userActions } from '../../_actions';
 import AlertPage from '../../components/Alerts/Alert';
 
 function SignUp() {
@@ -31,6 +31,7 @@ function SignUp() {
 
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
+    dispatch(alertActions.clear());
 		dispatch(userActions.signup(firstName, lastName, email, password));
 	}
 
@@ -78,19 +79,23 @@ function SignUp() {
                 <MDBBtn type='submit' className='mb-4' block>
                   Sign Up
                 </MDBBtn>
-                { alert && <AlertPage type={alert.type} text={alert.message} /> }
+                {
+                  alert && alert.message && alert.message?.map((value: any, key: number) => {
+                      return <AlertPage key={key} type={alert.type} text={value} />
+                    })
+                }
               </form>
               <div className='text-center'>
                 <p className="register_btn mb-3">
                   or sign up with
                 </p>
-                <MDBBtn className='mx-1' color='light'>
-                  <svg width="22" height="22" viewBox="0 0 1024 1024">
-                    <path d="M210.8 335.2l-174.8 174.8v142l175.2 0.8 174.8 1.2 1.2 87.2 0.8 86.8h172v-316h-350l352-352h-176l-175.2 175.2z"></path>
-                    <path d="M636 246c0 47.2 1.2 86 2.8 86s41.2-38.4 88-84.8l85.2-85.2v176l-176 176 0.8 86 1.2 86 87.2 1.2 86.8 0.8v-174l176-176v-178h-352v86z"></path>
-                    <path d="M900 602l-86 86h174v-86c0-47.2-0.4-86-1.2-86-0.4 0-39.6 38.8-86.8 86z"></path>
-                  </svg>
-                </MDBBtn>
+								<a href="http://localhost:3002/users/auth42" className="btn mx-1 light">
+									<svg width="22" height="22" viewBox="0 0 1024 1024">
+										<path d="M210.8 335.2l-174.8 174.8v142l175.2 0.8 174.8 1.2 1.2 87.2 0.8 86.8h172v-316h-350l352-352h-176l-175.2 175.2z"></path>
+										<path d="M636 246c0 47.2 1.2 86 2.8 86s41.2-38.4 88-84.8l85.2-85.2v176l-176 176 0.8 86 1.2 86 87.2 1.2 86.8 0.8v-174l176-176v-178h-352v86z"></path>
+										<path d="M900 602l-86 86h174v-86c0-47.2-0.4-86-1.2-86-0.4 0-39.6 38.8-86.8 86z"></path>
+									</svg>
+								</a>
               </div>
             </div>
           </div>
