@@ -22,6 +22,11 @@ export class GameGateway
   @WebSocketServer()
   server;
   game: Game;
+  settings = {
+    p1: null,
+    p2: null,
+  };
+  serverside_settings = {spectators: []}
 
   constructor() {
     this.game = new Game();
@@ -29,11 +34,30 @@ export class GameGateway
   }
 
   handleConnection(client: any, ...args: any[]) {
-    // throw new Error('Method not implemented.');
+    if (this.settings.p1 == null) {
+      this.settings.p1 = client.id;
+      client.emit('assignController', {control: ["player1"]});
+    } 
+    else if (this.settings.p2 == null) {
+      this.settings.p2 == client.id;
+      client.emit('assignController', {control: ["player2"]});
+    }
+    else {
+      this.serverside_settings.spectators.push(client.id)
+      client.emit('assignController', {control: []});
+    }
   }
   handleDisconnect(client: any) {
-    Logger.debug("Disconnected")
-    Logger.debug(Object.keys(client.client))
+    if (client.id == this.settings.p1) {
+      this.settings.p1 = null;
+    }
+    if (client.id == this.settings.p2) {
+      this.settings.p2 = null;
+    }
+    if (this.serverside_settings.spectators.includes(client.id))
+      this.serverside_settings.spectators; // remove spec
+    // Logger.debug("Disconnected")
+    // Logger.debug(Object.keys(client.client))
     // Logger.debug(client.client.id)
     // Logger.debug(client.id)
     // throw new Error('Method not implemented.');
@@ -42,6 +66,12 @@ export class GameGateway
     Logger.debug("oi");
     // throw new Error('Method not implemented.');
   }
+  @SubscribeMessage('ping')
+  handlePing(client, data)
+  {
+    client.emit('ping', data);
+  }
+
   @SubscribeMessage('gameUpdate')
   handleGameUpdate(client, data): void {
     // Logger.debug('Hello');

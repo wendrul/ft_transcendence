@@ -13,6 +13,7 @@ export default class Game {
   static deathCooldown = 3000;
 
 
+  private static ballStartSpeed = 200;
   private static dt = 1000.0 / 120.0;
 
   /* Logic */
@@ -123,10 +124,10 @@ export default class Game {
 
   public start() {
     if (this.lastLoser === "right") {
-      this.ball.velocity = new Vector2(100, 0)
+      this.ball.velocity = this.paddle2.pos.subtract(this.ball.pos).normalized().scale(Game.ballStartSpeed);
     }
     else if (this.lastLoser === "left") {
-      this.ball.velocity = new Vector2(-100, 0)
+      this.ball.velocity = this.paddle1.pos.subtract(this.ball.pos).normalized().scale(Game.ballStartSpeed);
     }
   }
 }
