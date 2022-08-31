@@ -47,6 +47,7 @@ export class ChatController {
 	@Post('/createChannel')
 	@UseGuards(AuthGuardApi)
 	async createChannel(@CurrentUser() user: User, @Body() body: CreateChannelDto) {
+		console.log('in backend');
 		const channel = await this.chatService.createChannel(body.userLogins, body.access, body.password, body.name, user)
 		return channel;	
 	}

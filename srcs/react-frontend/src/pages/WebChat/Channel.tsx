@@ -1,6 +1,9 @@
 import React, { useState} from 'react';
 import Popup from 'reactjs-popup';
 import "./Channel.css";
+import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
+import {channelActions} from '../../_actions/channel.actions'
+import {UpdateUser} from "../../interfaces/iUser";
 
 
 interface IProps{
@@ -10,7 +13,7 @@ interface IState{
 	type: string;
 }
 
-function oneChannel(){
+function OneChannel(){
 	return(
 		<div className='d-flex flex-row border-bottom m-3 justify-content-between'>
 		<div className='d-flex flex-row '>
@@ -25,44 +28,44 @@ function oneChannel(){
 }
 
 
-function ViewPublic(){
-	return(
-		<>
-		<div className='d-flex flex-row m-3'>
-			<div>
-				<p> Public channel</p>
-			</div>
-			<div className='mx-2'>
+// function ViewPublic(){
+// 	return(
+// 		<>
+// 		<div className='d-flex flex-row m-3'>
+// 			<div>
+// 				<p> Public channel</p>
+// 			</div>
+// 			<div className='mx-2'>
 
-				<Popup trigger={<button className="button"> + </button>} modal>
-					<div className='channelPopup'>
-						<form className='d-flex flex-column align-items-center justify-content-center'>
+// 				<Popup trigger={<button className="button"> + </button>} modal>
+// 					<div className='channelPopup'>
+// 						<form onSubmit={onSubmit} className='d-flex flex-column align-items-center justify-content-center'>
 
-							<div>
-								<input type="text" name="type" placeholder='Channel name'/>
-							</div>
+// 							<div>
+// 								<input type="text" name="type" placeholder='Channel name'/>
+// 							</div>
 
-							<input type="submit" value="Submit"/>
-						</form>
-					</div>
-				</Popup>
-			</div>
-	</div> 
+// 							<input type="submit" value="Submit"/>
+// 						</form>
+// 					</div>
+// 				</Popup>
+// 			</div>
+// 	</div> 
 	
-	<div id="allChannel">
-		{oneChannel()}
-		{oneChannel()}
-		{oneChannel()}
-		{oneChannel()}
-		{oneChannel()}
-		{oneChannel()}
-		{oneChannel()}
-		{oneChannel()}
+// 	<div id="allChannel">
+// 		{OneChannel()}
+// 		{OneChannel()}
+// 		{OneChannel()}
+// 		{OneChannel()}
+// 		{OneChannel()}
+// 		{OneChannel()}
+// 		{OneChannel()}
+// 		{OneChannel()}
 
-	</div>
-	</>
-	);
-}
+// 	</div>
+// 	</>
+// 	);
+// }
 
 function ViewProtect(){
 	return(
@@ -92,20 +95,18 @@ function ViewProtect(){
 			</div>
 		</Popup>
 
-
-
 			</div>
 	</div> 
 	
 	<div id="allChannel">
-		{oneChannel()}
-		{oneChannel()}
-		{oneChannel()}
-		{oneChannel()}
-		{oneChannel()}
-		{oneChannel()}
-		{oneChannel()}
-		{oneChannel()}
+		{OneChannel()}
+		{OneChannel()}
+		{OneChannel()}
+		{OneChannel()}
+		{OneChannel()}
+		{OneChannel()}
+		{OneChannel()}
+		{OneChannel()}
 
 	</div>
 	</>
@@ -122,6 +123,58 @@ class Channel extends React.Component<IProps, IState>{
 		this.setState({type: s});
 	}}
 
+	onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+		const dispatch = useAppDispatch();
+		let fruits: string[] = ['Apple', 'Orange', 'Banana'];
+		let person: UpdateUser = {};
+		event.preventDefault();
+		dispatch(channelActions.createChannel(
+			fruits,
+			'public',
+			' ',
+			'roomEriling',
+			person
+		));
+	}
+
+	ViewPublic = () => {
+		return(
+			<>
+			<div className='d-flex flex-row m-3'>
+				<div>
+					<p> Public channel</p>
+				</div>
+				<div className='mx-2'>
+	
+					<Popup trigger={<button className="button"> + </button>} modal>
+						<div className='channelPopup'>
+							<form onSubmit={this.onSubmit} className='d-flex flex-column align-items-center justify-content-center'>
+	
+								<div>
+									<input type="text" name="type" placeholder='Channel name'/>
+								</div>
+			
+								<input type="submit" value="Submit"/>
+							</form>
+						</div>
+					</Popup>
+				</div>
+		</div> 
+		
+		<div id="allChannel">
+			{OneChannel()}
+			{OneChannel()}
+			{OneChannel()}
+			{OneChannel()}
+			{OneChannel()}
+			{OneChannel()}
+			{OneChannel()}
+			{OneChannel()}
+	
+		</div>
+		</>
+		);
+	}
 
 	render(){
 	return (
@@ -143,7 +196,7 @@ class Channel extends React.Component<IProps, IState>{
 			</div>
 
 			<div className='webchatDiv3_2'>
-				{this.state.type == 'public' ? ViewPublic() : ViewProtect()}
+				{this.state.type == 'public' ? this.ViewPublic() : ViewProtect()}
 			</div>
 
 		</div> 

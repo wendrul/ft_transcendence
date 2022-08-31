@@ -62,7 +62,6 @@ export class ChatService {
 	}
 
 	async createChannel(userLogins: string[], access: string, password: string, name: string, owner: User) {
-
 		//check if name is used
 		const channels = await this.channelRepo.find({ where: {name: name} });	
 		if (channels.length) {
