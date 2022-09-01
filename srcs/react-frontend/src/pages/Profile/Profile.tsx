@@ -26,12 +26,17 @@ function Profile(){
 	const user = useAppSelector<any>(state => state.user);
 	const navigate = useNavigate();
 	const users = useAppSelector<any>(state => state.users);
+	const alert = useAppSelector<any>(state => state.alert);
 
 	useEffect(() => {
 
 	if(!authentication.loggedIn && !authentication.loggingIn && !authentication.initial)
 		navigate("/");
 	}, [authentication])
+
+	useEffect(() => {
+	//	dispatch(userActions.)
+	}, [])
 
 	return (
 		<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
@@ -64,6 +69,7 @@ function Profile(){
 				</form>
 				</div>
 				<img className='user' src={img_user} alt='user'></img>
+				{ user.data && user.data.avatarPath }
 				<p>AVAILABLE</p>
 				<div className="d-flex flex-row m-3 mb-1">
 					<button className="row-but2 border border-dark d-flex flex-row ">
