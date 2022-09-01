@@ -132,10 +132,6 @@ export class UsersService {
 		return this.repo.findBy({login});
 	}
 
-	findOneLogin(login: string) {
-		return this.repo.findOneBy({login});
-	}
-
 	async update(user: User, attrs: Partial<User>) {
 		if (attrs.email && attrs.email != user.email) {
 			

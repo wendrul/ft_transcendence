@@ -11,7 +11,7 @@ services:
       target: development
     command: npm run start:dev
     ports:
-      - 3030:3000
+      - 3002:3000
       - 9229:9229
     networks:
       - transcendence-net
