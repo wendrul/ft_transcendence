@@ -1,6 +1,6 @@
 import { avatarConstants } from '../_constants';
 
-export function user(state = {
+export function avatar(state = {
   updating: false
 }, action:any) {
   switch (action.type) {

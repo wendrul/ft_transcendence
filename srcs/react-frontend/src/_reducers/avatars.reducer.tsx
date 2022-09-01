@@ -1,6 +1,6 @@
 import { avatarConstants } from '../_constants';
 
-export function users(state : any = {
+export function avatars(state : any = {
   initial: true,
   items: []
 }, action:any) {
