@@ -8,6 +8,12 @@ import {APP_PIPE} from '@nestjs/core';
 import {FriendRequest} from './users/entities/friendRequest.entity';
 import {LocalFile} from './users/entities/localFiles.entity';
 import { ConfigModule } from '@nestjs/config';
+import {Channel} from './chat/entities/channels.entity';
+import {Message} from './chat/entities/messages.entity';
+import {ChatModule} from './chat/chat.module';
+import {AdminsInChannels} from './chat/entities/adminsInChannels.entity';
+import {UsersInChannels} from './chat/entities/usersInChannels.entity';
+import {BlockedUser} from './users/entities/blockedUsers.entity';
 const cookieSession = require('cookie-session');
 
 @Module({
@@ -20,10 +26,12 @@ const cookieSession = require('cookie-session');
 			username: process.env.POSTGRES_DB_USERNAME,
 			password: process.env.POSTGRES_DB_PASSWORD,
 			database: process.env.POSTGRES_DB_DATABASE,
-			entities: [User, FriendRequest, LocalFile],
+			entities: [User, FriendRequest, LocalFile, Channel, Message, AdminsInChannels, UsersInChannels, BlockedUser],
 			synchronize: true
 		}),
-		UsersModule],
+		UsersModule,
+		ChatModule,
+	],
   controllers: [AppController],
   providers: [
 		AppService,

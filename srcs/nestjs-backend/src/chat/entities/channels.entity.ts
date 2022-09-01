@@ -1,33 +1,38 @@
-// import {User} from "src/users/entities/users.entity";
-// import {
-// 	Column,
-// 	Entity,
-// 	ManyToMany,
-// 	ManyToOne,
-// 	OneToMany,
-// 	PrimaryGeneratedColumn,
-// } from "typeorm";
+import {User} from "src/users/entities/users.entity";
+import {
+	Column,
+	Entity,
+	ManyToOne,
+	OneToMany,
+	PrimaryGeneratedColumn,
+} from "typeorm";
+import {AdminsInChannels} from "./adminsInChannels.entity";
+import {Message} from "./messages.entity";
+import {UsersInChannels} from "./usersInChannels.entity";
 
-// @Entity()
-// export class Channel {
-// 	@PrimaryGeneratedColumn()
-// 	id: number;
+@Entity()
+export class Channel {
+	@PrimaryGeneratedColumn()
+	id: number;
 
-// 	@ManyToOne(() => User, (user) => user.ownedChannels)
-// 	owner: User;
+	@Column()
+	name: string;
 
-// 	@ManyToMany(() => User, (user) => user.adminChannels)
-// 	admins: User[];
+	@ManyToOne(() => User, (user) => user.ownedChannels)
+	owner: User;
 
-// 	@ManyToMany(() => User, (user) => user.channels)
-// 	usesrs: User[];
+	@OneToMany(() => AdminsInChannels, (adminsInChannels) => adminsInChannels.channel)
+	adminRelations: AdminsInChannels[];
 
-// 	@OneToMany(() => Message, (message) => message.channel)
-// 	messages: Message[];
+	@OneToMany(() => UsersInChannels, (usersInChannels) => usersInChannels.channel)
+	usersRelations: UsersInChannels[];
 
-// 	@Column({ default: 'public' })
-// 	access: string;
+	@OneToMany(() => Message, (message) => message.reciverChannel)
+	messages: Message[];
 
-// 	@Column({ nullable: true })
-// 	password?: string;
-// }
+	@Column({ default: 'public' })
+	access: string;
+
+	@Column({ nullable: true })
+	password?: string;
+}

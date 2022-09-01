@@ -16,12 +16,14 @@ import {TwoFactorAuthenticationController} from './twoFactorAuthentication.contr
 import {TwoFactorAuthecticationService} from './twoFactorAuthentication.service';
 import {JwtModule} from '@nestjs/jwt';
 import {JwtStrategy} from './jwt.strategy';
+import {BlockedUser} from './entities/blockedUsers.entity';
 
 @Module({
 	imports: [
 		TypeOrmModule.forFeature([User]),
 		TypeOrmModule.forFeature([FriendRequest]),
 		TypeOrmModule.forFeature([LocalFile]),
+		TypeOrmModule.forFeature([BlockedUser]),
 		JwtModule.registerAsync({
 			useFactory: async () => ({
 				secret: process.env.AUTH42_CLIENTSECRET,
