@@ -113,21 +113,22 @@ function ViewProtect(){
 	);
 }
 
+const dispatch = useAppDispatch();
 class Channel extends React.Component<IProps, IState>{
 	constructor(props: IProps){
 		super(props);
 		this.state = {type: 'public'};
 	}
-	
 	handleChannel = (s: string) => {{
 		this.setState({type: s});
 	}}
 
 	onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-		const dispatch = useAppDispatch();
 		let fruits: string[] = ['Apple', 'Orange', 'Banana'];
 		let person: UpdateUser = {};
-		event.preventDefault();
+
+		alert('hello');
+		// event.preventDefault();
 		dispatch(channelActions.createChannel(
 			fruits,
 			'public',
