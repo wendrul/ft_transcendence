@@ -15,7 +15,8 @@ export function channel(state = {
       };
 		case channelConstants.CREATE_FAILURE:
 			return{
-
 			}
+			default:
+				return state
 		}
 }
