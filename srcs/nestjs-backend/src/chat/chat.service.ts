@@ -30,6 +30,20 @@ export class ChatService {
 		private userService: UsersService,
 	) {}
 
+	async getChannelByType(type: string) {
+
+		//search the channels
+		const channels = await this.channelRepo.find({
+			relations: ['usersRelations', 'usersRelations.user', 'adminRelations', 'adminRelations.user', 'owner'],
+			where: {
+				access: type
+			}
+		});
+
+		return channels;
+
+	}
+
 	async getChannel(user: User, name: string) {
 
 		//search the channel by name
@@ -74,7 +88,7 @@ export class ChatService {
 
 		for (let i = 0; i < userLogins.length; i++) {
 			const user = await this.userService.findOneLogin(userLogins[i]);
-			if (user) {
+			if (user && (user.id !== owner.id)) {
 				users.push(user);
 			}
 		}
@@ -284,7 +298,6 @@ export class ChatService {
 		if (!flag) {
 			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 		}
-
 
 		return channel.messages;
 
