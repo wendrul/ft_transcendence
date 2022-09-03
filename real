@@ -37,7 +37,7 @@ services:
     volumes:
       - ./srcs/react-frontend:/usr/src/app
       - /usr/src/app/node_modules
-      - ./srcs/avatars:/usr/src/avatars
+      - ./srcs/avatars:/usr/src/app/src/avatars
     restart: unless-stopped
 
   postgres:
