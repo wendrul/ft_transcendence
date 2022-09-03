@@ -13,7 +13,7 @@ export function avatars(state : any = {
       };
     case avatarConstants.GETALL_SUCCESS:
       return {...state,
-        items: action.users,
+        items: action.avatars,
         loaded: true,
         initial: false,
       };
@@ -23,7 +23,7 @@ export function avatars(state : any = {
       };
     case avatarConstants.GETOTHER_SUCCESS:
       return {
-        item: action.users,
+        item: action.avatars,
         loaded: true
       };
     case avatarConstants.GETOTHER_FAILURE:

@@ -13,7 +13,7 @@ export function avatar(state = {
       return {...state,
         updated: true,
         updating: false,
-        data: action.user
+        image: action.avatar
       };
     case avatarConstants.UPDATE_FAILURE:
       return {...state,
