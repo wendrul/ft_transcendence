@@ -22,7 +22,10 @@ const oneUser = (s: string) => {{
 		</div>
 		<div>
 		<button> Play</button>
-		<button onClick={() => window.open(window.location.origin + '/chat_room')}>Chat</button>
+
+		{/* HERE */}
+		<button onClick={() => window.open(window.location.origin + '/direct_message')}>Chat</button>
+		
 		<button className='bg-danger'>Delete</button>
 		</div>
 	</div>

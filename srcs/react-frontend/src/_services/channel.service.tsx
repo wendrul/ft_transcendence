@@ -3,7 +3,8 @@ import config from '../config';
 import {UpdateUser} from "../interfaces/iUser";
 
 export const channelService = {
-		createChannel
+		createChannel,
+		// createMessageForUser
 };
 
 function createChannel(userLogins: string[], access: string,
@@ -24,6 +25,20 @@ function createChannel(userLogins: string[], access: string,
 		});
 }
 
+// function createMessageForUser(content: string, user: UpdateUser, id: number){
+// 	return axios.post(`${config.apiUrl}/chat/createChannel`,
+// 	{
+// 		content : content,
+// 		user : user,
+// 		id : id
+// 	},
+// 	{
+// 		withCredentials: true
+// 	}).then(handleResponse).then(message => {
+// 		localStorage.setItem('message', JSON.stringify(message));
+// 		return message;
+// 	});
+// }
 
 function handleResponse(response:any) {
     if(response.status == 400)
