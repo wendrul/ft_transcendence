@@ -55,8 +55,8 @@ export class User {
 	)
 	avatar?: LocalFile;
 
-	@Column({ nullable: true })
-	avatarPath?: string; 
+	@Column({ default:'/usr/src/avatars/default.jpg' })
+	avatarPath: string; 
 
 	@Column({ nullable: true })
 	avatarId?: number;

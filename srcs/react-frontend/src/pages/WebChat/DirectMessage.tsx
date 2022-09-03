@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState, ChangeEvent } from "react";
 import config from '../../config';
-import { user } from "../../_reducers/avatar.reducer";
+import { user } from "../../_reducers/user.reducer";
 import {UpdateUser} from "../../interfaces/iUser";
 import { useAppSelector } from '../../_helpers/hooks';
 import './ChatRoom.css'

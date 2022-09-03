@@ -35,9 +35,9 @@ function getById(id : any) {
 
         avatarService.getById(id)
             .then(
-                user => {
-                    console.log(user);
-                    dispatch(success(user));
+                img => {
+                    console.log(img);
+                    dispatch(success(img));
                 },
                 error => {
                     dispatch(failure(error));
@@ -46,7 +46,7 @@ function getById(id : any) {
     };
 
     function request() { return { type: avatarConstants.GETOTHER_REQUEST } }
-    function success(users:any) { return { type: avatarConstants.GETOTHER_SUCCESS, users } }
+    function success(img:any) { return { type: avatarConstants.GETOTHER_SUCCESS, img } }
     function failure(error:any) { return { type: avatarConstants.GETOTHER_FAILURE, error } }
 }
 

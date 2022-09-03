@@ -33,7 +33,8 @@ function updateProfile(user:UpdateUser) {
 }
 
 function getById(id: any) {
-    return axios.get(`${config.apiUrl}/users/${id}`,)
+   //return axios.get(`${config.apiUrl}/localFiles/${id}`,)
+    return axios.get(`${config.apiUrl}/localFiles/1`,)
     .then((response:any) => {
         if(response == 403 || response == 404)
         {

@@ -25,15 +25,14 @@ function guestView(){
 	);
 }
 
-function UserView(){
-	const user = useAppSelector<any>(state => state.user);
+function UserView(user:any){
 	return (
 		<>
 		<div className="d-flex flex-row mt-4">
 			<div className="dboard-avatar shadow-lg rounded d-flex flex-column align-items-center m-4">
 				<img className='user' src={img_user} alt='user'></img>
 				<h3 className='text-dark mt-4'> Ranking #1</h3>
-				<h5 className='text-dark'> { user.data.login } </h5>
+				<h5 className='text-dark'> { user?.data?.login || "" } </h5>
 			</div>
 		</div>
 		<button className='m-3 dboard-btn-sin bg-warning display-6'>PLAY !</button>
@@ -44,22 +43,22 @@ function UserView(){
 
 function HomePage(){
 	const authentication = useAppSelector<any>(state => state.authentication);
-
-	const [params, setSearchParams] = useSearchParams();
+	const user = useAppSelector<any>(state => state.user);
+	/*const [params, setSearchParams] = useSearchParams();
 	params.get("__firebase_request_key")
-
+*/
 	useEffect(() => {
 		document.title = "Home";
-		console.log();
+	/*	console.log();
 		if (params.get("code"))
-			console.log(params.get("code"))
+			console.log(params.get("code"))*/
 	}, [])
 
 	return(
 		<div className='d-flex flex-row'>
 
 			<div className='bc-gr2 d-flex flex-column align-items-center justify-content-center w-25'>
-				{authentication.loggedIn ? UserView() : guestView()}
+				{authentication.loggedIn ? UserView(user) : guestView()}
 			</div>
 
 			<div className='bc-blue d-flex flex-row align-items-center justify-content-center border-start border-2 border-dark w-75'>

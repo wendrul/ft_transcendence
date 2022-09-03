@@ -1,6 +1,6 @@
 import { avatarConstants } from '../_constants';
 
-export function users(state : any = {
+export function avatars(state : any = {
   initial: true,
   items: []
 }, action:any) {
@@ -13,7 +13,7 @@ export function users(state : any = {
       };
     case avatarConstants.GETALL_SUCCESS:
       return {...state,
-        items: action.users,
+        items: action.avatars,
         loaded: true,
         initial: false,
       };
@@ -23,7 +23,7 @@ export function users(state : any = {
       };
     case avatarConstants.GETOTHER_SUCCESS:
       return {
-        item: action.users,
+        item: action.avatars,
         loaded: true
       };
     case avatarConstants.GETOTHER_FAILURE:

@@ -1,6 +1,6 @@
 import { avatarConstants } from '../_constants';
 
-export function user(state = {
+export function avatar(state = {
   updating: false
 }, action:any) {
   switch (action.type) {
@@ -13,7 +13,7 @@ export function user(state = {
       return {...state,
         updated: true,
         updating: false,
-        data: action.user
+        image: action.avatar
       };
     case avatarConstants.UPDATE_FAILURE:
       return {...state,
