@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import "./Profile.css";
 
 // Image
-import img_user from '../../icon/utilisateur.png'
 import img_friends from '../../icon/friends.png'
 import img_chat from '../../icon/chat.png'
 import img_swords from '../../icon/swords.png'
@@ -28,6 +27,8 @@ function Profile(){
 	const users = useAppSelector<any>(state => state.users);
 	const alert = useAppSelector<any>(state => state.alert);
 
+	let avatarPath = undefined;
+	
 	useEffect(() => {
 
 	if(!authentication.loggedIn && !authentication.loggingIn && !authentication.initial)
@@ -35,8 +36,9 @@ function Profile(){
 	}, [authentication])
 
 	useEffect(() => {
-	//	dispatch(userActions.)
 	}, [])
+
+	if(user?.data?.id) {avatarPath = "http://localhost:3002/localFiles/" + user.data.id;}
 
 	return (
 		<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
@@ -68,8 +70,8 @@ function Profile(){
 					</button>
 				</form>
 				</div>
-				<img className='user' src={img_user} alt='user'></img>
-				{ user.data && user.data.avatarPath }
+				{avatarPath &&
+				 <img className='user' src={ avatarPath } alt='user'></img>}
 				<p>AVAILABLE</p>
 				<div className="d-flex flex-row m-3 mb-1">
 					<button className="row-but2 border border-dark d-flex flex-row ">
