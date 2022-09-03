@@ -39,6 +39,8 @@ function Profile(){
 		dispatch(userActions.getById(uuid));
 	}, [])
 
+	let avatarPath = undefined;
+	if(users?.item?.id) { avatarPath = "http://localhost:3002/localFiles/" + users.item.id; }
 	return (
 		<>
 		{
@@ -66,7 +68,8 @@ function Profile(){
 
 					<div className="shadow-lg bd-gr bc-gr rounded d-flex flex-column 
 					align-items-center m-4">
-						<img className='user' src={img_user} alt='user'></img>
+						{ avatarPath &&
+						<img className='user' src={ avatarPath } alt='user'></img>}
 						<p>AVAILABLE</p>
 						<div className="d-flex flex-row m-3 mb-1">
 							<button className="row-but2 border border-dark d-flex flex-row ">

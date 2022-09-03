@@ -27,7 +27,7 @@ function Profile(){
 	const users = useAppSelector<any>(state => state.users);
 	const alert = useAppSelector<any>(state => state.alert);
 
-	let avatarPath = undefined;
+
 	
 	useEffect(() => {
 
@@ -38,7 +38,8 @@ function Profile(){
 	useEffect(() => {
 	}, [])
 
-	if(user?.data?.id) {avatarPath = "http://localhost:3002/localFiles/" + user.data.id;}
+	let avatarPath = undefined;
+	if(user?.data?.id) { avatarPath = "http://localhost:3002/localFiles/" + user.data.id; }
 
 	return (
 		<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
