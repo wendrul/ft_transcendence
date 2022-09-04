@@ -22,11 +22,6 @@ export class GameGateway
   @WebSocketServer()
   server;
   room : GameRoom;
-  settings = {
-    p1: null,
-    p2: null,
-  };
-  serverside_settings = {spectators: []}
 
   constructor() {
   }

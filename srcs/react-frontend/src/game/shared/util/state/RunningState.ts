@@ -1,4 +1,5 @@
 import Game from "../Game";
+import { GameStateMachine } from "./GameStateMachine";
 import { IState } from "./StateMachine";
 
 export default class RunningState implements IState {
@@ -6,7 +7,7 @@ export default class RunningState implements IState {
     data: any;
     private game: Game;
 
-    constructor(game: Game) {
+    constructor(game: Game, machine : GameStateMachine) {
         this.name = "Running";
 
         this.game = game;

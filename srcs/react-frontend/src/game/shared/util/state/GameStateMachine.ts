@@ -22,15 +22,15 @@ export class GameStateMachine extends StateMachine {
     private scoringState!: IState;
     private endingState!: IState;
 
-    private static instance : GameStateMachine;
-    public static getInstance = () => this.instance;
+    // private static instance : GameStateMachine;
+    // public static getInstance = () => this.instance;
 
     constructor(game: Game) {
         super();
-        if (GameStateMachine.instance){
-            throw new Error("Singleton doubletoned");
-        }
-        GameStateMachine.instance = this;
+        // if (GameStateMachine.instance){
+        //     throw new Error("Singleton doubletoned");
+        // }
+        // GameStateMachine.instance = this;
         this.game = game;
         this.initStates();
         
@@ -40,10 +40,10 @@ export class GameStateMachine extends StateMachine {
     }
     
     private initStates() : void {
-        this.searchingState = new SearchingState();
-        this.runningState = new RunningState(this.game);
-        this.scoringState = new ScoringState(this.game);
-        this.endingState = new EndingState();
+        this.searchingState = new SearchingState(this);
+        this.runningState = new RunningState(this.game, this);
+        this.scoringState = new ScoringState(this.game, this);
+        this.endingState = new EndingState(this);
     }
 
     public changeGameState(newGameState: GameState, data: any): void {

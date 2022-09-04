@@ -1,3 +1,4 @@
+import { GameStateMachine } from "./GameStateMachine";
 import { IState } from "./StateMachine";
 
 export default class SearchingState implements IState {
@@ -5,7 +6,7 @@ export default class SearchingState implements IState {
     data: any;
 
 
-    constructor() {
+    constructor(machine : GameStateMachine) {
         this.name = "Searching";
     }
 

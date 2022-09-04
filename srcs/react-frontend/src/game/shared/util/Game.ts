@@ -3,7 +3,14 @@ import GoalZone from "../game_objects/GoalZone";
 import IGameObject from "../game_objects/IGameObject";
 import Paddle from "../game_objects/Paddle";
 import Wall from "../game_objects/Wall";
+import EventHandler from "./EventHandler";
 import Vector2 from "./Vector2";
+
+export enum GameEvents {
+  BallScore = "ballScore",
+  GameUpdate = "gameUpdate",
+  PointStart = "pointStart",
+}
 
 export default class Game {
   /* Game constants */
@@ -12,7 +19,6 @@ export default class Game {
   public static respawnCooldown = 1500;
   public static deathCooldown = 3000;
 
-
   private static ballStartSpeed = 200;
   private static dt = 1000.0 / 120.0;
 
@@ -20,25 +26,21 @@ export default class Game {
   leftGoal: Wall;
   rightGoal: Wall;
   lastLoser: string;
-  scoreboard = { left: 0, right: 0};
-
-  
-
-  
+  scoreboard = { left: 0, right: 0 };
 
   /* class variables */
   private gameObjects: Array<IGameObject> = [];
   private gameTime: number;
-  private _currentFrame : number;
+  private _currentFrame: number;
   private _paddle1: Paddle;
   private _paddle2: Paddle;
 
   fieldHeight: number;
   fieldWidth: number;
-  public get currentFrame() : number {
+  public get currentFrame(): number {
     return this._currentFrame;
   }
-  private set currentFrame(v : number) {
+  private set currentFrame(v: number) {
     this._currentFrame = v;
   }
   public get paddle1(): Paddle {
@@ -71,11 +73,15 @@ export default class Game {
     this._walls = v;
   }
 
+  private eventHandler: EventHandler;
+
   public updateEvents: Function[] = [];
 
   constructor() {
     this.gameTime = performance.now();
     this._currentFrame = 0;
+
+    this.eventHandler = new EventHandler(GameEvents);
 
     this.fieldWidth = Game.width;
     this.fieldHeight = Game.height;
@@ -93,18 +99,18 @@ export default class Game {
     );
     this.lastLoser = Math.random() > 0.5 ? "left" : "right";
 
-    this._ball = new Ball();
+    this._ball = new Ball(this.eventHandler);
 
     this._walls = [];
     this.walls.push(new Wall(50, 0, 900, 100, "bot"));
     this.walls.push(new Wall(50, 500, 900, 100, "top"));
-    
+
     //Debugging cage walls
     // this.walls.push(new Wall(50, 0, 50, 600, "right"));
     // this.walls.push(new Wall(50, 0, 50, 600, "right"));
-    
-    this.leftGoal = new GoalZone(0, 0, 100, 600, "right");
-    this.rightGoal = new GoalZone(900, 0, 100, 600, "left");
+
+    this.leftGoal = new GoalZone(0, 0, 100, 600, "right", this.eventHandler);
+    this.rightGoal = new GoalZone(900, 0, 100, 600, "left", this.eventHandler);
 
     this.ball.colliders.push(...this.walls, this.leftGoal, this.rightGoal);
     this.ball.colliders.push(this.paddle1, this.paddle2);
@@ -119,9 +125,13 @@ export default class Game {
 
     while (timeElapsed > Game.dt) {
       this.currentFrame += 1;
-      for (const updateEvent of this.updateEvents) {
-        updateEvent(this.currentFrame);
-      }
+
+      //EVENT Game Update
+      this.eventHandler.call_callbacks(
+        GameEvents.GameUpdate,
+        this.currentFrame
+      );
+
       for (const object of this.gameObjects) {
         object.update(Game.dt / 10);
       }
@@ -142,16 +152,29 @@ export default class Game {
   }
 
   public start() {
+    //EVENT point start
+    this.eventHandler.call_callbacks(GameEvents.PointStart, this.lastLoser);
+
     if (this.lastLoser === "right") {
-      this.ball.velocity = this.paddle2.pos.subtract(this.ball.pos).normalized().scale(Game.ballStartSpeed);
-    }
-    else if (this.lastLoser === "left") {
-      this.ball.velocity = this.paddle1.pos.subtract(this.ball.pos).normalized().scale(Game.ballStartSpeed);
+      this.ball.velocity = this.paddle2.pos
+        .subtract(this.ball.pos)
+        .normalized()
+        .scale(Game.ballStartSpeed);
+    } else if (this.lastLoser === "left") {
+      this.ball.velocity = this.paddle1.pos
+        .subtract(this.ball.pos)
+        .normalized()
+        .scale(Game.ballStartSpeed);
     }
   }
 
   private gameLoop() {
     this.update();
     setTimeout(() => this.gameLoop(), 5);
+  }
+
+  public on(eventName: GameEvents, callback: Function)
+  {
+    this.eventHandler.on(eventName, callback);
   }
 }

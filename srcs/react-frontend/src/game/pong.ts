@@ -7,7 +7,7 @@ import BallDrawable from "./graphics/BallDrawable";
 import PaddleDrawable from "./graphics/PaddleDrawable";
 import WallDrawable from "./graphics/WallDrawable";
 import { GraphicalDebugger } from "./graphics/Debug";
-import Game from "./shared/util/Game";
+import Game, { GameEvents } from "./shared/util/Game";
 import { GameStateMachine } from "./shared/util/state/GameStateMachine";
 import ScoreBoardDrawable from "./graphics/ScoreBoardDrawable";
 
@@ -27,8 +27,9 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
     return;
   }
   // fetch("http://localhost:3000").then((s) => console.log(s));
-  const socket = io("http://localhost:3000");
+  const socket = io("http://192.168.1.99:3000");
   socket.on("gameUpdate", (gameState: any) => {
+    
     if (!controlable.includes("player1")){
       game.paddle1.target.x = gameState.p1.target.x;
       game.paddle1.target.y = gameState.p1.target.y;
@@ -41,8 +42,10 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
     game.ball.pos.y = gameState.ballpos.y;
     game.ball.velocity.x = gameState.ballvel.x;
     game.ball.velocity.y = gameState.ballvel.y;
-    console.log("updated");
-  
+    game.scoreboard.left = gameState.score.left;
+    game.scoreboard.right = gameState.score.right;
+    console.log(game.scoreboard);
+    
   });
   socket.on("assignController", (settings) => {
     console.log(settings);
@@ -90,7 +93,7 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
 
   HUD(game, app);
 
-  game.updateEvents.push((frame: number) => {
+  game.on(GameEvents.GameUpdate, (frame: number) => {
     if(frame % 6 == 0) {
       for (const pkey of controlable) {
         const p = players[pkey as keyof typeof players];

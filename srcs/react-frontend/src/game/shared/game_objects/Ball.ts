@@ -4,6 +4,7 @@ import { ICollider, Ray } from "../util/Collider";
 import { cp } from "fs";
 import IGameObject from "./IGameObject";
 import Game from "../util/Game";
+import EventHandler from "../util/EventHandler";
 
 enum BallStates {
   MOVING,
@@ -20,10 +21,13 @@ class Ball implements IGameObject {
 
   colliders: Array<ICollider>;
 
+  private eventHandler: EventHandler;
+
   static readonly radius = 15;
   static readonly bounceStallDelay = 0.02;
 
-  constructor() {
+  constructor(eventHandler: EventHandler) {
+    this.eventHandler = eventHandler;
     this.reset();
     this.colliders = new Array<ICollider>();
   }

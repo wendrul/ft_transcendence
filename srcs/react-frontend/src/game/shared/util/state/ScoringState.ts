@@ -6,10 +6,12 @@ export default class ScoringState implements IState {
     name: string;
     data: any;
     private game: Game;
+    private machine: GameStateMachine;
 
-    constructor(game: Game) {
-        this.name = "Running";
+    constructor(game: Game, machine: GameStateMachine) {
+        this.name = "Scoring";
         this.game = game;
+        this.machine = machine;
     }
 
     onEnter() {
@@ -27,7 +29,7 @@ export default class ScoringState implements IState {
         this.game.lastLoser = side;
         //change to End state if any player has scored the win condition
         setTimeout(() => {
-            GameStateMachine.getInstance().changeGameState(GameState.Running, {});
+            this.machine.changeGameState(GameState.Running, {});
         }, Game.deathCooldown);
     }
 
