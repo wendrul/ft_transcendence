@@ -39,10 +39,18 @@ export class GameGateway
     // throw new Error('Method not implemented.');
   }
   @SubscribeMessage('inputUpdate')
-  handlePing(client, data)
+  handleInputUpdate(client, data)
   {
     this.room.onClientInput(client, data);
   }
+
+  @SubscribeMessage('pingBack')
+  handlePingBack(client, data)
+  {
+    this.room.onPingback(client, data);
+  }
+
+
 
   @SubscribeMessage('gameUpdate')
   handleGameUpdate(client, data): void {

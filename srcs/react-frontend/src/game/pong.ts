@@ -10,6 +10,7 @@ import { GraphicalDebugger } from "./graphics/Debug";
 import Game, { GameEvents } from "./shared/util/Game";
 import { GameStateMachine } from "./shared/util/state/GameStateMachine";
 import ScoreBoardDrawable from "./graphics/ScoreBoardDrawable";
+import WhaffHUD from "./graphics/WhaffHUD";
 
 let app: PIXI.Application;
 
@@ -28,6 +29,9 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
   }
   // fetch("http://localhost:3000").then((s) => console.log(s));
   const socket = io("http://192.168.1.99:3000");
+  let debugInfo = {
+    pings: {}
+  }
   socket.on("gameUpdate", (gameState: any) => {
     
     if (!controlable.includes("player1")){
@@ -44,8 +48,8 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
     game.ball.velocity.y = gameState.ballvel.y;
     game.scoreboard.left = gameState.score.left;
     game.scoreboard.right = gameState.score.right;
-    console.log(game.scoreboard);
-    
+    socket.emit('pingBack', {time: gameState.time});
+    debugInfo.pings = gameState.pings;
   });
   socket.on("assignController", (settings) => {
     console.log(settings);
@@ -91,7 +95,9 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
 
   console.log("Finished Game setup");
 
-  HUD(game, app);
+
+  const hud = new WhaffHUD(app, game, debugInfo);
+  // HUD(game, app);
 
   game.on(GameEvents.GameUpdate, (frame: number) => {
     if(frame % 6 == 0) {

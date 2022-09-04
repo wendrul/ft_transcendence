@@ -14,7 +14,12 @@ export default abstract class Drawable implements IDrawable {
         this.isVisible = isVisible;
 
         app.ticker.add((delta) => {
-            this.redraw();
+            if (this.isVisible) {
+                this.redraw();
+            }
+            else{
+                this.gfx.clear();
+            }
         });
         this.app.stage.addChild(this.gfx);
     }
