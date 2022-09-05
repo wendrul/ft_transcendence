@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	Get,
 	HttpCode,
 	Post,
 	Res,
@@ -25,7 +26,7 @@ export class TwoFactorAuthenticationController {
 		private usersService: UsersService,
 	) {}
 
-	@Post('generate')
+	@Get('generate')
 	@UseGuards(AuthGuardApi)
 	async register(@Res() response: Response, @CurrentUser() user: User) {
 		const { otpauthUrl } = await this.twoFactorAuthenticationService.generateTwoFactorAuthenticationSecret(user);
