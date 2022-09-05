@@ -19,6 +19,17 @@ import {UsersInChannels} from "./entities/usersInChannels.entity";
 
 const scrypt = promisify(_scrypt);
 
+function isUserInChannel(user: User, channel: Channel): boolean {
+	const userRelations = channel.usersRelations;
+	let flag: boolean = false;
+	for (let i = 0; i < userRelations.length; i++) {
+		if (user.id === userRelations[i].user.id) {
+			flag = true;
+		} 
+	}
+	return flag;
+}
+
 @Injectable()
 export class ChatService {
 	constructor(
@@ -29,6 +40,27 @@ export class ChatService {
 		@InjectRepository(BlockedUser) private blockRepo: Repository<BlockedUser>,
 		private userService: UsersService,
 	) {}
+
+	async getMyChannelsByType(user: User, type: string) {
+
+		//search the channels
+		const channels = await this.channelRepo.find({
+			relations: ['usersRelations', 'usersRelations.user', 'adminRelations', 'adminRelations.user', 'owner'],
+			where: {
+				access: type,
+			}	
+		});
+
+		let myChannels: Channel[] = [];
+		for (let i = 0; i < channels.length; i++) {
+			if (isUserInChannel(user, channels[i])) {
+				myChannels.push(channels[i]);
+			}
+		}
+
+		return myChannels;
+		
+	}
 
 	async getChannelByType(type: string) {
 

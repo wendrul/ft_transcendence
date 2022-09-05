@@ -85,6 +85,14 @@ export class ChatController {
 	}
 
 	@Serialize(ChannelDto)
+	@Get('/getMyChannelsByType/:type')
+	@UseGuards(AuthGuardApi)
+	async getMyChannelByType(@CurrentUser() user: User, @Param('type') type: string) {
+		const channels = await this.chatService.getMyChannelsByType(user, type);
+		return channels;
+	}
+
+	@Serialize(ChannelDto)
 	@Get('/channelData/:name')
 	@UseGuards(AuthGuardApi)
 	async getChannelData(@CurrentUser() user: User, @Param('name') name: string) {
