@@ -28,17 +28,18 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
     return;
   }
   // fetch("http://localhost:3000").then((s) => console.log(s));
-  const socket = io("http://192.168.1.99:3000");
+  const socket = io(`${window.location.origin}:3000/game`, {
+    query: { name: "Jhon", roomID: null, premade: false, spectator: false },
+  });
   let debugInfo = {
-    pings: {}
-  }
+    pings: {},
+  };
   socket.on("gameUpdate", (gameState: any) => {
-    
-    if (!controlable.includes("player1")){
+    if (!controlable.includes("player1")) {
       game.paddle1.target.x = gameState.p1.target.x;
       game.paddle1.target.y = gameState.p1.target.y;
     }
-    if (!controlable.includes("player2")){
+    if (!controlable.includes("player2")) {
       game.paddle2.target.x = gameState.p2.target.x;
       game.paddle2.target.y = gameState.p2.target.y;
     }
@@ -48,39 +49,39 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
     game.ball.velocity.y = gameState.ballvel.y;
     game.scoreboard.left = gameState.score.left;
     game.scoreboard.right = gameState.score.right;
-    socket.emit('pingBack', {time: gameState.time});
+    socket.emit("pingBack", { time: gameState.time });
     debugInfo.pings = gameState.pings;
   });
   socket.on("assignController", (settings) => {
     console.log(settings);
-    controlable  = settings.control;
+    controlable = settings.control;
   });
 
-  let controlable : string[] = [];
+  let controlable: string[] = [];
   app = instantiatedApp;
 
   const game = new Game();
-/*DRAWABLES */
+  /*DRAWABLES */
   const p1 = new PaddleDrawable(game.paddle1, app);
   const p2 = new PaddleDrawable(game.paddle2, app);
   const players = {
-    "player1": game.paddle1,
-    "player2": game.paddle2
-  }
+    player1: game.paddle1,
+    player2: game.paddle2,
+  };
   const ball = new BallDrawable(game.ball, app);
   game.walls.forEach((w) => new WallDrawable(w, app));
   new WallDrawable(game.leftGoal, app, 0x00ffff);
   new WallDrawable(game.rightGoal, app, 0x00ffff);
-/* DRAWABLES */
+  /* DRAWABLES */
 
-  app.stage.interactive= true;
+  app.stage.interactive = true;
   app.stage.on("pointermove", (e) => {
-    const pos = e.data.global
+    const pos = e.data.global;
     for (const pKey of controlable) {
       const p = players[pKey as keyof typeof players];
       p.target = pos;
     }
-  })
+  });
   addKeyListeners("w").press = () => (game.paddle1.phi += 0.05);
   addKeyListeners("s").press = () => (game.paddle1.phi -= 0.05);
   addKeyListeners("o").press = () => (game.paddle2.phi += 0.05);
@@ -95,21 +96,18 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
 
   console.log("Finished Game setup");
 
-
   const hud = new WhaffHUD(app, game, debugInfo);
   // HUD(game, app);
 
   game.on(GameEvents.GameUpdate, (frame: number) => {
-    if(frame % 6 == 0) {
+    if (frame % 6 == 0) {
       for (const pkey of controlable) {
         const p = players[pkey as keyof typeof players];
-        socket.emit('inputUpdate', {
-          target: {x: p.target.x, y: p.target.y}
+        socket.emit("inputUpdate", {
+          target: { x: p.target.x, y: p.target.y },
         });
       }
-      
     }
-
   });
 
   game_starting_for_good = true;
@@ -120,7 +118,7 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
   //   t = performance.now();
   //   if (t - elapsed > 30) {
   //     // console.log(t - elapsed);
-      
+
   //     elapsed = t;
   //     const send = {
   //       time: t,
@@ -153,7 +151,6 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
   //   }
   // });
   const gameStateMachine = new GameStateMachine(game);
-
 }
 
 function HUD(game: Game, app: PIXI.Application) {

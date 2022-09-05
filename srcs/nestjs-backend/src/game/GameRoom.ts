@@ -12,22 +12,36 @@ class GameRoom {
   private game: Game;
   private stateMachine: GameStateMachine;
 
+  private _id: string;
+  public get id(): string {
+    return this._id;
+  }
+  private set id(v: string) {
+    this._id = v;
+  }
+
   private socket;
   private settings = {
     p1: null,
     p2: null,
   };
+
+  private logger = new Logger("GameGatewayRoom");
+
   private serverside_settings = { spectators: [] };
   private pingBuffers: any;
   private clientPings: any;
   static movingAveragePeriod: number = 30;
 
-  constructor(socket: Socket) {
+  constructor(socket: Socket, roomID: string) {
     this.pingBuffers = {};
     this.clientPings = {};
     this.socket = socket;
+    this.id = roomID;
+
     this.game = new Game();
     this.stateMachine = new GameStateMachine(this.game);
+
     this.game.on(GameEvents.GameUpdate, (frame) => this.update(frame));
     this.game.on(GameEvents.BallScore, (data) => {
       // this.socket.emit('scoreGoal', {});
@@ -36,23 +50,34 @@ class GameRoom {
     });
   }
 
-  public connection(client) {
-    if (this.settings.p1 == null) { //condition must be less arbitrary
-      this.settings.p1 = client.id;
+  public connection(client: Socket, name: string, spectator: boolean = false) {
+    if (spectator){
       this.pingBuffers[client.id] = new Array<number>(GameRoom.movingAveragePeriod);
-      client.emit('assignController', { control: ['player1'] });
-    } else if (this.settings.p2 == null) {
-      this.settings.p2 = client.id;
-      this.pingBuffers[client.id] = new Array<number>(GameRoom.movingAveragePeriod);
-      client.emit('assignController', { control: ['player2'] });
-    } else {
-      this.pingBuffers = new Array<number>(GameRoom.movingAveragePeriod);
-      this.serverside_settings.spectators.push(client.id);
+      this.serverside_settings.spectators.push({id: client.id, name});
       client.emit('assignController', { control: [] });
+    }
+    else {
+      if (this.settings.p1 == null) {
+        this.settings.p1 = client.id;
+        this.game.paddle1.name = name;
+        this.pingBuffers[client.id] = new Array<number>(
+          GameRoom.movingAveragePeriod,
+        );
+        client.emit('assignController', { control: ['player1'] });
+      } else if (this.settings.p2 == null) {
+        this.settings.p2 = client.id;
+        this.game.paddle1.name = name;
+        this.pingBuffers[client.id] = new Array<number>(
+          GameRoom.movingAveragePeriod,
+        );
+        client.emit('assignController', { control: ['player2'] });
+      } else {
+        this.logger.error("Player tried connecting to a full match");
+      }
     }
   }
 
-  public disconnect(client) {
+  public disconnect(client: Socket) {
     if (client.id == this.settings.p1) {
       this.settings.p1 = null;
     }
@@ -63,7 +88,7 @@ class GameRoom {
       this.serverside_settings.spectators;
   }
 
-  public onClientInput(client, data) {
+  public onClientInput(client: Socket, data: any) {
     switch (client.id) {
       case this.settings.p1:
         this.game.paddle1.target.x = data.target.x;
@@ -78,20 +103,20 @@ class GameRoom {
     }
   }
 
-  public onPingback(client, data) {
+  public onPingback(client: Socket, data: any) {
     const ping = performance.now() - data.time;
     this.pingBuffers[client.id].push(ping);
     this.pingBuffers[client.id].shift(1);
     switch (client.id) {
       case this.settings.p1:
-        this.clientPings[this.game.paddle1.name] = Math.round(Utils.mean(
-          this.pingBuffers[client.id],
-        ));
+        this.clientPings[this.game.paddle1.name] = Math.round(
+          Utils.mean(this.pingBuffers[client.id]),
+        );
         break;
       case this.settings.p2:
-        this.clientPings[this.game.paddle2.name] = Math.round(Utils.mean(
-          this.pingBuffers[client.id],
-        ));
+        this.clientPings[this.game.paddle2.name] = Math.round(
+          Utils.mean(this.pingBuffers[client.id]),
+        );
         break;
       default:
         break;

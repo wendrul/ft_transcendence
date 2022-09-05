@@ -46,8 +46,6 @@ class DebugHUD extends Drawable {
   }
 
   updateText() {
-    console.log(this.debug);
-
     this.text = "Player ping\n";
     for (const playerName in this.debug.pings) {
       if (Object.prototype.hasOwnProperty.call(this.debug.pings, playerName)) {
