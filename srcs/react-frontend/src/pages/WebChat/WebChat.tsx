@@ -1,6 +1,6 @@
 import React from 'react';
 import "./WebChat.css";
-import Friend from './Friend';
+import User from './User';
 import Channel from './Channel';
 
 
@@ -14,10 +14,10 @@ interface IState {
 class WebChat extends React.Component<IProps, IState>{
 	constructor(props: IProps){
 		super(props);
-		this.state = {page: 'friend'};
+		this.state = {page: 'User'};
 	}
-	handleFriend = () => {{
-			this.setState({page : 'friend'});
+	handleUser = () => {{
+			this.setState({page : 'User'});
 	}};
 
 	handleChannel = () => {{
@@ -37,7 +37,7 @@ class WebChat extends React.Component<IProps, IState>{
 
 			<div className='webchatDiv2_2'>
 			<div className='mt-5'>
-					<button onClick={this.handleFriend}> FRIENDS</button>
+					<button onClick={this.handleUser}> USERS </button>
 				</div>
 				<div className='mt-5'>
 				<button onClick={this.handleChannel}> CHANNEL</button>
@@ -45,7 +45,7 @@ class WebChat extends React.Component<IProps, IState>{
 			</div>
 
 		</div>
-		{this.state.page == 'friend' ? <Friend></Friend> : <Channel></Channel>}
+		{this.state.page == 'User' ? <User></User> : <Channel></Channel>}
 
 	</div>
 

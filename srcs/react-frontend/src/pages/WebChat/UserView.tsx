@@ -46,7 +46,7 @@ class FriendUser extends React.Component<IProps, IState>{
 
 	render(): React.ReactNode {
 		let view;
-		if (this.props.type == 'online' || this.props.type == 'all'){
+		if (this.props.type == 'conversation' || this.props.type == 'friends'){
 			view = oneUser(this.props.type);
 		}
 		else if (this.props.type == 'block'){
