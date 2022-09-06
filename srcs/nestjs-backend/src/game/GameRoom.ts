@@ -26,7 +26,7 @@ class GameRoom {
     p2: null,
   };
 
-  private logger = new Logger("GameGatewayRoom");
+  private logger = new Logger("GameRoom");
 
   private serverside_settings = { spectators: [] };
   private pingBuffers: any;
@@ -66,7 +66,7 @@ class GameRoom {
         client.emit('assignController', { control: ['player1'] });
       } else if (this.settings.p2 == null) {
         this.settings.p2 = client.id;
-        this.game.paddle1.name = name;
+        this.game.paddle2.name = name;
         this.pingBuffers[client.id] = new Array<number>(
           GameRoom.movingAveragePeriod,
         );

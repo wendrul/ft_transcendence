@@ -13,7 +13,7 @@ import { Server, Socket } from 'socket.io';
 
 type GameClient = {
   name: string;
-  roomID: string | null;
+  roomID: string;
   premade: boolean;
   socket: Socket;
   spectator: boolean;
@@ -55,14 +55,14 @@ export class GameGateway
 
     const query = client.handshake.query;
 
-    if (!query.name || !query.roomID || !query.premade || !query.spectator) {
-      this.logger.error("didn't receive sufficeint fields on query");
+    if (query.name === undefined || query.roomID === undefined || query.premade === undefined || query.spectator === undefined) {
+      this.logger.debug("didn't receive sufficeint fields on query");
       client.disconnect();
     }
-    const roomID = query.roomID === 'null' ? null : query.roomID;
+    // const roomID = query.roomID === 'null' ? null : query.roomID;
     const newClient: GameClient = {
       name: query.name as string,
-      roomID: roomID as string,
+      roomID: query.roomID as string,
       premade: query.premade === 'true',
       socket: client,
       spectator: query.spectator === 'true',
@@ -89,7 +89,6 @@ export class GameGateway
       }
     } else if (newClient.premade) {
       // Premade Match
-
       if (!this.gameRooms[newClient.roomID]) {
         this.gameRooms[newClient.roomID] = new GameRoom(
           this.server.to(newClient.roomID),
@@ -141,6 +140,17 @@ export class GameGateway
   }
 
   handleDisconnect(client: Socket) {
+    // If he was in a matchmaking queue
+    for (let i = 0; i < this.matchQueue.length; i++) {
+      const gameClient = this.matchQueue[i];
+      if (gameClient.socket.id == client.id) {
+        this.matchQueue.splice(i,1);
+        return ;
+      }
+    }
+    
+
+
     const gameClient = this.gameClients[client.id];
     if (gameClient && this.gameRooms[gameClient.roomID]) {
       this.gameRooms[gameClient.roomID].disconnect(client);

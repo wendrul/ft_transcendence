@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 import addKeyListeners from "./shared/util/Interaction";
 
@@ -21,16 +21,26 @@ declare global {
 
 let game_starting_for_good = false;
 
-export function gameSetup(instantiatedApp: PIXI.Application) {
+export function gameSetup(
+  instantiatedApp: PIXI.Application,
+  queryParameters: {
+      name: string;
+      roomID: string;
+      premade: boolean;
+      spectator: boolean;
+    }
+) {
   if (!game_starting_for_good) {
     //Hacky way to avoid running this twice, should be fixed in the future
     game_starting_for_good = true;
     return;
   }
+  const socket = io(`${window.location.origin}:3000/game`, {query: queryParameters});
+
   // fetch("http://localhost:3000").then((s) => console.log(s));
-  const socket = io(`${window.location.origin}:3000/game`, {
-    query: { name: "Jhon", roomID: null, premade: false, spectator: false },
-  });
+  // const socket = io(`${window.location.origin}:3000/game`, {
+  //   query: { name: "Jhon", roomID: null, premade: false, spectator: false },
+  // });
   let debugInfo = {
     pings: {},
   };
@@ -61,6 +71,7 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
   app = instantiatedApp;
 
   const game = new Game();
+
   /*DRAWABLES */
   const p1 = new PaddleDrawable(game.paddle1, app);
   const p2 = new PaddleDrawable(game.paddle2, app);
@@ -72,7 +83,7 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
   game.walls.forEach((w) => new WallDrawable(w, app));
   new WallDrawable(game.leftGoal, app, 0x00ffff);
   new WallDrawable(game.rightGoal, app, 0x00ffff);
-  /* DRAWABLES */
+  /* END DRAWABLES */
 
   app.stage.interactive = true;
   app.stage.on("pointermove", (e) => {
@@ -109,48 +120,7 @@ export function gameSetup(instantiatedApp: PIXI.Application) {
       }
     }
   });
-
   game_starting_for_good = true;
-  let t = performance.now();
-  let elapsed = t;
-  // function coms() {
-  //   const dt = performance.now() - t;
-  //   t = performance.now();
-  //   if (t - elapsed > 30) {
-  //     // console.log(t - elapsed);
-
-  //     elapsed = t;
-  //     const send = {
-  //       time: t,
-  //       p1: { target: {x: game.paddle1.target.x, y: game.paddle1.target.y}},
-  //       p2: { target: {x: game.paddle2.target.x, y: game.paddle2.target.y}},
-  //       ballpos: { x: game.ball.pos.x, y: game.ball.pos.y },
-  //       ballvel: { x: game.ball.velocity.x, y: game.ball.velocity.y },
-  //     };
-  //     socket.emit("gameUpdate", send);
-  //     socket.emit("ping", {t: performance.now()});
-  //   }
-  //   setTimeout(() => coms(), 10);
-  // }
-  // requestAnimationFrame(() => coms());
-  // PIXI.Ticker.shared.add((delta) => {
-  //   elapsed += delta / 60;
-  //   if (elapsed > 0.03) {
-  //     // console.log(elapsed);
-
-  //     elapsed = 0;
-  //     const send = {
-  //       p1: { phi: p.phi },
-  //       p2: { phi: p2.phi },
-  //       ballpos: { x: ball.pos.x, y: ball.pos.y },
-  //       ballvel: { x: ball.velocity.x, y: ball.velocity.y },
-  //       ball: ball,
-  //       name: "etie"
-  //     };
-  //     socket.emit("gameUpdate", send);
-  //   }
-  // });
-  const gameStateMachine = new GameStateMachine(game);
 }
 
 function HUD(game: Game, app: PIXI.Application) {
