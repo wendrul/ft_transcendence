@@ -19,6 +19,17 @@ import {UsersInChannels} from "./entities/usersInChannels.entity";
 
 const scrypt = promisify(_scrypt);
 
+function isUserInChannel(user: User, channel: Channel): boolean {
+	const userRelations = channel.usersRelations;
+	let flag: boolean = false;
+	for (let i = 0; i < userRelations.length; i++) {
+		if (user.id === userRelations[i].user.id) {
+			flag = true;
+		} 
+	}
+	return flag;
+}
+
 @Injectable()
 export class ChatService {
 	constructor(
@@ -29,6 +40,41 @@ export class ChatService {
 		@InjectRepository(BlockedUser) private blockRepo: Repository<BlockedUser>,
 		private userService: UsersService,
 	) {}
+
+	async getMyChannelsByType(user: User, type: string) {
+
+		//search the channels
+		const channels = await this.channelRepo.find({
+			relations: ['usersRelations', 'usersRelations.user', 'adminRelations', 'adminRelations.user', 'owner'],
+			where: {
+				access: type,
+			}	
+		});
+
+		let myChannels: Channel[] = [];
+		for (let i = 0; i < channels.length; i++) {
+			if (isUserInChannel(user, channels[i])) {
+				myChannels.push(channels[i]);
+			}
+		}
+
+		return myChannels;
+		
+	}
+
+	async getChannelByType(type: string) {
+
+		//search the channels
+		const channels = await this.channelRepo.find({
+			relations: ['usersRelations', 'usersRelations.user', 'adminRelations', 'adminRelations.user', 'owner'],
+			where: {
+				access: type
+			}
+		});
+
+		return channels;
+
+	}
 
 	async getChannel(user: User, name: string) {
 
@@ -73,7 +119,7 @@ export class ChatService {
 
 		for (let i = 0; i < userLogins.length; i++) {
 			const user = await this.userService.findOneLogin(userLogins[i]);
-			if (user) {
+			if (user && (user.id !== owner.id)) {
 				users.push(user);
 			}
 		}
@@ -283,7 +329,6 @@ export class ChatService {
 		if (!flag) {
 			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 		}
-
 
 		return channel.messages;
 

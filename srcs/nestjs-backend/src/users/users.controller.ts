@@ -193,6 +193,15 @@ export class UsersController {
 		return user;
 	}
 
+	@Get('/userByLogin/:login')
+	async findUserByLogin(@Param('login') login: string) {
+		const user = await this.userService.findOneLogin(login);
+		if (!user) {
+			throw new NotFoundException('user not found');
+		}
+		return user;
+	}
+
 	@Get()
 	findAllUsers(@Query('email') email: string) {
 		return this.userService.findEmail(email);
