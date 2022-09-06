@@ -14,6 +14,8 @@ import Room from './pages/Room/Room';
 import WebChat from './pages/WebChat/WebChat';
 import ChatRoom from './pages/WebChat/ChatRoom';
 import DirectMessage from './pages/WebChat/DirectMessage';
+import TurnOn2fa from './pages/TurnOn2fa/TurnOn2fa';
+import Authenticate2fa from './pages/Authenticate2fa/Authenticate2fa';
 
 class RoutesHandler extends React.Component {
   
@@ -24,6 +26,10 @@ class RoutesHandler extends React.Component {
         <Route  path ='/' element={<UsernameRedirect component={<HomePage/>} />} />
        {/* <Route  path ='/:code' element={<UsernameRedirect component={<HomePage/>} />} /> */}
         <Route  path ='/username' element={<Username/>} />
+
+        <Route  path ='/turnOn2fa' element={<TurnOn2fa/>} />
+        <Route  path ='/Authenticate2fa' element={<Authenticate2fa/>} />
+
         <Route  path ='/create_room' element={<CreateRoom/>} /> {/* poner el component cuando todo sirva */}
         <Route  path ='/room/:uuid' element={<Room/>} /> {/* poner el component cuando todo sirva */}
         <Route  path ='/signin' element={<UsernameRedirect component={<SignIn/>} />} />

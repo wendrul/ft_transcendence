@@ -7,6 +7,8 @@ export const userService = {
     getAll,
     getById,
     whoami,
+    turnOn2fa,
+    authenticate2fa,
     signout,
     auth42,
     signup,
@@ -25,6 +27,38 @@ function whoami() {
         }
         return response.data;
     })     
+}
+
+function turnOn2fa(code:string) {
+    return axios.post(`${config.apiUrl}/2fa/turn-on`,
+    {
+           code: code
+    }, { 
+        withCredentials: true 
+    }).then((response:any) => {
+        if(response == 401)
+        {
+            const error = response.message || response.statusText;
+            return Promise.reject(error);
+        }
+        return response.data;
+    })
+}
+
+function authenticate2fa(code:string) {
+    return axios.post(`${config.apiUrl}/2fa/authenticate`,
+    {
+           code: code
+    }, { 
+        withCredentials: true 
+    }).then((response:any) => {
+        if(response == 401)
+        {
+            const error = response.message || response.statusText;
+            return Promise.reject(error);
+        }
+        return response.data;
+    })
 }
 
 function login(email:string, password:string) {
