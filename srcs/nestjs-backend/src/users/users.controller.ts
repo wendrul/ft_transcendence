@@ -15,6 +15,7 @@ import {
 	UploadedFile,
 	Redirect,
 	Res,
+	BadRequestException,
 } from '@nestjs/common';
 import { diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -79,6 +80,10 @@ export class UsersController {
 		})
 	}))
 	addAvatar(@CurrentUser() user: User, @UploadedFile() file: Express.Multer.File) {
+		console.log(1111213213123, file ,12312312312)
+		if (!file) {
+			throw new BadRequestException('Need a file');
+		}
 		return this.userService.addAvatar(user.id, {
 			path: file.path,
 			filename: file.originalname,
