@@ -2,7 +2,9 @@ import {
 	Body,
 	Controller,
 	Get,
+	HttpCode,
 	Param,
+	Patch,
 	Post,
 	UseGuards,
 } from "@nestjs/common";
@@ -17,8 +19,10 @@ import {ChannelMessageDto} from "./dtos/channelMessage.dto";
 import {CreateChannelDto} from "./dtos/create-channel.dto";
 import {CreateMessageDto} from "./dtos/create-message.dto";
 import {JoinChannelDto} from "./dtos/join-channel.dto";
+import {MuteUserDto} from "./dtos/mute-user.dto";
 import {RelationsDto} from "./dtos/relations.dto";
 import {SetAdminDto} from "./dtos/set-admin.dto";
+import {UnmuteUserDto} from "./dtos/unmute-user.dto";
 import {UserMessageDto} from "./dtos/userMessage.dto";
 
 @Controller('chat')
@@ -26,6 +30,46 @@ export class ChatController {
 	constructor(
 		private chatService: ChatService,
 	) {}
+
+	@Patch('/changePasswordForChannel/:id')
+	@UseGuards(AuthGuardApi)
+	async changePasswordForChannel(@CurrentUser() user: User, @Param('id') id: string, @Body() body: { password: string } ) {
+		await this.chatService.changePasswordForChannel(user, parseInt(id), body.password);
+	}
+
+	@Patch('/removePasswordForChannel/:id')
+	@UseGuards(AuthGuardApi)		
+	async removePasswordForChannel(@CurrentUser() user: User, @Param('id') id: string) {
+		await this.chatService.removePasswordForChannel(user, parseInt(id));
+	}
+
+	@Post('/banUser')
+	@HttpCode(200)
+	@UseGuards(AuthGuardApi)
+	async banUser(@CurrentUser() user: User, @Body() body: UnmuteUserDto) {
+		await this.chatService.banUser(user, body.user, body.channel);
+	}
+
+	@Post('/unbanUser')
+	@HttpCode(200)
+	@UseGuards(AuthGuardApi)
+	async unbanUser(@CurrentUser() user: User, @Body() body: UnmuteUserDto) {
+		await this.chatService.unbanUser(user, body.user, body.channel);
+	}
+
+	@Post('/unmuteUser')
+	@HttpCode(200)
+	@UseGuards(AuthGuardApi)
+	async unmuteUser(@CurrentUser() user: User, @Body() body: UnmuteUserDto) {
+		await this.chatService.unmuteUser(user, body.user, body.channel);	
+	}
+
+	@Post('/muteUser')
+	@HttpCode(200)
+	@UseGuards(AuthGuardApi)
+	async muteUser(@CurrentUser() user: User, @Body() body: MuteUserDto) {
+		await this.chatService.muteUser(user, body.user, body.channel, body.time);
+	}
 
 	@Serialize(UserMessageDto)
 	@Post('/createMessageForUser/:id')
