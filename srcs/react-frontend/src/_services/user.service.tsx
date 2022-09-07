@@ -8,6 +8,7 @@ export const userService = {
     getById,
     whoami,
     turnOn2fa,
+    turnOff2fa,
     authenticate2fa,
     signout,
     auth42,
@@ -34,6 +35,20 @@ function turnOn2fa(code:string) {
     {
            code: code
     }, { 
+        withCredentials: true 
+    }).then((response:any) => {
+        if(response == 401)
+        {
+            const error = response.message || response.statusText;
+            return Promise.reject(error);
+        }
+        return response.data;
+    })
+}
+
+function turnOff2fa() {
+    return axios.get(`${config.apiUrl}/2fa/turn-off`,
+    { 
         withCredentials: true 
     }).then((response:any) => {
         if(response == 401)

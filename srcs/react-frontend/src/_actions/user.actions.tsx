@@ -9,6 +9,7 @@ export const userActions = {
     signout,
     auth42,
     turnOn2fa,
+    turnOff2fa,
     authenticate2fa,
     getAll,
     getById,
@@ -56,6 +57,25 @@ function turnOn2fa(code:string) {
     function request() { return { type: userConstants.TURN2FA_REQUEST } }
     function success(user:any) { return { type: userConstants.TURN2FA_SUCCESS, user } }
     function failure(error:any) { return { type: userConstants.TURN2FA_FAILURE, error } }
+}
+
+function turnOff2fa() {
+    console.log("aqui estoy")
+    return (dispatch:any) => {
+        dispatch(request());
+
+        userService.turnOff2fa()
+        .then(
+            response => {
+                dispatch(success());
+            },
+            error => dispatch(failure(error))
+        );
+};
+
+    function request() { return { type: userConstants.TURN_OFF2FA_REQUEST } }
+    function success() { return { type: userConstants.TURN_OFF2FA_SUCCESS } }
+    function failure(error:any) { return { type: userConstants.TURN_OFF2FA_FAILURE, error } }
 }
 
 function authenticate2fa(code:string) {

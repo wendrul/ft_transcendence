@@ -4,7 +4,6 @@ import {
 	MDBBtn,
 	MDBInput
   } from 'mdb-react-ui-kit';
-import "./Authenticate2fa.css";
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { alertActions, userActions } from '../../_actions';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +15,7 @@ function Authenticate2fa() {
   const navigate = useNavigate();
 	const authentication = useAppSelector<any>(state => state.authentication);
   const user = useAppSelector<any>(state => state.user);
-	
+
 /*
 	useEffect(() => {
 		document.title = "authenticate 2fa";
