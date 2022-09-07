@@ -2,6 +2,7 @@ import Ball from "../game_objects/Ball";
 import GoalZone from "../game_objects/GoalZone";
 import IGameObject from "../game_objects/IGameObject";
 import Paddle from "../game_objects/Paddle";
+import Powerup from "../game_objects/powerups/Powerup";
 import Wall from "../game_objects/Wall";
 import EventHandler from "./EventHandler";
 import Vector2 from "./Vector2";
@@ -34,6 +35,9 @@ export default class Game {
   private _currentFrame: number;
   private _paddle1: Paddle;
   private _paddle2: Paddle;
+  private _ball: Ball;
+  private _walls: Wall[];
+  private _powerups = Powerup.GetImplementations();
 
   fieldHeight: number;
   fieldWidth: number;
@@ -57,7 +61,6 @@ export default class Game {
     this._paddle2 = v;
   }
 
-  private _ball: Ball;
   public get ball(): Ball {
     return this._ball;
   }
@@ -65,12 +68,15 @@ export default class Game {
     this._ball = v;
   }
 
-  private _walls: Wall[];
   public get walls(): Wall[] {
     return this._walls;
   }
   private set walls(v: Wall[]) {
     this._walls = v;
+  }
+
+  public get powerups() {
+    return this._powerups;
   }
 
   private eventHandler: EventHandler;
@@ -86,13 +92,13 @@ export default class Game {
     this.fieldWidth = Game.width;
     this.fieldHeight = Game.height;
     this._paddle1 = new Paddle(
-      "John",
+      "garbage",
       1,
       this.fieldWidth / 2,
       this.fieldHeight / 2
     );
     this._paddle2 = new Paddle(
-      "Jim",
+      "trash",
       2,
       this.fieldWidth / 2,
       this.fieldHeight / 2
@@ -173,8 +179,12 @@ export default class Game {
     setTimeout(() => this.gameLoop(), 5);
   }
 
-  public on(eventName: GameEvents, callback: Function)
-  {
+  public on(eventName: GameEvents, callback: Function) {
     this.eventHandler.on(eventName, callback);
+  }
+
+  public getRandomPowerup() {
+    let i = Math.floor((Math.random() * this.powerups.length) + 1);
+    return this.powerups[i];
   }
 }
