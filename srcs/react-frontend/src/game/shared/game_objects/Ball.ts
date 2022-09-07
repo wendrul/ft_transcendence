@@ -14,6 +14,7 @@ enum BallStates {
 class Ball implements IGameObject {
   pos!: Vector2;
   velocity!: Vector2;
+  magnusForce: Vector2 = new Vector2(0, 0);
 
   state: BallStates = BallStates.MOVING;
   enteringState: boolean = false;
@@ -51,7 +52,7 @@ class Ball implements IGameObject {
         this.enteringState = false;
         const newPos = this.pos.add(this.velocity.scale(delta / 60));
 
-        // this.gravity(delta);
+        this.velocity = this.velocity.subtract(this.magnusForce)
 
         const collidedObject = this.findPossibleCollision(
           this.pos,

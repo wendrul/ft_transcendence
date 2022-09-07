@@ -18,14 +18,17 @@ export default class Paddle implements ICollider, IGameObject {
 
   private _target!: Vector2;
   public static maxAngle: number = (40 * Math.PI) / 360;
+  velocity: any;
+  static vel_to_F_factor: any = 1;
+  static maxForce: any = 150;
   public get target(): Vector2 {
     return this._target;
   }
-  public set target(v: Vector2) {
+  private set target(v: Vector2) {
     this._target = v;
   }
 
-  private FTBO_K = 0.00005;
+  private FTBO_K = 0.0005;
 
   static readonly racketSize = 100;
   static readonly racketWidth = 10;
@@ -55,6 +58,7 @@ export default class Paddle implements ICollider, IGameObject {
       )
     );
     this.target = this.pos;
+    // this.positions = 
   }
 
   update(dt: number) {
@@ -129,6 +133,14 @@ export default class Paddle implements ICollider, IGameObject {
 
     collidingObject.velocity = collidingObject.velocity.rotate(
       -angle + Math.PI
+    );
+    collidingObject.magnusForce = new Vector2(
+      0,
+      Utils.clamp(
+        this.velocity * Paddle.vel_to_F_factor,
+        -Paddle.maxForce,
+        Paddle.maxForce
+      )
     );
 
     //Decrease velocity by 20% on bounce

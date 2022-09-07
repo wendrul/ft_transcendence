@@ -55,7 +55,12 @@ export class GameGateway
 
     const query = client.handshake.query;
 
-    if (query.name === undefined || query.roomID === undefined || query.premade === undefined || query.spectator === undefined) {
+    if (
+      query.name === undefined ||
+      query.roomID === undefined ||
+      query.premade === undefined ||
+      query.spectator === undefined
+    ) {
       this.logger.debug("didn't receive sufficeint fields on query");
       client.disconnect();
     }
@@ -69,55 +74,72 @@ export class GameGateway
     };
 
     this.gameClients[client.id] = newClient;
+    if (newClient.name.length == 0 ) {
+      this.logger.error(`Nameless client tried connecting. Refusing connection`);
+      client.disconnect();
+      return;
+    }
     this.logger.log(
       `New client "${newClient.name}" with ID ${newClient.socket.id} connected`,
     );
 
     if (newClient.spectator) {
       // Spectate match
-
-      const room = this.gameRooms[newClient.roomID];
-      if (!room) {
-        this.logger.error('Failed to find room that spectator was looking for');
-        newClient.socket.disconnect();
-      } else {
-        newClient.socket.join(newClient.roomID);
-        room.connection(newClient.socket, newClient.name, true);
-        this.logger.log(
-          `${newClient.name} [${newClient.socket.id}] started spectating room with ID: ${newClient.roomID}`,
-        );
-      }
+      this.connectSpectator(newClient);
     } else if (newClient.premade) {
       // Premade Match
-      if (!this.gameRooms[newClient.roomID]) {
-        this.gameRooms[newClient.roomID] = new GameRoom(
-          this.server.to(newClient.roomID),
-          newClient.roomID,
-        );
-
-        newClient.socket.join(newClient.roomID);
-        this.gameRooms[newClient.roomID].connection(
-          newClient.socket,
-          newClient.name,
-        );
-
-        this.logger.log(
-          `${newClient.name} [${newClient.socket.id}] created new room with ID: ${newClient.roomID}`,
-        );
-      } else {
-        this.gameRooms[newClient.roomID].connection(
-          newClient.socket,
-          newClient.name,
-        );
-
-        this.logger.log(
-          `${newClient.name} [${newClient.socket.id}] connected to room with ID: ${newClient.roomID}`,
-        );
-      }
+      this.connectToPremadeMatch(newClient);
     } else {
       // Normal matchmaking
+      this.connectToMatchmaking(newClient);
+    }
+  }
 
-      this.matchQueue.push(newClient);
+  private connectSpectator(newClient: GameClient) {
+
+    const room = this.gameRooms[newClient.roomID];
+    if (!room) {
+      this.logger.error('Failed to find room that spectator was looking for');
+      newClient.socket.disconnect();
+    } else {
+      newClient.socket.join(newClient.roomID);
+      room.connection(newClient.socket, newClient.name, true);
+      this.logger.log(
+        `${newClient.name} [${newClient.socket.id}] started spectating room with ID: ${newClient.roomID}`,
+      );
+    }
+  }
+  
+  private connectToPremadeMatch(newClient: GameClient) {
+    if (!this.gameRooms[newClient.roomID]) {
+      this.gameRooms[newClient.roomID] = new GameRoom(
+        this.server.to(newClient.roomID),
+        newClient.roomID,
+      );
+
+      newClient.socket.join(newClient.roomID);
+      this.gameRooms[newClient.roomID].connection(
+        newClient.socket,
+        newClient.name,
+      );
+
+      this.logger.log(
+        `${newClient.name} [${newClient.socket.id}] created new room with ID: ${newClient.roomID}`,
+      );
+    } else {
+      this.gameRooms[newClient.roomID].connection(
+        newClient.socket,
+        newClient.name,
+      );
+
+      this.logger.log(
+        `${newClient.name} [${newClient.socket.id}] connected to room with ID: ${newClient.roomID}`,
+      );
+    }
+  }
+  
+  private connectToMatchmaking(newClient: GameClient){
+    this.matchQueue.push(newClient);
       if (this.matchQueue.length >= 2) {
         const player1 = this.matchQueue.shift();
         const player2 = this.matchQueue.shift();
@@ -136,7 +158,6 @@ export class GameGateway
           `${player2.name} [${player2.socket.id}] connected to room with ID: ${player2.roomID}`,
         );
       }
-    }
   }
 
   handleDisconnect(client: Socket) {
@@ -144,12 +165,10 @@ export class GameGateway
     for (let i = 0; i < this.matchQueue.length; i++) {
       const gameClient = this.matchQueue[i];
       if (gameClient.socket.id == client.id) {
-        this.matchQueue.splice(i,1);
-        return ;
+        this.matchQueue.splice(i, 1);
+        return;
       }
     }
-    
-
 
     const gameClient = this.gameClients[client.id];
     if (gameClient && this.gameRooms[gameClient.roomID]) {
@@ -157,7 +176,7 @@ export class GameGateway
       this.logger.log(
         `${gameClient.name} [${client.id}] disconnected (was in room ${gameClient.roomID})`,
       );
-    }  else {
+    } else {
       this.logger.error(
         `Cannot find client or room, gameClient = ${gameClient}`,
       );
@@ -170,7 +189,7 @@ export class GameGateway
     const gameClient = this.gameClients[client.id];
     if (gameClient && this.gameRooms[gameClient.roomID]) {
       this.gameRooms[gameClient.roomID].onClientInput(client, data);
-    }  else {
+    } else {
       this.logger.error(
         `Cannot find client or room, gameClient = ${gameClient}`,
       );
