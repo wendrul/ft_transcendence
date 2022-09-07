@@ -3,6 +3,7 @@ import { userConstants } from '../_constants';
 export function user(state = {
   updating: false,
   validating: false,
+  bool2fa: false
 }, action:any) {
   switch (action.type) {
     case userConstants.SIGNUP_REQUEST:
@@ -24,14 +25,22 @@ export function user(state = {
     case userConstants.SIGNUP_SUCCESS:
     case userConstants.WHOAMI_SUCCESS:
     case userConstants.LOGIN_SUCCESS:
+      return {...state,
+        data: action.user,
+      };
     case userConstants.AUTHENTIFICATE2FA_SUCCESS:
       return {...state,
-        data: action.user
+        data: action.user,
+        bool2fa: true
       };
     case userConstants.TURN2FA_SUCCESS:
-    case userConstants.TURN_OFF2FA_SUCCESS:
       return {...state,
         validated: true,
+        validating: false,
+      }
+    case userConstants.TURN_OFF2FA_SUCCESS:
+      return {...state,
+        validated: false,
         validating: false,
       }
     case userConstants.UPDATE_SUCCESS:

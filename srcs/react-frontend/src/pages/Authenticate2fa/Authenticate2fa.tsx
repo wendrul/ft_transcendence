@@ -14,31 +14,21 @@ function Authenticate2fa() {
   const alert = useAppSelector<any>(state => state.alert);
   const navigate = useNavigate();
 	const authentication = useAppSelector<any>(state => state.authentication);
-  const user = useAppSelector<any>(state => state.user);
+  const userData = useAppSelector<any>(state => state.user);
 
-/*
-	useEffect(() => {
-		document.title = "authenticate 2fa";
-		if (!userData.updated && !userData.updating && !authentication.initial && 
-      ((!authentication.loggedIn && !authentication.loggingIn) 
-      || (authentication.loggedIn && userData.data?.login)))
-			navigate("/");
-	}, [authentication, userData])
-
-  useEffect(() => {
-		if(user && Object.keys(user).length === 0)
-      setUser(userData.data);
-	}, [authentication])
-*/
   useEffect(() => {
     dispatch(alertActions.clear());
 	}, [])
+
+  useEffect(() => {
+    if (userData && userData.bool2fa)
+      navigate("/")
+	}, [userData])
 
 const [code, setCode] = useState("");
 
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-    console.log("Codigo:[", code ,"]")
     dispatch(userActions.authenticate2fa(code));
 	}
 

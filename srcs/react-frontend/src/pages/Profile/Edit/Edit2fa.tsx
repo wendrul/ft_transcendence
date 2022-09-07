@@ -43,6 +43,11 @@ function Edit2fa() {
     dispatch(alertActions.clear());
 	}, [])
 
+  useEffect(() => {
+    if (userData && userData.validated)
+      navigate("/")
+	}, [userData])
+
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
     console.log("Codigo:[", code ,"]")

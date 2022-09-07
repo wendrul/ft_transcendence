@@ -41,6 +41,11 @@ function EditProfile() {
 	}, [])
 
   useEffect(() => {
+		if (!authentication.loggedIn)
+      navigate("/");
+	}, [authentication])
+
+  useEffect(() => {
 		if(user && Object.keys(user).length === 0)
       setUser(userData.data);
 	}, [authentication])
