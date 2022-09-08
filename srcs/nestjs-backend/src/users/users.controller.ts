@@ -42,6 +42,12 @@ export class UsersController {
 		private authService: AuthService
 	) {}
 
+	@Get('/rankPositionByLogin/:login')
+	@UseGuards(AuthGuardApi)
+	async getRankPosition(@Param('login') login: string) {
+		return this.userService.getRankPosition(login);
+	}
+
 	@Get('/ladder')
 	@Serialize(UserLadderDto)
 	getLadder() {
@@ -85,7 +91,6 @@ export class UsersController {
 		})
 	}))
 	addAvatar(@CurrentUser() user: User, @UploadedFile() file: Express.Multer.File) {
-		console.log(1111213213123, file ,12312312312)
 		if (!file) {
 			throw new BadRequestException('Need a file');
 		}
