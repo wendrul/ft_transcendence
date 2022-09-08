@@ -1,21 +1,27 @@
+import { request } from 'http';
 import { friendConstants } from '../_constants';
 
 export function friend(state = {
-  updating: false
+  updating: false,
+  initial: true,
+  request: []
 }, action:any) {
   switch (action.type) {
-    case friendConstants.UPDATE_REQUEST:
+    case friendConstants.PENDING_FAILURE:
       return {...state,
         updating: true
       };
 
-    case friendConstants.UPDATE_SUCCESS:
+    case friendConstants.PENDING_SUCCESS:
       return {...state,
-        updating: false
+        updating: false,
+        updated:true,
+        request: action.users
       };
-    case friendConstants.UPDATE_FAILURE:
+    case friendConstants.PENDING_FAILURE:
       return {...state,
-        updating: true
+        updating: true,
+        updated:false
       };
     default:
       return state

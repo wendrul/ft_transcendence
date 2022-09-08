@@ -1,30 +1,25 @@
 
-import React, { useState, useEffect, FormEventHandler, ChangeEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	MDBBtn,
-	MDBRow,
-	MDBCol,
-	MDBInput,
-  MDBSwitch,
-  MDBFile,
   MDBListGroup,
   MDBListGroupItem,
-  MDBDropdownLink,
-  MDBDropdownItem,
   MDBIcon
   } from 'mdb-react-ui-kit';
 import { useAppDispatch, useAppSelector } from '..//../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
-import { alertActions, userActions } from '../../_actions';
+import { alertActions, friendActions, userActions } from '../../_actions';
 import AlertPage from '../../components/Alerts/Alert';
 
 import "./FriendRequest.css";
 
 function FriendRequest() {
 	const dispatch = useAppDispatch();
-	const navigate = useNavigate();
 	const authentication = useAppSelector<any>(state => state.authentication);
   const userData = useAppSelector<any>(state => state.user);
+  const allUsers = useAppSelector<any>(state => state.users);
+
+  const pendingRequests = useAppSelector<any>(state => state.friend);
 
   const [user, setUser] = useState({});
   
@@ -36,12 +31,7 @@ function FriendRequest() {
     login: string;
   }
 
-  const [fRequest, settest] = useState<ApiData[]>([
-    { id: 1, firstName: 'Frank', lastName: 'Murphy', email: 'frank.murphy@test.com', login: 'afadsf' },
-    { id: 2, firstName: 'Vic', lastName: 'Reynolds', email: 'vic.reynolds@test.com', login: 'admin' },
-    { id: 3, firstName: 'Gina', lastName: 'Jabowski', email: 'gina.jabowski@test.com', login: 'nani' },
-    { id: 4, firstName: 'Jessi', lastName: 'Glaser', email: 'jessi.glaser@test.com', login: 'test' }
-]);
+  const [fRequest, settest] = useState<ApiData[]>([]);
 
 	useEffect(() => {
 		document.title = "Pending Requests";
@@ -58,17 +48,31 @@ function FriendRequest() {
 	}, [authentication])
 */
 
-function acceptRequest(id: number, event:any ) {
-  console.log("accept:[", id, "]")
-  console.log(111,event,222)
-//  setPassword(event?.currentTarget?.value);
-}
+  useEffect(() => {
+    dispatch(friendActions.pendingRequests())
+  }, [])
 
-function denyRequest(id: number, event:any ) {
-  console.log("deny:[", id, "]")
-  console.log(111,event,222)
-//  setPassword(event?.currentTarget?.value);
-}
+  useEffect(() => {
+    let array: ApiData[] = [];
+    for(let i = 0; i < pendingRequests.request.length; i++) {
+      const user = allUsers.items.find((item:ApiData) => item.id === pendingRequests.request[i].senderId );
+      array.push(user);
+    }
+    settest(array);
+  }, [pendingRequests.request])
+
+
+  function acceptRequest(id: number, event:any ) {
+    console.log("accept:[", id, "]")
+    console.log(111, event, 222)
+  //  setPassword(event?.currentTarget?.value);
+  }
+
+  function denyRequest(id: number, event:any ) {
+    console.log("deny:[", id, "]")
+    console.log(111, event, 222)
+  //  setPassword(event?.currentTarget?.value);
+  }
 
   return (
     <>
@@ -114,7 +118,8 @@ function denyRequest(id: number, event:any ) {
                     </MDBBtn>
                   </div>
                 </MDBListGroupItem>
-              )}
+              )
+            }
               </MDBListGroup>
 
             </div>

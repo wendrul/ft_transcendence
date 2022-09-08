@@ -3,7 +3,7 @@ import { friendService } from '../_services';
 import { alertActions } from '.';
 
 export const friendActions = {
-    getAll,
+    pendingRequests,
     getById,
     updateProfile
 };
@@ -50,14 +50,14 @@ function getById(id : any) {
     function failure(error:any) { return { type: friendConstants.GETOTHER_FAILURE, error } }
 }
 
-function getAll() {
+function pendingRequests() {
     return (dispatch:any) => {
         dispatch(request());
 
-        friendService.getAll()
+        friendService.pendingRequests()
             .then(
-                user => {
-                    dispatch(success(user));
+                users => {
+                    dispatch(success(users));
                 },
                 error => {
                     dispatch(failure(error));
@@ -65,7 +65,7 @@ function getAll() {
             );
     };
 
-    function request() { return { type: friendConstants.GETALL_REQUEST } }
-    function success(users:any) { return { type: friendConstants.GETALL_SUCCESS, users } }
-    function failure(error:any) { return { type: friendConstants.GETALL_FAILURE, error } }
+    function request() { return { type: friendConstants.PENDING_REQUEST } }
+    function success(users:any) { return { type: friendConstants.PENDING_SUCCESS, users } }
+    function failure(error:any) { return { type: friendConstants.PENDING_FAILURE, error } }
 }

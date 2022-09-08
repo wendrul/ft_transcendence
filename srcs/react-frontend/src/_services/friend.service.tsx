@@ -3,7 +3,7 @@ import config from '../config';
 import { UpdateUser } from '../interfaces/iUser'
 
 export const friendService = {
-    getAll,
+    pendingRequests,
     getById,
     updateProfile
 };
@@ -45,8 +45,10 @@ function getById(id: any) {
     })
 }
 
-function getAll() {
-    return axios.get(`${config.apiUrl}/users`,)
+function pendingRequests() {
+    return axios.get(`${config.apiUrl}/friendRequest/pendingRequests`, { 
+        withCredentials: true 
+    })
     .then((response:any) => {
         if(response == 403)
         {
