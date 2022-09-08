@@ -29,5 +29,13 @@ export class UserDto {
 
 	@Expose()
 	@ApiProperty()
-	avatarPath: string;
+	wins: number;
+
+	@Expose()
+	@ApiProperty()
+	loses: number;
+
+	@Expose()
+	@ApiProperty()
+	score: number;
 }

@@ -14,6 +14,27 @@ export class UsersService {
 		private localFilesService: LocalFilesService
 	) {}
 
+	async getLadder() {
+		const users: User[] = await this.repo.findBy({});
+
+		users.sort((a, b) => {
+			if (a.score > b.score) {
+				return -1;
+			}	
+			else {
+				return 1;
+			}
+		});
+
+		let ladder: User[] = [];
+		for (let i = 0; i < 10 && i < users.length; i++) {
+			ladder.push(users[i]);
+		}
+
+		return ladder;
+
+	}
+
 	async blockUser(user: User, login: string) {
 
 		const toBlock = await this.findOneLogin(login);	
