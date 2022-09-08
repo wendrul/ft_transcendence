@@ -8,6 +8,10 @@ export class GameService {
 		private userService: UsersService,
 	) {}
 
+	async createMatch() {
+
+	}
+
 	async userInGame(login: string) {
 		const user = await this.userService.findOneLogin(login);
 		if (!user) {

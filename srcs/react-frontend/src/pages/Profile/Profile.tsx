@@ -112,7 +112,7 @@ function Profile(){
 							<h5 className='m-0 text-dark stats-txt'> MATCH</h5>
 						</div>
 						<div className='stats'>
-							<h5>324</h5>
+							<h5>{user.data.wins + user.data.loses}</h5>
 						</div>
 					</div>
 				</div>
@@ -124,7 +124,7 @@ function Profile(){
 							<h5 className='m-0 text-dark stats-txt'> PERFORMANCE</h5>
 						</div>
 						<div className='stats'>
-							<h5>86 %</h5>
+							<h5>{Math.floor((user.data.wins / (user.data.wins + user.data.loses)) * 100)} %</h5>
 						</div>
 					</div>
 				</div>
@@ -140,7 +140,7 @@ function Profile(){
 							<h5 className='m-0 text-dark stats-txt'> WIN</h5>
 						</div>
 						<div className='stats'>
-							<h5 className='text-success'>280</h5>
+							<h5 className='text-success'>{user.data.wins}</h5>
 						</div>
 					</div>
 				</div>
@@ -152,7 +152,7 @@ function Profile(){
 							<h5 className='m-0 text-dark stats-txt'> LOSE</h5>
 						</div>
 						<div className='stats'>
-							<h5 className='text-danger'>44</h5>
+							<h5 className='text-danger'>{user.data.loses}</h5>
 						</div>
 					</div>
 				</div>

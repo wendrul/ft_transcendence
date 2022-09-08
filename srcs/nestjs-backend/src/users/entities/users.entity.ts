@@ -2,6 +2,7 @@ import {AdminsInChannels} from "src/chat/entities/adminsInChannels.entity";
 import {Channel} from "src/chat/entities/channels.entity";
 import {Message} from "src/chat/entities/messages.entity";
 import {UsersInChannels} from "src/chat/entities/usersInChannels.entity";
+import {Match} from "src/game/entities/match.entity";
 import {
 	Column,
 	Entity,
@@ -108,5 +109,11 @@ export class User {
 
 	@Column({default: false})
 	inGame: boolean;
+
+	@OneToMany(() => Match, (match) => match.winer)
+	wonMatches: Match[];
+
+	@OneToMany(() => Match, (match) => match.losser)
+	lostMatches: Match[];
 
 }
