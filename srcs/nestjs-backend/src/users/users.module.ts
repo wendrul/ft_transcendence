@@ -17,6 +17,7 @@ import {TwoFactorAuthecticationService} from './twoFactorAuthentication.service'
 import {JwtModule} from '@nestjs/jwt';
 import {JwtStrategy} from './jwt.strategy';
 import {BlockedUser} from './entities/blockedUsers.entity';
+import {Match} from 'src/game/entities/match.entity';
 
 @Module({
 	imports: [
@@ -24,6 +25,7 @@ import {BlockedUser} from './entities/blockedUsers.entity';
 		TypeOrmModule.forFeature([FriendRequest]),
 		TypeOrmModule.forFeature([LocalFile]),
 		TypeOrmModule.forFeature([BlockedUser]),
+		TypeOrmModule.forFeature([Match]),
 		JwtModule.registerAsync({
 			useFactory: async () => ({
 				secret: process.env.AUTH42_CLIENTSECRET,

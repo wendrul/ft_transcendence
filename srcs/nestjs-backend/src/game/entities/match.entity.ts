@@ -13,6 +13,8 @@ export class Match {
 	losser: User;
 
 	@Column()
-	score: [number, number];
+	winerScore: number;
 
+	@Column()
+	losserScore: number;
 }
