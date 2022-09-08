@@ -27,8 +27,16 @@ function FriendRequest() {
   const userData = useAppSelector<any>(state => state.user);
 
   const [user, setUser] = useState({});
+  
+  interface ApiData {
+    id:	number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    login: string;
+  }
 
-  const [fRequest, settest] = useState([
+  const [fRequest, settest] = useState<ApiData[]>([
     { id: 1, firstName: 'Frank', lastName: 'Murphy', email: 'frank.murphy@test.com', login: 'afadsf' },
     { id: 2, firstName: 'Vic', lastName: 'Reynolds', email: 'vic.reynolds@test.com', login: 'admin' },
     { id: 3, firstName: 'Gina', lastName: 'Jabowski', email: 'gina.jabowski@test.com', login: 'nani' },
@@ -75,7 +83,12 @@ function denyRequest(id: number, event:any ) {
             <div className="d-flex flex-column align-items-center justify-content-center w-75 pb-5 mb-3">
 
               <MDBListGroup style={{ minWidth: '22rem' }}>
-              { fRequest && fRequest.map(item =>
+              { fRequest && fRequest.length === 0 &&
+                <p className="register_btn mb-3">
+                  empty
+                </p>
+              }
+              { fRequest && fRequest.map((item:ApiData) =>
                 
                 <MDBListGroupItem key={item.id} className='d-flex justify-content-between align-items-center'>
                   <div className='d-flex align-items-center'>
