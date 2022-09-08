@@ -33,6 +33,21 @@ export class FriendUserDto {
 
 	@Expose()
 	@ApiProperty()
-	status: string;
+	online: boolean;
 
+	@Expose()
+	@ApiProperty()
+	inGame: boolean;
+
+	@Expose()
+	@ApiProperty()
+	wins: number;
+
+	@Expose()
+	@ApiProperty()
+	loses: number;
+
+	@Expose()
+	@ApiProperty()
+	score: number;
 }

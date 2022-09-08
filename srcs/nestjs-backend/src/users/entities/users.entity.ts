@@ -34,8 +34,8 @@ export class User {
 	@Column({ default: null })
 	login: string;
 
-	@Column({ default: 'online'})
-	status: string;
+	@Column({ default: true})
+	online: boolean;
 
 	@Column({default: false})
 	user42: boolean;
@@ -94,5 +94,19 @@ export class User {
 
 	@OneToMany(() => Message, (message) => message.reciverUser)
 	recivedMessages: Message[];
+
+	//Game
+	
+	@Column({default: 0})
+	wins: number;
+
+	@Column({default: 0})
+	loses: number;
+
+	@Column({default: 0})
+	score: number;
+
+	@Column({default: false})
+	inGame: boolean;
 
 }
