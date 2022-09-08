@@ -15,6 +15,7 @@ import {AdminsInChannels} from './chat/entities/adminsInChannels.entity';
 import {UsersInChannels} from './chat/entities/usersInChannels.entity';
 import {BlockedUser} from './users/entities/blockedUsers.entity';
 import {Match} from './game/entities/match.entity';
+import {GameModule} from './game/game.module';
 const cookieSession = require('cookie-session');
 
 @Module({
