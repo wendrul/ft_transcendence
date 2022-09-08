@@ -14,6 +14,33 @@ export class UsersService {
 		private localFilesService: LocalFilesService
 	) {}
 
+	async getRankPosition(login: string) {
+		const user = await this.repo.findOneBy({login});
+		if (!user) {
+			throw new NotFoundException('Usesr not found');
+		}
+		const allUsers: User[] = await this.repo.findBy({});
+
+		allUsers.sort((a, b) => {
+			if (a.score > b.score) {
+				return -1;
+			}
+			else {
+				return 1;
+			}
+		});
+
+		let position: number;
+		for (position = 0; position < allUsers.length; position++) {
+			if (user.id === allUsers[position].id) {
+				return (position + 1).toString();
+			}
+		}
+
+		throw new BadRequestException('User not in ranking');
+
+	}
+
 	async getLadder() {
 		const users: User[] = await this.repo.findBy({});
 

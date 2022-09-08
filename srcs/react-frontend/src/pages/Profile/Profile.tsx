@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import "./Profile.css";
 
 // Image
@@ -18,6 +18,7 @@ import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
 import { userActions } from '../../_actions';
 import { MDBIcon } from 'mdb-react-ui-kit';
+import axios from 'axios';
 
 function Profile(){ 
 	const dispatch = useAppDispatch();
@@ -38,13 +39,25 @@ function Profile(){
 	useEffect(() => {
 	}, [])
 
+	//Geting avatar
 	let avatarPath = undefined;
 	if(user?.data?.id) { avatarPath = "http://localhost:3002/localFiles/" + user.data.id; }
+
+	//Geting rank position
+    const [rank, setrank] = useState("");
+	axios.get("http://localhost:3002/users/rankPositionByLogin/" + user?.data?.login,
+		{
+			withCredentials: true,
+		}
+	).then((Response: any) => {
+		const rank: string = Response.data
+		setrank(rank);
+	});
 
 	return (
 		<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
 			<p className="register_btn mb-1 display-2">
-				Ranking #1
+				Ranking {rank}
 			</p>
 			<p className="register_btn mb-3 display-6">
 				{ user.data && user.data.login? user.data.login : "default" }
@@ -99,7 +112,7 @@ function Profile(){
 							<h5 className='m-0 text-dark stats-txt'> MATCH</h5>
 						</div>
 						<div className='stats'>
-							<h5>324</h5>
+							<h5>{user.data.wins + user.data.loses}</h5>
 						</div>
 					</div>
 				</div>
@@ -111,7 +124,7 @@ function Profile(){
 							<h5 className='m-0 text-dark stats-txt'> PERFORMANCE</h5>
 						</div>
 						<div className='stats'>
-							<h5>86 %</h5>
+							<h5>{Math.floor((user.data.wins / (user.data.wins + user.data.loses)) * 100)} %</h5>
 						</div>
 					</div>
 				</div>
@@ -127,7 +140,7 @@ function Profile(){
 							<h5 className='m-0 text-dark stats-txt'> WIN</h5>
 						</div>
 						<div className='stats'>
-							<h5 className='text-success'>280</h5>
+							<h5 className='text-success'>{user.data.wins}</h5>
 						</div>
 					</div>
 				</div>
@@ -139,7 +152,7 @@ function Profile(){
 							<h5 className='m-0 text-dark stats-txt'> LOSE</h5>
 						</div>
 						<div className='stats'>
-							<h5 className='text-danger'>44</h5>
+							<h5 className='text-danger'>{user.data.loses}</h5>
 						</div>
 					</div>
 				</div>
