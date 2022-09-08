@@ -30,7 +30,7 @@ function User(){
 							<button> Block</button>
 							<button> Unblock</button>
 						</div>
-					</div> 
+			</div> 
 		);
 	}
 	const UserNotFinded = () => {
