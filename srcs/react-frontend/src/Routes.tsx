@@ -14,6 +14,7 @@ import Edit2fa from './pages/Profile/Edit/Edit2fa';
 import EditInfo from './pages/Profile/Edit/EditInfo';
 import EditPhoto from './pages/Profile/Edit/EditPhoto';
 
+import FriendRequest from './pages/Friends/FriendRequest';
 
 import CreateRoom from './pages/CreateRoom/CreateRoom';
 import UsernameRedirect from './pages/Username/UsernameRedirect';
@@ -43,10 +44,11 @@ class RoutesHandler extends React.Component {
         <Route  path ='/profile' element={<UsernameRedirect component={<Profile/>} />} />
 
         <Route  path ='/edit_profile' element={<UsernameRedirect component={<EditProfile/>} />} />
-
         <Route  path ='/edit_2fa' element={<UsernameRedirect component={<Edit2fa/>} />} />
         <Route  path ='/edit_info' element={<UsernameRedirect component={<EditInfo/>} />} />
         <Route  path ='/edit_photo' element={<UsernameRedirect component={<EditPhoto/>} />} />
+
+        <Route  path ='/friend_request' element={<UsernameRedirect component={<FriendRequest/>} />} />
 
         <Route  path ='/history' element={<UsernameRedirect component={<History/>} />} />
         <Route  path ='/web_chat' element={<WebChat/>} />
