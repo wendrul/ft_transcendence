@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useState, useEffect, FormEventHandler, ChangeEvent } from 'react';
 import {
 	MDBBtn,
 	MDBRow,
@@ -50,6 +50,18 @@ function FriendRequest() {
 	}, [authentication])
 */
 
+function acceptRequest(id: number, event:any ) {
+  console.log("accept:[", id, "]")
+  console.log(111,event,222)
+//  setPassword(event?.currentTarget?.value);
+}
+
+function denyRequest(id: number, event:any ) {
+  console.log("deny:[", id, "]")
+  console.log(111,event,222)
+//  setPassword(event?.currentTarget?.value);
+}
+
   return (
     <>
       { 1/* authentication.loggedIn*/ && 
@@ -75,11 +87,16 @@ function FriendRequest() {
                     </div>
                   </div>
                   <div>
-                    <MDBBtn size='sm'  rounded color='success'>
+                    <MDBBtn onClick={(e) => {
+                            acceptRequest(item.id, e);
+                        }}size='sm'  rounded color='success'>
                       <MDBIcon icon="check" />
                     </MDBBtn>
                     <> </>
-                    <MDBBtn size='sm' rounded color='danger'>
+                    <MDBBtn onClick={(e) => {
+                            denyRequest(item.id, e);
+                        }}
+                        size='sm' rounded color='danger'>
                       <MDBIcon icon="trash-alt" />
                     </MDBBtn>
                   </div>
