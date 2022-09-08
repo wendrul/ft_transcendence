@@ -11,13 +11,19 @@ function SignIn() {
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const authentication = useAppSelector<any>(state => state.authentication);
+	const user = useAppSelector<any>(state => state.user);
 	const alert = useAppSelector<any>(state => state.alert);
 
 	useEffect(() => {
 		document.title = "SignIn";
 	
 		if(authentication.loggedIn)
-			navigate("/");
+		{
+			if (user?.data?.twoFactorAuthenticationFlag)
+				navigate("/Authenticate2fa");
+			else
+				navigate("/");
+		}
 	}, [authentication])
 
 	const [email, setEmail] = useState("");

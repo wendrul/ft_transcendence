@@ -8,6 +8,9 @@ export const userActions = {
     signup,
     signout,
     auth42,
+    turnOn2fa,
+    turnOff2fa,
+    authenticate2fa,
     getAll,
     getById,
 		getByLogin,
@@ -33,6 +36,68 @@ function whoami() {
     function request() { return { type: userConstants.WHOAMI_REQUEST } }
     function success(user:any) { return { type: userConstants.WHOAMI_SUCCESS, user } }
     function failure() { return { type: userConstants.WHOAMI_FAILURE } }
+}
+
+function turnOn2fa(code:string) {
+    console.log(11, code, 22)
+    return (dispatch:any) => {
+        dispatch(request());
+
+        userService.turnOn2fa(code)
+            .then(
+                user => {
+                    dispatch(success(user));
+                },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                }
+            );
+    };
+
+    function request() { return { type: userConstants.TURN2FA_REQUEST } }
+    function success(user:any) { return { type: userConstants.TURN2FA_SUCCESS, user } }
+    function failure(error:any) { return { type: userConstants.TURN2FA_FAILURE, error } }
+}
+
+function turnOff2fa() {
+    console.log("aqui estoy")
+    return (dispatch:any) => {
+        dispatch(request());
+
+        userService.turnOff2fa()
+        .then(
+            response => {
+                dispatch(success());
+            },
+            error => dispatch(failure(error))
+        );
+};
+
+    function request() { return { type: userConstants.TURN_OFF2FA_REQUEST } }
+    function success() { return { type: userConstants.TURN_OFF2FA_SUCCESS } }
+    function failure(error:any) { return { type: userConstants.TURN_OFF2FA_FAILURE, error } }
+}
+
+function authenticate2fa(code:string) {
+    return (dispatch:any) => {
+        dispatch(request());
+
+        userService.authenticate2fa(code)
+            .then(
+                user => {
+                    dispatch(success(user));
+                },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                }
+            );
+    };
+
+    function request() { return { type: userConstants.AUTHENTIFICATE2FA_REQUEST } }
+    function success(user:any) { return { type: userConstants.AUTHENTIFICATE2FA_SUCCESS, user } }
+    function failure(error:any) { return { type: userConstants.AUTHENTIFICATE2FA_FAILURE, error } }
 }
 
 function auth42(Token:string) {

@@ -47,7 +47,7 @@ export class TwoFactorAuthenticationController {
 		await this.usersService.turnOntTwoFactorAuthentication(user.id);
 	}
 
-	@Post('turn-off')
+	@Get('turn-off')
 	@HttpCode(200)
 	@UseGuards(AuthGuardApi)
 	async turnOffTwoFactorAuthentication(@CurrentUser() user: User) {

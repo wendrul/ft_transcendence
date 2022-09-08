@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import config from '../config';
 import { UpdateUser } from '../interfaces/iUser'
 
-export const avatarService = {
+export const friendService = {
     getAll,
     getById,
     updateProfile

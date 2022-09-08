@@ -1,14 +1,3 @@
-/************************************/
-/*
-  -Problema, al estar actualizando,
-  si hay error (login in use) u otro,
-  te dirige directamente a la paguna
-  username (MIRAR ESTO)
-
-
-  -Avatar aun no conectado
-*/
-/************************************/
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import {
 	MDBBtn,
@@ -18,12 +7,12 @@ import {
   MDBSwitch,
   MDBFile
   } from 'mdb-react-ui-kit';
-import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
+import { useAppDispatch, useAppSelector } from '../../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
-import { alertActions, userActions } from '../../_actions';
-import AlertPage from '../../components/Alerts/Alert';
+import { alertActions, userActions } from '../../../_actions';
+import AlertPage from '../../../components/Alerts/Alert';
 
-function EditProfile() {
+function EditInfo() {
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const authentication = useAppSelector<any>(state => state.authentication);
@@ -31,12 +20,9 @@ function EditProfile() {
 	const alert = useAppSelector<any>(state => state.alert);
 
   const [user, setUser] = useState({});
-  const [boolTwo, SetBoolTwo] = useState(userData.data.twoFactorAuthenticationFlag);
-  const toggleSwitch = () => SetBoolTwo((previousState:boolean) => !previousState);
-
 
 	useEffect(() => {
-		document.title = "Edit Profile";
+		document.title = "Edit Information";
 		if(!authentication.loggedIn)
 			navigate("/");
 	}, [authentication])
@@ -46,11 +32,22 @@ function EditProfile() {
       setUser(userData.data);
 	}, [authentication])
 
+  useEffect(() => {
+		if(userData && userData.updated)
+     navigate("/")
+	}, [userData])
+
+  const testfonc = () => {
+    console.log(userData.updated)
+  }
+
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
     dispatch(alertActions.clear());
     dispatch(userActions.updateProfile(user));
-   // navigate("/profile");
+
+   /* if (userData.updated == true)
+      navigate("/"); */
 	}
 
   const handleChangeFirstName = function(event: ChangeEvent<HTMLInputElement>) {
@@ -64,17 +61,6 @@ function EditProfile() {
   const handleChangeLogin = function(event: ChangeEvent<HTMLInputElement>) {
     setUser({...user, login: event?.currentTarget?.value});
 	}
-
-  const handletest = function(event: ChangeEvent<HTMLInputElement>) {
-    console.log(event)
-    console.log(boolTwo)
-    toggleSwitch()
-    setUser({...user, twoFactorAuthenticationFlag: !boolTwo});
-	}
-
-  
-
-
 
   return (
     <>
@@ -97,8 +83,6 @@ function EditProfile() {
                   </MDBCol>
                 </MDBRow>
                 <MDBInput className='mb-3' onChange={handleChangeLogin} type='text' defaultValue={userData.data.login} label='login'/>
-                <MDBFile className='mb-4' label='Avatar' />
-                <MDBSwitch checked={boolTwo} label='Two Factor Authentication' onChange={handletest} />
                 <br />
                 <MDBBtn type='submit' className='mb-4' block>
                   Save
@@ -117,4 +101,4 @@ function EditProfile() {
   );
 }
 
-export default EditProfile;
+export default EditInfo;

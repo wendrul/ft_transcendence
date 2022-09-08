@@ -41,6 +41,57 @@ export class ChatService {
 		private userService: UsersService,
 	) {}
 
+	async changePasswordForChannel(user: User, id: number, password: string) {
+		const channel = await this.channelRepo.findOne({
+			relations: ['owner'],
+			where: {
+				id: id,
+			}
+		});	
+
+		if (!channel) {
+			throw new NotFoundException('channel not found');
+		}
+
+		if (user.id !== channel.owner.id) {
+			throw new HttpException('you are not the channel owner', HttpStatus.FORBIDDEN);
+		}
+
+		const salt = randomBytes(8).toString('hex');	
+		const hash = (await scrypt(password, salt, 32)) as Buffer;
+		const result = salt + '.' + hash.toString('hex');
+		password = result;
+
+		return this.channelRepo.update(id, {
+			password: password,
+			access: 'protected'
+		});
+		
+	}
+
+	async removePasswordForChannel(user: User, id: number) {
+		const channel = await this.channelRepo.findOne({
+			relations: ['owner'],
+			where: {
+				id: id,
+			}
+		});	
+
+		if (!channel) {
+			throw new NotFoundException('channel not found');
+		}
+
+		if (user.id !== channel.owner.id) {
+			throw new HttpException('you are not the channel owner', HttpStatus.FORBIDDEN);
+		}
+
+		return this.channelRepo.update(id, {
+			password: null, 
+			access: 'public'
+		});
+
+	}
+
 	async getMyChannelsByType(user: User, type: string) {
 
 		//search the channels
@@ -231,39 +282,53 @@ export class ChatService {
 		}
 
 		//add new admin
-		const adminInChannel = this.adminsInChannelsRepo.create({ user: newAdmin, channel });
-		return this.adminsInChannelsRepo.save(adminInChannel);
+			const adminInChannel = this.adminsInChannelsRepo.create({ user: newAdmin, channel });
+			return this.adminsInChannelsRepo.save(adminInChannel);
 
-	}
+		}
 
-	async createMessageForChannel(content: string, sender: User, id: number) {
+		async createMessageForChannel(content: string, sender: User, id: number) {
 
-		//search the channel by id
-		const channels = await this.channelRepo.find({
-			relations: ['usersRelations', 'usersRelations.user'],
-			where: {
-				id: id,
+			//search the channel by id
+			const channels = await this.channelRepo.find({
+				relations: ['usersRelations', 'usersRelations.user'],
+				where: {
+					id: id,
+				}
+			});
+
+			if (channels.length === 0) {
+				throw new NotFoundException('channel not found');	
 			}
-		});
+			const channel: Channel = channels[0];
 
-		if (channels.length === 0) {
-			throw new NotFoundException('channel not found');	
-		}
-		const channel: Channel = channels[0];
+			//check if the sender is in the channel and if is banned
+			const usersRelations = channel.usersRelations;
+			let	n: number;
+			let flag: boolean = false;
+			for (let i = 0; i < usersRelations.length; i++) {
+				if (sender.id === usersRelations[i].user.id) {
+					flag = true;
+					n = i;
+				} 
+			}
+			if (!flag) {
+				throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+			}
+			if (usersRelations[n].ban) {
+			throw new HttpException('You have been banned from this channel', HttpStatus.FORBIDDEN);
+			}
 
-		//check if the sender is in the channel
-		const usersRelations = channel.usersRelations;
-		let flag: boolean = false;
-		for (let i = 0; i < usersRelations.length; i++) {
-			if (sender.id === usersRelations[i].user.id) {
-				flag = true;
-			} 
-		}
-		if (!flag) {
-			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-		}
+			//check if user is muted
+			
+			const mutedUntil = usersRelations[n].mutedUntil;
+			const currentTime = new Date();
+			currentTime.getTime();
+			if (currentTime < mutedUntil) {
+				throw new HttpException('You have been muted for this channel', HttpStatus.FORBIDDEN);
+			}
 
-		//create and save the message
+			//create and save the message
 		const message = this.messageRepo.create({content});
 		message.sender = sender;
 		message.reciverChannel = channel;
@@ -318,20 +383,43 @@ export class ChatService {
 		}
 		const channel = channels[0];
 
-		//check if user is in channel
 		const userRelations = channel.usersRelations;
+
+		//check if user is in channel and if is banned
+		let	n: number
 		let flag: boolean = false;
 		for (let i = 0; i < userRelations.length; i++) {
 			if (user.id === userRelations[i].user.id) {
 				flag = true;
+				n = i;
 			} 
 		}
 		if (!flag) {
 			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 		}
+		if (userRelations[n].ban) {
+			throw new HttpException('You have been banned from this channel', HttpStatus.FORBIDDEN);
+		}
 
-		return channel.messages;
+		//check if you have blocked a user
+		let messages = channel.messages;
 
+		for (let i = 0; i < messages.length; i++) {
+			let blocked = await this.blockRepo.findOne({
+				relations: ["blocked", "blocker"],
+				where: {
+					blocked: messages[i].sender,
+					blocker: user
+				}
+			});
+
+			if (blocked) {
+				messages[i].content = null;	
+			}
+			
+		}
+
+		return messages;
 	}
 
 	async getMessagesWith(user: User, id: number) {
@@ -372,6 +460,200 @@ export class ChatService {
 
 		return conversation;
 
+	}
+
+	async unbanUser(user: User, bannedName: string, channelName: string) {
+			const channel =	await this.channelRepo.findOne({
+			relations: ['usersRelations', 'usersRelations.user', 'adminRelations', 'adminRelations.user', 'owner'],
+			where: {
+				name: channelName,
+			}
+		});
+		if (!channel) {
+			throw new NotFoundException('channel not found');
+		}		
+
+		const bannedUser = await this.userService.findOneLogin(bannedName);
+		if (!bannedUser) {
+			throw new NotFoundException('user not found');
+		}	
+
+		//check if user is admin
+		const adminRelations = channel.adminRelations;
+		let flag: boolean = false;
+		for (let i = 0; i < adminRelations.length; i++) {
+			if (user.id === adminRelations[i].user.id) {
+				flag = true;
+			} 
+		}
+		if (!flag) {
+			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+		}
+
+		const userRelation = await this.usersInChannelsRepo.findOne({
+			relations: ['user', 'channel'],
+			where: {
+				user: bannedUser,
+				channel: channel
+			}
+		});
+		if (!userRelation) {
+			throw new BadRequestException('user is not in channel');
+		}
+		
+		return this.usersInChannelsRepo.update(userRelation.id, {
+			ban: false
+		});
+	
+	}
+
+
+	async banUser(user: User, bannedName: string, channelName: string) {
+			const channel =	await this.channelRepo.findOne({
+			relations: ['usersRelations', 'usersRelations.user', 'adminRelations', 'adminRelations.user', 'owner'],
+			where: {
+				name: channelName,
+			}
+		});
+		if (!channel) {
+			throw new NotFoundException('channel not found');
+		}		
+
+		const bannedUser = await this.userService.findOneLogin(bannedName);
+		if (!bannedUser) {
+			throw new NotFoundException('user not found');
+		}	
+
+		//check if user is admin
+		const adminRelations = channel.adminRelations;
+		let flag: boolean = false;
+		for (let i = 0; i < adminRelations.length; i++) {
+			if (user.id === adminRelations[i].user.id) {
+				flag = true;
+			} 
+		}
+		if (!flag) {
+			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+		}
+
+		//check if you try to ban the channel owner
+		if (bannedUser.id === channel.owner.id) {
+			throw new HttpException('You can not ban the channel owner', HttpStatus.FORBIDDEN);
+		}
+
+		const userRelation = await this.usersInChannelsRepo.findOne({
+			relations: ['user', 'channel'],
+			where: {
+				user: bannedUser,
+				channel: channel
+			}
+		});
+		if (!userRelation) {
+			throw new BadRequestException('user is not in channel');
+		}
+		
+		return this.usersInChannelsRepo.update(userRelation.id, {
+			ban: true	
+		});
+	
+	}
+
+	async unmuteUser(user: User, mutedName: string, channelName: string) {
+		const channel =	await this.channelRepo.findOne({
+			relations: ['usersRelations', 'usersRelations.user', 'adminRelations', 'adminRelations.user', 'owner'],
+			where: {
+				name: channelName,
+			}
+		});
+		if (!channel) {
+			throw new NotFoundException('channel not found');
+		}		
+
+		const mutedUser = await this.userService.findOneLogin(mutedName);
+		if (!mutedUser) {
+			throw new NotFoundException('user not found');
+		}	
+
+		//check if user is admin
+		const adminRelations = channel.adminRelations;
+		let flag: boolean = false;
+		for (let i = 0; i < adminRelations.length; i++) {
+			if (user.id === adminRelations[i].user.id) {
+				flag = true;
+			} 
+		}
+		if (!flag) {
+			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+		}
+
+		const userRelation = await this.usersInChannelsRepo.findOne({
+			relations: ['user', 'channel'],
+			where: {
+				user: mutedUser,
+				channel: channel
+			}
+		});
+		if (!userRelation) {
+			throw new BadRequestException('user is not in channel');
+		}
+		
+		return this.usersInChannelsRepo.update(userRelation.id, {	
+			mutedUntil: '1996-10-28'
+		});
+	}
+
+	async muteUser(user: User, mutedName: string, channelName: string, time: number) {
+		const channel =	await this.channelRepo.findOne({
+			relations: ['usersRelations', 'usersRelations.user', 'adminRelations', 'adminRelations.user', 'owner'],
+			where: {
+				name: channelName,
+			}
+		});
+		if (!channel) {
+			throw new NotFoundException('channel not found');
+		}		
+
+		const mutedUser = await this.userService.findOneLogin(mutedName);
+		if (!mutedUser) {
+			throw new NotFoundException('user not found');
+		}		
+		
+		//check if user is a channel admin
+		const adminRelations = channel.adminRelations;
+		let flag: boolean = false;
+		for (let i = 0; i < adminRelations.length; i++) {
+			if (user.id === adminRelations[i].user.id) {
+				flag = true;
+			} 
+		}
+		if (!flag) {
+			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+		}
+
+		//check if you try to mute the owner
+		if (mutedUser.id === channel.owner.id) {
+			throw new HttpException('You can not mute the channel owner', HttpStatus.FORBIDDEN);
+		}
+
+		const userRelation = await this.usersInChannelsRepo.findOne({
+			relations: ['user', 'channel'],
+			where: {
+				user: mutedUser,
+				channel: channel
+			}
+		});
+		if (!userRelation) {
+			throw new BadRequestException('user is not in channel');
+		}
+		
+		let currentTime = new Date();
+		let timeUntilMute = new Date();
+		timeUntilMute.setTime(currentTime.getTime() + (time * 60 * 1000));
+		console.log(currentTime);
+
+		return this.usersInChannelsRepo.update(userRelation.id, {	
+			mutedUntil: timeUntilMute
+		});
 	}
 
 	async getOpenConversations(user: User) {

@@ -5,8 +5,7 @@ import { users } from './users.reducer';
 import { user } from './user.reducer';
 import { alert } from './alert.reducer';
 import { channel } from './channel.reducer';
-import { avatars } from './avatars.reducer';
-import { avatar } from './avatar.reducer';
+import { friend } from './friend.reducer';
 
 const rootReducer = combineReducers({
   authentication,
@@ -14,8 +13,7 @@ const rootReducer = combineReducers({
   user,
   alert,
 	channel,
-  avatar,
-  avatars
+  friend
 });
 
 export default rootReducer;

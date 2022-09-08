@@ -1,8 +1,8 @@
-import { avatarConstants } from '../_constants';
-import { avatarService } from '../_services';
+import { friendConstants } from '../_constants';
+import { friendService } from '../_services';
 import { alertActions } from '.';
 
-export const avatarActions = {
+export const friendActions = {
     getAll,
     getById,
     updateProfile
@@ -12,7 +12,7 @@ export const avatarActions = {
 function updateProfile(user: any) {
     return (dispatch:any) => {
         dispatch(request(user));
-        avatarService.updateProfile(user)
+        friendService.updateProfile(user)
             .then(
                 user => {
                     dispatch(success(user));
@@ -24,16 +24,16 @@ function updateProfile(user: any) {
             );
     };
 
-    function request(user:any) { return { type: avatarConstants.UPDATE_REQUEST, user } }
-    function success(user:any) { return { type: avatarConstants.UPDATE_SUCCESS, user } }
-    function failure(error:any) { return { type: avatarConstants.UPDATE_FAILURE, error } }
+    function request(user:any) { return { type: friendConstants.UPDATE_REQUEST, user } }
+    function success(user:any) { return { type: friendConstants.UPDATE_SUCCESS, user } }
+    function failure(error:any) { return { type: friendConstants.UPDATE_FAILURE, error } }
 }
 
 function getById(id : any) {
     return (dispatch:any) => {
         dispatch(request());
 
-        avatarService.getById(id)
+        friendService.getById(id)
             .then(
                 img => {
                     console.log(img);
@@ -45,16 +45,16 @@ function getById(id : any) {
             );
     };
 
-    function request() { return { type: avatarConstants.GETOTHER_REQUEST } }
-    function success(img:any) { return { type: avatarConstants.GETOTHER_SUCCESS, img } }
-    function failure(error:any) { return { type: avatarConstants.GETOTHER_FAILURE, error } }
+    function request() { return { type: friendConstants.GETOTHER_REQUEST } }
+    function success(img:any) { return { type: friendConstants.GETOTHER_SUCCESS, img } }
+    function failure(error:any) { return { type: friendConstants.GETOTHER_FAILURE, error } }
 }
 
 function getAll() {
     return (dispatch:any) => {
         dispatch(request());
 
-        avatarService.getAll()
+        friendService.getAll()
             .then(
                 user => {
                     dispatch(success(user));
@@ -65,7 +65,7 @@ function getAll() {
             );
     };
 
-    function request() { return { type: avatarConstants.GETALL_REQUEST } }
-    function success(users:any) { return { type: avatarConstants.GETALL_SUCCESS, users } }
-    function failure(error:any) { return { type: avatarConstants.GETALL_FAILURE, error } }
+    function request() { return { type: friendConstants.GETALL_REQUEST } }
+    function success(users:any) { return { type: friendConstants.GETALL_SUCCESS, users } }
+    function failure(error:any) { return { type: friendConstants.GETALL_FAILURE, error } }
 }
