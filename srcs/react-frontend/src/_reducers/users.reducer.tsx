@@ -6,6 +6,7 @@ export function users(state : any = {
 }, action:any) {
   switch (action.type) {
     case userConstants.GETOTHER_REQUEST:
+		case userConstants.GETLOGIN_REQUEST:
     case userConstants.GETALL_REQUEST:
       return {...state,
         initial: false,
@@ -18,18 +19,21 @@ export function users(state : any = {
         initial: false,
       };
     case userConstants.GETALL_FAILURE:
-      return { 
+      return {...state,
         loaded: false
       };
     case userConstants.GETOTHER_SUCCESS:
-      return {
+		case userConstants.GETLOGIN_SUCCESS:
+      return {...state,
         item: action.users,
         loaded: true
       };
     case userConstants.GETOTHER_FAILURE:
-      return {
+		case userConstants.GETLOGIN_FAILURE:
+      return {...state,
         loaded: false,
-      }
+				item: null
+			}
     default:
       return state
   }

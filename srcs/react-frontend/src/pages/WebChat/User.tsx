@@ -1,6 +1,8 @@
-import React, { useState, ChangeEvent} from 'react';
+import React, { useState, ChangeEvent, useEffect} from 'react';
 import UserView from './UserView';
+import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import "./User.css";
+import { userActions } from '../../_actions';
 
 
 interface Iprop {
@@ -11,17 +13,20 @@ interface Iprop {
 function User(){
 	const [type, setType] = useState("conversation");
 	const [userSrch, setUserSrch] = useState('');
-	const [isUser, setUser] = useState('');
+	const user = useAppSelector<any>(state => state.users);
+	const current_user = useAppSelector<any>(state => state.user);
+	const dispatch = useAppDispatch();
 	let searchView;
+
 	
 	const UserFinded = () => {
 		return (
 		<div className='FriendSearch'>
 						<div>
-							<p> user: {userSrch}</p>
+							<p> user: {user?.item?.login}</p>
 						</div>
 						<div>
-							<button> Chat</button>
+							<button onClick={() => window.open(window.location.origin + '/direct_message/' + user?.item?.id)}> Chat</button>
 							<button> Block</button>
 							<button> Unblock</button>
 						</div>
@@ -49,12 +54,14 @@ function User(){
 
 	const createDivUser =  (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-
+		dispatch(userActions.getByLogin(userSrch));
 	}
 
-	if (userSrch === "eric")
-		searchView = UserFinded();
-	else if (userSrch != "")
+	if (user && user?.item?.login){
+		if (user?.item?.login != current_user.data.login)
+			searchView = UserFinded();
+	}
+	else
 		searchView = UserNotFinded();
 
 	return (

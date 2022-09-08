@@ -1,10 +1,11 @@
 import axios from "axios";
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent,useEffect } from "react";
 import config from '../../config';
 import { user } from "../../_reducers/user.reducer";
 import {UpdateUser} from "../../interfaces/iUser";
-import { useAppSelector } from '../../_helpers/hooks';
+import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import './ChatRoom.css'
+import { userActions } from "../../_actions";
 
 interface IProps{
 	chanName : string;
@@ -26,17 +27,27 @@ function Channel (props:IProps){
 
 function DirectMessage(){
 	const [msg, setMsg] = useState("");
-	const [receiver, setReceiver] = useState("");
-	const user = useAppSelector<any>(state => state.user);
-	const owner : UpdateUser = user.data;
+	const curr_user = useAppSelector<any>(state => state.user);
+	const user = useAppSelector<any>(state => state.users);
+	const dispatch = useAppDispatch();
+	const owner : UpdateUser = curr_user.data;
+	const url = window.location.href;
+	const recv_id = url.split("/").pop();
 
+  useEffect(() => {
+	// 	//show old conversation
+		dispatch(userActions.getById(recv_id));
+		// if (user && user?.item)
+		// 	console.log("the user exist:" + user?.item?.login)
+		// else
+		// 	console.log("the user is not existed")
+	// 	// if recv_id is not blocked
+	}, [user.item]);
+	
 	const handleMsg = function (e: ChangeEvent<HTMLInputElement>)  {
 		setMsg(e?.currentTarget?.value);
 	}
 
-	const handleReceiver = function (e: ChangeEvent<HTMLInputElement>)  {
-		setReceiver(e?.currentTarget?.value);
-	}
 
 	function handleResponse(response:any) {
     if(response.status == 400)
@@ -46,26 +57,12 @@ function DirectMessage(){
     }
     return response.data;
 }
-const recv = function (event: React.FormEvent<HTMLFormElement>) {
-	return axios.post(`${config.apiUrl}/chat/getMessageWith/${receiver}`,
+const send = function (event: React.FormEvent<HTMLFormElement>) {
+	return axios.post(`${config.apiUrl}/chat/sendMessageForUser/${recv_id}`,
 	{
 		content : msg,
-		user : owner,
-		id : receiver
-	},
-	{
-		withCredentials: true
-	}).then(handleResponse).then(message => {
-		localStorage.setItem('channel', JSON.stringify(message));
-		return message;
-	});
-}
-	const send = function (event: React.FormEvent<HTMLFormElement>) {
-	return axios.post(`${config.apiUrl}/chat/sendMessageForUser/${receiver}`,
-	{
-		content : msg,
-		user : owner,
-		id : receiver
+		curr_user : owner,
+		id : recv_id
 	},
 	{
 		withCredentials: true
@@ -88,7 +85,6 @@ const recv = function (event: React.FormEvent<HTMLFormElement>) {
 							</div>
 							<div className='chatRoomDisplayMsgBar'>
 								<form onSubmit={send}>
-								<input onChange={handleReceiver} className='chatRoomDisplayMsgBarInput' type="number" placeholder="To"/>
 								<input onChange={handleMsg} className='chatRoomDisplayMsgBarInput' type="text" placeholder="Send message"/>
 								</form>
 							</div>

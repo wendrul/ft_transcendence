@@ -10,6 +10,7 @@ export const userActions = {
     auth42,
     getAll,
     getById,
+		getByLogin,
     whoami,
     updateProfile
 };
@@ -154,6 +155,26 @@ function getById(id : any) {
     function success(users:any) { return { type: userConstants.GETOTHER_SUCCESS, users } }
     function failure(error:any) { return { type: userConstants.GETOTHER_FAILURE, error } }
 }
+
+function getByLogin(login: string){
+	return (dispatch: any) => {
+			dispatch(request());
+			userService.getByLogin(login)
+			.then( user =>{
+				console.log(user);
+				dispatch(success(user));
+			}, 
+				error => {
+					dispatch(failure(error));
+				}
+
+			);
+	};
+	function request() { return { type: userConstants.GETLOGIN_REQUEST } }
+	function success(users:any) { return { type: userConstants.GETLOGIN_SUCCESS, users } }
+	function failure(error:any) { return { type: userConstants.GETLOGIN_FAILURE, error } }
+}
+
 
 function getAll() {
     return (dispatch:any) => {
