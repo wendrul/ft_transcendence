@@ -16,6 +16,7 @@ import {
 	Redirect,
 	Res,
 	BadRequestException,
+	Put,
 } from '@nestjs/common';
 import { diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -42,6 +43,12 @@ export class UsersController {
 		private userService: UsersService,
 		private authService: AuthService
 	) {}
+
+	@Get('/isUserBlocked/:login')
+	@UseGuards(AuthGuardApi)
+	async isUserBlocked(@CurrentUser() user: User, @Param('login') login: string) {
+		return this.userService.isUserBlocked(user, login);		
+	}
 
 	@Get('/matchHistory/:login')
 	@UseGuards(AuthGuardApi)
@@ -76,14 +83,14 @@ export class UsersController {
 		return user;
 	}
 
-	@Post('/block/:login')
+	@Get('/block/:login')
 	@Serialize(UserDto)
 	@UseGuards(AuthGuardApi)
 	blockUser(@CurrentUser() user: User, @Param('login') login: string) {
 		return this.userService.blockUser(user, login);
 	}
 
-	@Post('/unblock/:login')
+	@Get('/unblock/:login')
 	@UseGuards(AuthGuardApi)
 	@Serialize(UserDto)
 	unblockUser(@CurrentUser() user: User, @Param('login') login: string) {
@@ -262,6 +269,10 @@ export class UsersController {
 	}
 }
 function La(La: any) {
+	throw new Error('Function not implemented.');
+}
+
+function Pu(arg0: string) {
 	throw new Error('Function not implemented.');
 }
 
