@@ -67,7 +67,7 @@ function Profile(){
 
 	return (
 		<>
-		{ authentication.loggedIn && users.loaded &&
+		{ authentication.loggedIn && users.loaded && users.item &&
 			
 				<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
 				<p className="register_btn mb-1 display-2">
@@ -119,7 +119,7 @@ function Profile(){
 									<h5 className='m-0 text-dark stats-txt'> MATCH</h5>
 								</div>
 								<div className='stats'>
-									<h5>{users.item.wins + users.item.loses}</h5>
+									<h5>{users?.item?.wins + users?.item?.loses}</h5>
 								</div>
 							</div>
 						</div>
@@ -131,7 +131,7 @@ function Profile(){
 									<h5 className='m-0 text-dark stats-txt'> PERFORMANCE</h5>
 								</div>
 								<div className='stats'>
-									<h5>{Math.floor((users.item.wins / (users.item.wins + users.item.loses)) * 100)} %</h5>
+									<h5>{Math.floor((users?.item?.wins / (users?.item?.wins + users?.item?.loses)) * 100)} %</h5>
 								</div>
 							</div>
 						</div>
@@ -147,7 +147,7 @@ function Profile(){
 									<h5 className='m-0 text-dark stats-txt'> WIN</h5>
 								</div>
 								<div className='stats'>
-									<h5 className='text-success'>{users.item.wins}</h5>
+									<h5 className='text-success'>{users?.item?.wins}</h5>
 								</div>
 							</div>
 						</div>
@@ -159,7 +159,7 @@ function Profile(){
 									<h5 className='m-0 text-dark stats-txt'> LOSE</h5>
 								</div>
 								<div className='stats'>
-									<h5 className='text-danger'>{users.item.loses}</h5>
+									<h5 className='text-danger'>{users?.item?.loses}</h5>
 								</div>
 							</div>
 						</div>
