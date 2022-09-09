@@ -31,6 +31,12 @@ function Profile(){
 
 
 	useEffect(() => {
+		if(!authentication.loggedIn && !authentication.loggingIn && !authentication.initial)
+			navigate("/");
+		}, [authentication])
+	
+
+	useEffect(() => {
 		if(!users.initial && !users.loaded && !users.loading)
 			navigate("/404");
 	}, [users])
@@ -61,8 +67,7 @@ function Profile(){
 
 	return (
 		<>
-		{
-			users.loaded &&
+		{ authentication.loggedIn && users.loaded &&
 			
 				<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
 				<p className="register_btn mb-1 display-2">
