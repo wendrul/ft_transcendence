@@ -96,7 +96,7 @@ export default function NavbarComponent() {
                 </MDBDropdownToggle>
                 <MDBDropdownMenu>
                   <MDBDropdownItem>
-                    <MDBDropdownLink>Leaderboard</MDBDropdownLink>
+                    <MDBDropdownLink href='/Leaderboard'>Leaderboard</MDBDropdownLink>
                   </MDBDropdownItem>
                   <MDBDropdownItem>
                     <MDBDropdownLink>Users connected</MDBDropdownLink>

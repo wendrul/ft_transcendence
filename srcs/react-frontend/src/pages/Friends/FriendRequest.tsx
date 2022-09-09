@@ -15,6 +15,7 @@ import "./FriendRequest.css";
 
 function FriendRequest() {
 	const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 	const authentication = useAppSelector<any>(state => state.authentication);
   const userData = useAppSelector<any>(state => state.user);
   const allUsers = useAppSelector<any>(state => state.users);
@@ -36,17 +37,11 @@ function FriendRequest() {
 	useEffect(() => {
 		document.title = "Pending Requests";
 	}, [])
-/*
+
   useEffect(() => {
 		if (!authentication.loggedIn)
       navigate("/");
 	}, [authentication])
-
-  useEffect(() => {
-		if(user && Object.keys(user).length === 0)
-      setUser(userData.data);
-	}, [authentication])
-*/
 
   useEffect(() => {
     dispatch(friendActions.pendingRequests())
@@ -70,7 +65,6 @@ function FriendRequest() {
   async function acceptRequest(user: any, event:any ) {
     const req = pendingRequests.request.find((item:any) => item.senderId === user.id );
     let id = "" + req.id;
-    console.log(id)
     dispatch(friendActions.acceptRequest(id, "accepted"))
   }
 
@@ -78,7 +72,6 @@ function FriendRequest() {
     console.log("rejected")
     const req = pendingRequests.request.find((item:any) => item.senderId === user.id );
     let id = "" + req.id;
-    console.log(id)
     dispatch(friendActions.acceptRequest(id, "rejected"))
   }
 
