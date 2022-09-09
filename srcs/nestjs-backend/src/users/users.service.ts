@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
+import {Match} from 'src/game/entities/match.entity';
 import {Repository} from 'typeorm';
 import {LocalFileDto} from './dtos/localFile.dto';
 import {BlockedUser} from './entities/blockedUsers.entity';
@@ -11,8 +12,48 @@ export class UsersService {
 	constructor(
 		@InjectRepository(User) private repo: Repository<User>,
 		@InjectRepository(BlockedUser) private blockRepo: Repository<BlockedUser>,
-		private localFilesService: LocalFilesService
+		private localFilesService: LocalFilesService,
 	) {}
+
+	async getMatchHistory(login: string) {
+		const user = await this.repo.findOne({
+			relations: [
+				'wonMatches',
+				'lostMatches',
+				'wonMatches.winer',
+				'wonMatches.losser',
+				'lostMatches.winer',
+				'lostMatches.losser',
+			],
+			where: {
+				login: login,
+			}
+		});
+
+		const wonMatches: Match[]  = user.wonMatches;		
+		const lostMatches: Match[] = user.lostMatches;
+
+		const allMatches: Match[] = [];
+
+		for (let i = 0; i < wonMatches.length; i++) {
+			allMatches.push(wonMatches[i]);
+		}
+
+		for (let i = 0; i < lostMatches.length; i++) {
+			allMatches.push(lostMatches[i]);
+		}
+
+		allMatches.sort((a, b) => {
+			if (a.id > b.id) {
+				return 1;
+			}
+			else {
+				return -1;
+			}
+		});
+
+		return allMatches;
+	}
 
 	async getRankPosition(login: string) {
 		const user = await this.repo.findOneBy({login});

@@ -33,6 +33,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { TwoFactorGuard } from 'src/guards/twoFactor.guard';
 import {UserLadderDto} from './dtos/userLadder.dto';
+import {MatchDto} from './dtos/match.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -41,6 +42,13 @@ export class UsersController {
 		private userService: UsersService,
 		private authService: AuthService
 	) {}
+
+	@Get('/matchHistory/:login')
+	@UseGuards(AuthGuardApi)
+	@Serialize(MatchDto)
+	async getMatchHistory(@Param('login') login: string) {
+		return this.userService.getMatchHistory(login);
+	}
 
 	@Get('/rankPositionByLogin/:login')
 	@UseGuards(AuthGuardApi)
