@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react'
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
+import {userActions} from '../../_actions';
 import {useAppDispatch, useAppSelector} from '../../_helpers/hooks';
 import './History.css';
 
@@ -29,15 +30,26 @@ function History (){
 	const users = useAppSelector<any>(state => state.users);
 	const alert = useAppSelector<any>(state => state.alert);
 
+	const { uuid } = useParams();
+
 	useEffect(() => {
 		if(!authentication.loggedIn && !authentication.loggingIn && !authentication.initial)
 			navigate("/");
 	}, [authentication])
 
+	useEffect(() => {
+		if (!users.initial && !users.loaded && !users.loading)
+			navigate("/404");
+	}, [users])
+
+	useEffect(() => {
+		dispatch(userActions.getById(uuid));
+	}, [])
+
 	//Geting rank position
 	const [rank, setrank] = useState("");
-	if (user)
-		axios.get("http://localhost:3002/users/rankPositionByLogin/" + user?.data?.login,
+	if (users?.item?.login)
+		axios.get("http://localhost:3002/users/rankPositionByLogin/" + users?.item?.login,
 			{
 				withCredentials: true,
 			}
@@ -71,7 +83,8 @@ function History (){
 	const [history, setHistory] = useState<Data[]>([]);
 
 	useEffect(() => {
-		axios.get("http://localhost:3002/users/matchHistory/" + user.data.login,
+		if (users?.item?.login !== undefined) {
+		axios.get("http://localhost:3002/users/matchHistory/" + users.item.login,
 			{
 				withCredentials: true,
 			})
@@ -79,17 +92,18 @@ function History (){
 				const history = res.data;
 				setHistory(history);
 			})
-			.catch(() => {})
-	}, []);
+			.catch(() => {console.log('error')})
+		}
+	}, [users]);
 
 	let results: RealData[] = [];
 	for(let i = 0; i < history?.length; i++) {
 		let result: RealData = {id: 0, result: '?', winerScore: 0, losserScore: 0, rival: '?', bc: 'white'};
 		result.id = history[i].id;
-		result.result = (history[i].winerLogin === user?.data?.login) ? 'WIN' : 'DEFEAT';
+		result.result = (history[i].winerLogin === users?.item?.login) ? 'WIN' : 'DEFEAT';
 		result.winerScore = history[i].winerScore;
 		result.losserScore = history[i].losserScore;
-		result.rival = (history[i].winerLogin !== user?.data?.login) ? history[i].winerLogin : history[i].losserLogin; 
+		result.rival = (history[i].winerLogin !== users?.item?.login) ? history[i].winerLogin : history[i].losserLogin; 
 		result.bc = (result.result === 'WIN') ? 'green' : 'red';
 
 		results.push(result);
@@ -97,17 +111,17 @@ function History (){
 
 	return(
 		<>
-			{ authentication.loggedIn &&
+			{ authentication.loggedIn && users.loaded && users.item &&
 			<>
 				<div className="bc-gr2 bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
 					<p className="register_btn mb-1 display-2">
 						Ranking {rank}
 					</p>
 					<p className="register_btn mb-3 display-6">
-						{user.data.login}
+						{users.item.login}
 					</p>
 					<div className='row-btn1 mt-3'>
-						<a href={window.location.origin + '/profile'}>
+						<a href={window.location.origin + '/profile/' + users.item.login}>
 							<button id='btn-profile2'>
 								PROFILE
 							</button>

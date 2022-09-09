@@ -5,6 +5,7 @@ import SignIn from './pages/SignIn/SignIn';
 import SignUp from './pages/SignUp/SignUp';
 import Username from './pages/Username/Username';
 import History from './pages/History/History';
+import Historyuuid from './pages/History/Historyuuid';
 import Profile from './pages/Profile/Profile';
 import Profileuuid from './pages/Profile/Profileuuid';
 
@@ -51,6 +52,7 @@ class RoutesHandler extends React.Component {
         <Route  path ='/friend_request' element={<UsernameRedirect component={<FriendRequest/>} />} />
 
         <Route  path ='/history' element={<UsernameRedirect component={<History/>} />} />
+        <Route  path ='/history/:uuid' element={<UsernameRedirect component={<Historyuuid/>} />} />
         <Route  path ='/web_chat' element={<WebChat/>} />
         <Route  path ='/chat_room' element={<ChatRoom/>} />
         <Route  path ='/direct_message' element={<DirectMessage/>} />

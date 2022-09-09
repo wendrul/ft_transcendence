@@ -85,7 +85,7 @@ function Profile(){
 					<button id='btn-profile'>
 						PROFILE
 					</button>
-					<a href={window.location.origin + '/history'}>
+					<a href={window.location.origin + '/history/' + users.item.login}>
 						<button id='btn-history'>
 							HISTORY
 						</button>
