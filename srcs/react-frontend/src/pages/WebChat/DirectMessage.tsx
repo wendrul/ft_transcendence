@@ -5,6 +5,7 @@ import {UpdateUser} from "../../interfaces/iUser";
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import './ChatRoom.css'
 import { userActions } from "../../_actions";
+import { user } from "../../_reducers/user.reducer";
 
 interface IProps{
 	chanName : string;
@@ -13,12 +14,9 @@ interface IProps{
 function Channel (props:IProps){
 	return(
 		<div className='chatRoomDiv1_1'>
-
 			<div>
 				<p> {props.chanName}</p>
 			</div>
-
-
 		</div>
 	);
 }
@@ -32,30 +30,39 @@ function DirectMessage(){
 	const dispatch = useAppDispatch();
 	const recv = window.location.href.split("/").pop();
 	let view;
-//	let history_msg : any;
 
-		interface Messages{
-			id: number,
-			content: string,
-			reciverType: string,
-			senderId: number,
-			reciverUserId: number
-		}
+	
+	interface Messages{
+		id: number,
+		content: string,
+		reciverType: string,
+		senderId: number,
+		reciverUserId: number
+	}
+	let [history_msg, setHistoryMsg] = useState<Messages[]>([]);
 
-	const [history_msg, setHistoryMsg] = useState<Messages[]>([
-		{ id: 1, content: "hello word", reciverType: "user", senderId: 2, reciverUserId: 3 },
-		{ id: 2, content: "goasdasd word", reciverType: "user", senderId: 3, reciverUserId: 2 },
-		{ id: 3, content: "nani word", reciverType: "user", senderId: 2, reciverUserId: 3},
-		{ id: 4, content: "nani word", reciverType: "user", senderId: 3, reciverUserId: 2},
-		{ id: 5, content: "como estas", reciverType: "user", senderId: 2, reciverUserId: 3},
-		{ id: 6, content: "hola amigo", reciverType: "user", senderId: 2, reciverUserId: 3}
-	])
+	const receive = () => {
+		const id_user = users.item?.id;
+		return axios.get(`${config.apiUrl}/chat/getMessagesWith/${id_user}`,
+		{
+			withCredentials: true
+		}).then(handleResponse).then(res => {
+				setHistoryMsg(res);
+			return res;
+		});
+	}
 
 	useEffect(() => {
 		if (recv !== undefined)
 			dispatch(userActions.getByLogin(recv));
-	//		history_msg = receive();
-  },[]);
+	},[]);
+
+	useEffect(() => {
+		if (users.item?.id !== undefined)
+			receive()
+	},[users.item]);
+
+
 
 	
 const handleMsg = (e: ChangeEvent<HTMLInputElement>) => {
@@ -75,48 +82,20 @@ const handleResponse = (response:any) => {
 // === CHAT ===
 
 const send = (event: React.FormEvent<HTMLFormElement>) => {
-	event.preventDefault();
-	const recv_id = users?.item?.id;
-	return axios.post(`${config.apiUrl}/chat/createMessageForUser/${recv_id}`,
+	// event.preventDefault();
+	const id_user = users?.item?.id;
+	return axios.post(`${config.apiUrl}/chat/createMessageForUser/${id_user}`,
 	{
 		content : msg,
 		curr_user : curr_user.data,
-		id : recv_id
+		id : id_user
 	},
 	{
 		withCredentials: true
 	}).then(handleResponse).then(message => {
-		localStorage.setItem('channel', JSON.stringify(message));
 		return message;
 	});
 }
-/*
-useEffect(() => {
-	if (users && users.item)
-	{
-		let recv_id = users?.item?.id;
-		return axios.get(`${config.apiUrl}/chat/getMessagesWith/${recv_id}`,
-		{
-			withCredentials: true
-		}).then(handleResponse).then(message => {
-			localStorage.setItem('channel', JSON.stringify(message));
-			return message;
-		});
-	}
-},[users]);
-*/
-/*
-const receive = () => {
-	const recv_id = users?.item?.id;
-	return axios.get(`${config.apiUrl}/chat/getMessagesWith/${recv_id}`,
-	{
-		withCredentials: true
-	}).then(handleResponse).then(message => {
-		localStorage.setItem('channel', JSON.stringify(message));
-		return message;
-	});
-}
-*/
 
 // === VIEW ===
 
@@ -146,9 +125,9 @@ const defaultView = () => {
 			<div className='chatRoomDisplayMsg'>
 				<div className='chatRoomDisplayMsgUser'>
 					{	history_msg && history_msg.map((item:Messages) =>
-						<>
+					
 						<h3 key={item.id}> {users.items[item.senderId - 1]?.login}: {item.content}  </h3> 
-						</>
+						
 					)}
 					</div>
 				</div>
