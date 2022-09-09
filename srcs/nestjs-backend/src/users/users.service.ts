@@ -15,6 +15,28 @@ export class UsersService {
 		private localFilesService: LocalFilesService,
 	) {}
 
+	async isUserBlocked(user: User, login: string) {
+		const friend = await this.repo.findOneBy({login});
+		if (!friend) {
+				throw new NotFoundException('user not found');
+		}
+
+		const	blocked = await this.blockRepo.findOne({
+			relations: ["blocked", "blocker"],
+			where: {
+				blocked: friend,
+				blocker: user,
+			}
+		}); 
+
+		if (blocked) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
 	async getMatchHistory(login: string) {
 		const user = await this.repo.findOne({
 			relations: [

@@ -20,6 +20,18 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { userActions } from '../../_actions';
 import axios from 'axios';
 
+function blockButton() {
+	return (
+		<img className="row-img2"src={img_prohibition} alt='prohibition'></img>
+	)
+}
+
+function unblockButton() {
+	return (
+		<img className="row-img2"src={img_friends} alt='prohibition'></img>
+	)
+}
+
 function Profile(){ 
 	const dispatch = useAppDispatch();
 	const authentication = useAppSelector<any>(state => state.authentication);
@@ -52,7 +64,6 @@ function Profile(){
 	//Geting rank position
     const [rank, setrank] = useState("");
 	useEffect(() => {
-		console.log('hola');
 		if (users?.item?.login) {
 			axios.get("http://localhost:3002/users/rankPositionByLogin/" + users.item.login,
 				{
@@ -69,6 +80,37 @@ function Profile(){
 	let perform: number = 100;
 	if (users?.item?.wins !== 0 || users?.item?.loses !== 0)
 		perform = Math.floor((users?.item?.wins / (users?.item?.wins + users?.item?.loses)) * 100);
+
+	//check if user is blocked
+	const [blockedFlag, setBlockedFlag] = useState<boolean>(false);
+	useEffect(() => {
+		if (users?.item?.login) {
+			axios.get("http://localhost:3002/users/isUserBlocked/" + users.item.login,
+				{
+					withCredentials: true,
+				}
+			).then((Response: any) => {
+				const blockFlag: boolean = Response.data
+				setBlockedFlag(blockFlag);
+			}).catch(() => {console.log('error')});
+		}
+	}, [users]);
+
+	function changeBlockStatus() {
+		if (blockedFlag){
+			axios.get("http://localhost:3002/users/unblock/" + users.item.login,
+				{
+					withCredentials: true,
+				}
+			).then(() => window.location.reload()).catch((error: any) => {console.log(error)})
+		} else {
+			axios.get("http://localhost:3002/users/block/" + users.item.login,
+				{
+					withCredentials: true,
+				}
+			).then(() => window.location.reload()).catch((error: any) => {console.log(error)})
+		}
+	}
 
 	return (
 		<>
@@ -109,8 +151,12 @@ function Profile(){
 							<button className="row-but2 border border-dark d-flex flex-row ">
 							<img className="row-img2"src={img_swords} alt='swords'></img>
 							</button>
-							<button className="row-but2 border border-dark d-flex flex-row ">
-							<img className="row-img2"src={img_prohibition} alt='prohibition'></img>
+							<button onClick={(e) => {
+								changeBlockStatus();
+								}} className="row-but2 border border-dark d-flex flex-row ">
+								<>
+									{(blockedFlag) ? unblockButton() : blockButton()}
+								</>
 							</button>
 						</div>
 					</div>
