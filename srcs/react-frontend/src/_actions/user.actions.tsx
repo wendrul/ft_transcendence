@@ -235,9 +235,9 @@ function getByLogin(login: string){
 
 			);
 	};
-	function request() { return { type: userConstants.GETOTHER_REQUEST } }
-	function success(users:any) { return { type: userConstants.GETOTHER_SUCCESS, users } }
-	function failure(error:any) { return { type: userConstants.GETOTHER_FAILURE, error } }
+	function request() { return { type: userConstants.GETLOGIN_REQUEST } }
+	function success(users:any) { return { type: userConstants.GETLOGIN_SUCCESS, users } }
+	function failure(error:any) { return { type: userConstants.GETLOGIN_FAILURE, error } }
 }
 
 

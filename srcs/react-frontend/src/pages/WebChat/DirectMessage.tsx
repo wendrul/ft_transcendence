@@ -27,22 +27,34 @@ function Channel (props:IProps){
 function DirectMessage(){
 	const [msg, setMsg] = useState("");
 	const curr_user = useAppSelector<any>(state => state.user);
+	const authentication = useAppSelector<any>(state => state.authentication);
 	const users = useAppSelector<any>(state => state.users);
 	const dispatch = useAppDispatch();
-	const url = window.location.href.split("/").pop();
-	let recv_id;
+	const recv = window.location.href.split("/").pop();
 	let view;
+//	let history_msg : any;
+
+		interface Messages{
+			id: number,
+			content: string,
+			reciverType: string,
+			senderId: number,
+			reciverUserId: number
+		}
+
+	const [history_msg, setHistoryMsg] = useState<Messages[]>([
+		{ id: 1, content: "hello word", reciverType: "user", senderId: 2, reciverUserId: 3 },
+		{ id: 2, content: "goasdasd word", reciverType: "user", senderId: 3, reciverUserId: 2 },
+		{ id: 3, content: "nani word", reciverType: "user", senderId: 2, reciverUserId: 3},
+		{ id: 4, content: "nani word", reciverType: "user", senderId: 3, reciverUserId: 2},
+		{ id: 5, content: "como estas", reciverType: "user", senderId: 2, reciverUserId: 3},
+		{ id: 6, content: "hola amigo", reciverType: "user", senderId: 2, reciverUserId: 3}
+	])
 
 	useEffect(() => {
-		if (url !== undefined){
-			recv_id = url.match(/\d+/);
-			console.log('url: ' + url);
-			console.log('in: ' + recv_id);
-			dispatch(userActions.getById(recv_id));
-		}
-		else
-			recv_id = 0
-			console.log('out: ' + recv_id);
+		if (recv !== undefined)
+			dispatch(userActions.getByLogin(recv));
+	//		history_msg = receive();
   },[]);
 
 	
@@ -60,8 +72,12 @@ const handleResponse = (response:any) => {
 	return response.data;
 }
 
+// === CHAT ===
+
 const send = (event: React.FormEvent<HTMLFormElement>) => {
-	return axios.post(`${config.apiUrl}/chat/sendMessageForUser/${recv_id}`,
+	event.preventDefault();
+	const recv_id = users?.item?.id;
+	return axios.post(`${config.apiUrl}/chat/createMessageForUser/${recv_id}`,
 	{
 		content : msg,
 		curr_user : curr_user.data,
@@ -73,6 +89,41 @@ const send = (event: React.FormEvent<HTMLFormElement>) => {
 		localStorage.setItem('channel', JSON.stringify(message));
 		return message;
 	});
+}
+/*
+useEffect(() => {
+	if (users && users.item)
+	{
+		let recv_id = users?.item?.id;
+		return axios.get(`${config.apiUrl}/chat/getMessagesWith/${recv_id}`,
+		{
+			withCredentials: true
+		}).then(handleResponse).then(message => {
+			localStorage.setItem('channel', JSON.stringify(message));
+			return message;
+		});
+	}
+},[users]);
+*/
+/*
+const receive = () => {
+	const recv_id = users?.item?.id;
+	return axios.get(`${config.apiUrl}/chat/getMessagesWith/${recv_id}`,
+	{
+		withCredentials: true
+	}).then(handleResponse).then(message => {
+		localStorage.setItem('channel', JSON.stringify(message));
+		return message;
+	});
+}
+*/
+
+// === VIEW ===
+
+const LoadingView  = ()  => {
+	return (		<div className="d-flex justify-content-center align-items-center mt-4">
+	<h1>Loading...</h1>
+</div>)
 }
 
 
@@ -86,17 +137,21 @@ const err404View = () => {
 
 const defaultView = () => {
 	return(
+	<>
+	{ authentication.loggedIn && users.items &&
 	<div className='chatRoomDiv1'>
 
 		<Channel chanName={'direct message'}></Channel>
 		<div className='chatRoomDisplay'>
-
-			 <div className='chatRoomDisplayMsg'>
-					<div className='chatRoomDisplayMsgUser'>
-						{/* HISTORY MESSAGE */}
+			<div className='chatRoomDisplayMsg'>
+				<div className='chatRoomDisplayMsgUser'>
+					{	history_msg && history_msg.map((item:Messages) =>
+						<>
+						<h3 key={item.id}> {users.items[item.senderId - 1]?.login}: {item.content}  </h3> 
+						</>
+					)}
 					</div>
-			</div>
-
+				</div>
 			<div className='chatRoomDisplayMsgBar'>
 					<form onSubmit={send}>
 						<input onChange={handleMsg} className='chatRoomDisplayMsgBarInput' type="text" placeholder="Send message"/>
@@ -106,16 +161,20 @@ const defaultView = () => {
 		</div>
 		
 	</div>
+			
+		}
+	</>
 	)
 }
-/*
-	constant 
 
-*/
-if (users.loaded === false)
+view = LoadingView();
+
+if (users.loged === true &&
+	(curr_user?.data?.login !== users?.item?.login)){
+		view = defaultView();
+}
+else if (users.loged === false)
 	view = err404View();
-else
-	view = defaultView();
 
 return(
 	<>

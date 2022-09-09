@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useState, ChangeEvent, useEffect} from 'react';
+import { channelActions, userActions } from '../../_actions';
+import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 
 
 const oneBlockUser = () => {{
@@ -14,58 +16,56 @@ const oneBlockUser = () => {{
 	);
 }}
 
-const oneUser = (s: string) => {{
-	return(
-		<div className='d-flex flex-row border-bottom m-3 justify-content-between'>
-		<div className='d-flex flex-row '>
-			<p> {s} user</p>
-		</div>
-		<div>
-		<button> Play</button>
 
-		{/* HERE */}
-		<button onClick={() => window.open(window.location.origin + '/direct_message')}>Chat</button>
-		
-		<button className='bg-danger'>Delete</button>
-		</div>
-	</div>
-	);
-}}
 
 interface IProps{
 	type: string;
 }
 
-interface IState{
-}
+function UserView (props : IProps){
+	const dispatch = useAppDispatch();
 
-class FriendUser extends React.Component<IProps, IState>{
-	constructor(props: IProps){
-		super(props);
-	}
+	useEffect(() => {
+		console.log('hello');
+		dispatch(channelActions.getOpenConversations);
+	},[]);
 
-	render(): React.ReactNode {
-		let view;
-		if (this.props.type == 'conversation' || this.props.type == 'friends'){
-			view = oneUser(this.props.type);
-		}
-		else if (this.props.type == 'block'){
-			view = oneBlockUser();
-		}
 
+	const convView = () => {{
 		return(
-			<>
-				{view}
-				{view}
-				{view}
-				{view}
-				{view}
-				{view}
-				{view}
-				{view}
-			</>
+			<div className='d-flex flex-row border-bottom m-3 justify-content-between'>
+			<div className='d-flex flex-row '>
+				<p>  user</p>
+			</div>
+			<div>
+			<button> Play</button>
+	
+			{/* HERE */}
+			<button onClick={() => window.open(window.location.origin + '/direct_message')}>Chat</button>
+			
+			<button className='bg-danger'>Delete</button>
+			</div>
+		</div>
 		);
+	}}
+
+
+	let view;
+	if (props.type == 'conversation'){
+		view = convView();
 	}
+	else if (props.type == 'friends'){
+		// view = oneUser(props.type);
+	}
+	else if (props.type == 'block'){
+		view = oneBlockUser();
+	}
+
+	return(
+		<>
+			{view}
+		</>
+	);
 }
 
-export default FriendUser
+export default UserView

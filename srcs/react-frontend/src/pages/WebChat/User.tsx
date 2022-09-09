@@ -13,20 +13,21 @@ interface Iprop {
 function User(){
 	const [type, setType] = useState("conversation");
 	const [userSrch, setUserSrch] = useState('');
-	const user = useAppSelector<any>(state => state.users);
+	const users = useAppSelector<any>(state => state.users);
 	const current_user = useAppSelector<any>(state => state.user);
 	const dispatch = useAppDispatch();
 	let searchView;
 
-	
+
+
 	const UserFinded = () => {
 		return (
 		<div className='FriendSearch'>
 						<div>
-							<p> user: {user?.item?.login}</p>
+							<p> user: {users?.item?.login}</p>
 						</div>
 						<div>
-							<button onClick={() => window.open(window.location.origin + '/direct_message/' + user?.item?.id)}> Chat</button>
+							<button onClick={() => window.open(window.location.origin + '/direct_message/' + users?.item?.login)}> Chat</button>
 							<button> Block</button>
 							<button> Unblock</button>
 						</div>
@@ -57,8 +58,8 @@ function User(){
 		dispatch(userActions.getByLogin(userSrch));
 	}
 
-	if (user && user?.item?.login){
-		if (user?.item?.login != current_user.data.login)
+	if (users && users?.loged){
+		if (users?.item?.login != current_user.data.login)
 			searchView = UserFinded();
 	}
 	else
