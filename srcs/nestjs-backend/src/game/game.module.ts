@@ -12,6 +12,7 @@ import { LocalFile } from "src/users/entities/localFiles.entity";
 import { AdminsInChannels } from "src/chat/entities/adminsInChannels.entity";
 import { UsersInChannels } from "src/chat/entities/usersInChannels.entity";
 import { BlockedUser } from "src/users/entities/blockedUsers.entity";
+import { GameController } from "./game.controller";
 
 @Module({
 	imports: [
@@ -25,6 +26,9 @@ import { BlockedUser } from "src/users/entities/blockedUsers.entity";
 		TypeOrmModule.forFeature([UsersInChannels]),
 		TypeOrmModule.forFeature([BlockedUser]),
 
+	],
+	controllers: [
+		GameController,
 	],
 	providers: [
 		GameService,
