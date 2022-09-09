@@ -53,6 +53,11 @@ function FriendRequest() {
   }, [])
 
   useEffect(() => {
+    if(pendingRequests.accept)
+      window.location.reload();
+  }, [pendingRequests.accept])
+
+  useEffect(() => {
     let array: ApiData[] = [];
     for(let i = 0; i < pendingRequests.request.length; i++) {
       const user = allUsers.items.find((item:ApiData) => item.id === pendingRequests.request[i].senderId );
@@ -62,21 +67,24 @@ function FriendRequest() {
   }, [pendingRequests.request])
 
 
-  function acceptRequest(id: number, event:any ) {
-    console.log("accept:[", id, "]")
-    console.log(111, event, 222)
-  //  setPassword(event?.currentTarget?.value);
+  async function acceptRequest(user: any, event:any ) {
+    const req = pendingRequests.request.find((item:any) => item.senderId === user.id );
+    let id = "" + req.id;
+    console.log(id)
+    dispatch(friendActions.acceptRequest(id, "accepted"))
   }
 
-  function denyRequest(id: number, event:any ) {
-    console.log("deny:[", id, "]")
-    console.log(111, event, 222)
-  //  setPassword(event?.currentTarget?.value);
+  async  function rejectedRequest(user: any, event:any ) {
+    console.log("rejected")
+    const req = pendingRequests.request.find((item:any) => item.senderId === user.id );
+    let id = "" + req.id;
+    console.log(id)
+    dispatch(friendActions.acceptRequest(id, "rejected"))
   }
 
   return (
     <>
-      { 1/* authentication.loggedIn*/ && 
+      {  authentication.loggedIn && 
         <div className="p-5 bd-highlight justify-content-center d-flex">
           <div className="p-2 d-flex flex-column bd-highlight col-example col-md-6 align-items-center justify-content-center h-100 w-100">
             <div className="d-flex flex-column align-items-center justify-content-center w-75 pb-5 mb-3">
@@ -105,13 +113,13 @@ function FriendRequest() {
                   </div>
                   <div>
                     <MDBBtn onClick={(e) => {
-                            acceptRequest(item.id, e);
+                            acceptRequest(item, e);
                         }}size='sm'  rounded color='success'>
                       <MDBIcon icon="check" />
                     </MDBBtn>
                     <> </>
                     <MDBBtn onClick={(e) => {
-                            denyRequest(item.id, e);
+                            rejectedRequest(item, e);
                         }}
                         size='sm' rounded color='danger'>
                       <MDBIcon icon="trash-alt" />

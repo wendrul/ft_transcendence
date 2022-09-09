@@ -3,16 +3,15 @@ import { friendService } from '../_services';
 import { alertActions } from '.';
 
 export const friendActions = {
+    acceptRequest,
     pendingRequests,
-    getById,
-    updateProfile
+    getById
 };
 
-
-function updateProfile(user: any) {
+function acceptRequest(id: string, body:string) {
     return (dispatch:any) => {
-        dispatch(request(user));
-        friendService.updateProfile(user)
+        dispatch(request());
+        friendService.acceptRequest(id, body)
             .then(
                 user => {
                     dispatch(success(user));
@@ -24,9 +23,9 @@ function updateProfile(user: any) {
             );
     };
 
-    function request(user:any) { return { type: friendConstants.UPDATE_REQUEST, user } }
-    function success(user:any) { return { type: friendConstants.UPDATE_SUCCESS, user } }
-    function failure(error:any) { return { type: friendConstants.UPDATE_FAILURE, error } }
+    function request() { return { type: friendConstants.ACCEPT_REQUEST } }
+    function success(user:any) { return { type: friendConstants.ACCEPT_SUCCESS, user} }
+    function failure(error:any) { return { type: friendConstants.ACCEPT_FAILURE, error } }
 }
 
 function getById(id : any) {
