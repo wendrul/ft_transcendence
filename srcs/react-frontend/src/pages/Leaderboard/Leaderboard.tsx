@@ -66,7 +66,7 @@ function Leaderboard(){
         	
         		<div className="d-flex flex-column align-items-center justify-content-center w-75">
               		<p className="register_btn">
-            			raking Requiest
+						The 10 best players
             		</p>
             	
 			</div>
