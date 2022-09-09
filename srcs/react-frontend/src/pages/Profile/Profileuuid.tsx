@@ -65,6 +65,11 @@ function Profile(){
 		}
 	}, [users]);
 
+	//Set performnace
+	let perform: number = 100;
+	if (users?.item?.wins !== 0 || users?.item?.loses !== 0)
+		perform = Math.floor((users?.item?.wins / (users?.item?.wins + users?.item?.loses)) * 100);
+
 	return (
 		<>
 		{ authentication.loggedIn && users.loaded && users.item &&
@@ -131,7 +136,7 @@ function Profile(){
 									<h5 className='m-0 text-dark stats-txt'> PERFORMANCE</h5>
 								</div>
 								<div className='stats'>
-									<h5>{Math.floor((users?.item?.wins / (users?.item?.wins + users?.item?.loses)) * 100)} %</h5>
+									<h5>{perform} %</h5>
 								</div>
 							</div>
 						</div>

@@ -40,7 +40,7 @@ function Profile(){
 	if(user?.data?.id) { avatarPath = "http://localhost:3002/localFiles/" + user.data.id; }
 
 	//Geting rank position
-    const [rank, setrank] = useState("");
+   const [rank, setrank] = useState("");
 	if (user)
 	axios.get("http://localhost:3002/users/rankPositionByLogin/" + user?.data?.login,
 		{
@@ -50,6 +50,11 @@ function Profile(){
 		const rank: string = Response.data
 		setrank(rank);
 	});
+
+	//Geting performance
+	let performance = 100;
+	if (user?.data?.wins !== 0 || user?.data?.loses !== 0)
+			performance = Math.floor((user?.data?.wins / (user?.data?.wins + user?.data?.loses)) * 100);
 
 	return (
 	<>
@@ -123,7 +128,7 @@ function Profile(){
 								<h5 className='m-0 text-dark stats-txt'> PERFORMANCE</h5>
 							</div>
 							<div className='stats'>
-								<h5>{Math.floor((user?.data?.wins / (user?.data?.wins + user?.data?.loses)) * 100)} %</h5>
+								<h5>{ performance } %</h5>
 							</div>
 						</div>
 					</div>
