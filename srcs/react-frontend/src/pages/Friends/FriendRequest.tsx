@@ -8,8 +8,8 @@ import {
   } from 'mdb-react-ui-kit';
 import { useAppDispatch, useAppSelector } from '..//../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
-import { alertActions, friendActions, userActions } from '../../_actions';
-import AlertPage from '../../components/Alerts/Alert';
+import { friendActions } from '../../_actions';
+//import AlertPage from '../../components/Alerts/Alert';
 
 import "./FriendRequest.css";
 
@@ -17,13 +17,10 @@ function FriendRequest() {
 	const dispatch = useAppDispatch();
   const navigate = useNavigate();
 	const authentication = useAppSelector<any>(state => state.authentication);
-  const userData = useAppSelector<any>(state => state.user);
   const allUsers = useAppSelector<any>(state => state.users);
 
   const pendingRequests = useAppSelector<any>(state => state.friend);
-
-  const [user, setUser] = useState({});
-  
+ 
   interface ApiData {
     id:	number;
     firstName: string;
@@ -41,11 +38,11 @@ function FriendRequest() {
   useEffect(() => {
 		if (!authentication.loggedIn)
       navigate("/");
-	}, [authentication])
+	}, [authentication, navigate])
 
   useEffect(() => {
     dispatch(friendActions.pendingRequests())
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     if(pendingRequests.accept)
@@ -59,7 +56,7 @@ function FriendRequest() {
       array.push(user);
     }
     settest(array);
-  }, [pendingRequests.request])
+  }, [pendingRequests.request, allUsers.items])
 
 
   async function acceptRequest(user: any, event:any ) {

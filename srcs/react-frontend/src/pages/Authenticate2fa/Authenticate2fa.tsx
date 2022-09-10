@@ -24,11 +24,11 @@ function Authenticate2fa() {
   useEffect(() =>{
     if (params.get("twoFactor"))
       setTwo(true)
-  }, [])
+  }, [params])
 
   useEffect(() => {
     dispatch(alertActions.clear());
-	}, [])
+	}, [dispatch])
 
   useEffect(() => {
     if (userData && userData.bool2fa)
@@ -42,7 +42,7 @@ function Authenticate2fa() {
       else
         navigate("/")
     }
-	}, [userData])
+	}, [userData, navigate, twofactor, params])
 
 const [code, setCode] = useState("");
 
