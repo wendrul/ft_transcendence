@@ -132,7 +132,7 @@ export default function NavbarComponent() {
               </form>
               <MDBNavbarNav className='d-flex input-group w-auto'>
                 <MDBNavbarItem>
-                  <MDBNavbarLink href='/friend_request'><MDBIcon color={ friend_req?.request.length > 0 ? "danger": "muted" } icon="bell" animate={ friend_req?.request.length > 0 ? "spin": "beat" }/></MDBNavbarLink>
+                  <MDBNavbarLink href='/friends'><MDBIcon color={ friend_req?.request.length > 0 ? "danger": "muted" } icon="bell" animate={ friend_req?.request.length > 0 ? "spin": "beat" }/></MDBNavbarLink>
                 </MDBNavbarItem>
               </MDBNavbarNav>
               <MDBNavbarNav className='d-flex input-group w-auto'>

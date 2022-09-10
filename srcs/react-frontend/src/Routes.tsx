@@ -53,7 +53,7 @@ class RoutesHandler extends React.Component {
         <Route  path ='/edit_info' element={<UsernameRedirect component={<EditInfo/>} />} />
         <Route  path ='/edit_photo' element={<UsernameRedirect component={<EditPhoto/>} />} />
 
-        <Route  path ='/friend_request' element={<UsernameRedirect component={<FriendRequest/>} />} />
+        <Route  path ='/friends' element={<UsernameRedirect component={<FriendRequest/>} />} />
 
         <Route  path ='/history' element={<UsernameRedirect component={<History/>} />} />
         <Route  path ='/history/:uuid' element={<UsernameRedirect component={<Historyuuid/>} />} />
