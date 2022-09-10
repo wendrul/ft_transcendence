@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import "./HomePage.css";
-import { useSearchParams } from 'react-router-dom';
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAppSelector } from '../../_helpers/hooks';
 import img_user from '../../icon/utilisateur.png'
 import img_gear from '../../icon/gear.png'
@@ -50,9 +50,11 @@ function UserView(user:any){
 function HomePage(){
 	const authentication = useAppSelector<any>(state => state.authentication);
 	const user = useAppSelector<any>(state => state.user);
-	/*const [params, setSearchParams] = useSearchParams();
+	const navigate = useNavigate();
+	const [params, setSearchParams] = useSearchParams();
 	params.get("__firebase_request_key")
-*/
+
+	const [url, seturl] = useState(params.get("twoFactor"));
 
 	interface Data {
 		login: string;
@@ -60,7 +62,17 @@ function HomePage(){
 		loses: number;
 		score: number;
 	}
-
+	useEffect(() =>{
+		if (params.get("twoFactor") === "true")
+			console.log("url[",url,"]");
+			if (url == "true")
+			{
+				navigate("/")
+				seturl(params.get("code"));
+				window.location.reload()
+			}
+	  }, [])
+	
 	useEffect(() => {
 		document.title = "Home";
 	/*	console.log();

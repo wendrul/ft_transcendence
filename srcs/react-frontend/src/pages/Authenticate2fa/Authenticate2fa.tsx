@@ -6,7 +6,7 @@ import {
   } from 'mdb-react-ui-kit';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { alertActions, userActions } from '../../_actions';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import AlertPage from '../../components/Alerts/Alert';
 
 function Authenticate2fa() {
@@ -16,13 +16,32 @@ function Authenticate2fa() {
 	const authentication = useAppSelector<any>(state => state.authentication);
   const userData = useAppSelector<any>(state => state.user);
 
+  const [params, setSearchParams] = useSearchParams();
+	params.get("__firebase_request_key")
+
+  const [twofactor, setTwo] = useState(false);
+
+  useEffect(() =>{
+    if (params.get("twoFactor"))
+      setTwo(true)
+  }, [])
+
   useEffect(() => {
     dispatch(alertActions.clear());
 	}, [])
 
   useEffect(() => {
     if (userData && userData.bool2fa)
-      navigate("/")
+    {
+
+      if (twofactor)
+      {
+        const url = "/?" + params;
+        navigate(url)
+      }
+      else
+        navigate("/")
+    }
 	}, [userData])
 
 const [code, setCode] = useState("");
@@ -38,7 +57,7 @@ const [code, setCode] = useState("");
 
   return (
     <>
-      { authentication.loggedIn && 
+      { (authentication.loggedIn || twofactor) && 
         <div className="p-5 bd-highlight justify-content-center d-flex">
           <div className="p-2 d-flex flex-column bd-highlight col-example col-md-6 align-items-center justify-content-center h-100 w-100">
             <div className="d-flex flex-column align-items-center justify-content-center w-75 pb-5 mb-2">
