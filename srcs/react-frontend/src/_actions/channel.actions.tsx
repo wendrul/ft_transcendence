@@ -37,7 +37,7 @@ function getOpenConversations(){
 									dispatch(success(response));
 							},
 							error => dispatch(failure(error))
-					);
+						);
 	};
 	function request() { return { type: channelConstants.OPEN_CONV_REQUEST } }
 	function success(response:any) { return { type: channelConstants.OPEN_CONV_SUCCESS, response } }
