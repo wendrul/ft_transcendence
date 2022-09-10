@@ -82,7 +82,7 @@ const handleResponse = (response:any) => {
 // === CHAT ===
 
 const send = (event: React.FormEvent<HTMLFormElement>) => {
-	// event.preventDefault();
+	event.preventDefault();
 	const id_user = users?.item?.id;
 	return axios.post(`${config.apiUrl}/chat/createMessageForUser/${id_user}`,
 	{
