@@ -31,7 +31,7 @@ function UserView (props : IProps){
 
 	const LoadingView  = ()  => {
 		return (<div className="d-flex justify-content-center align-items-center mt-4">
-		<h1>Loading...</h1>
+		<h1>No user</h1>
 	</div>)
 	}
 
@@ -49,7 +49,9 @@ function UserView (props : IProps){
 							<button onClick={() => window.open(window.location.origin + '/direct_message/' + item.login)}>
 								Chat
 							</button>
-							<button> Profile </button>
+							<button onClick={() => window.open(window.location.origin + '/profile/' + item.login)}>							
+								Profile 
+							</button>
 						</div>
 					</div>
 				)}
