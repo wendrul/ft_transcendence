@@ -1,18 +1,11 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import config from '../config';
-import { UpdateUser } from '../interfaces/iUser'
 
 export const friendService = {
     acceptRequest,
     pendingRequests,
-    getFriends,
-    getById
+    getFriends
 };
-
-interface acceptParams {
-    id: string,
-    body: string
-}
 
 function getFriends() {
     return axios.get(`${config.apiUrl}/friendRequest/friends`,
@@ -20,7 +13,7 @@ function getFriends() {
         withCredentials: true
     })
     .then((response:any) => {
-        if(response == 403)
+        if(response === 403)
         {
             const error = response.message || response.statusText;
             return Promise.reject(error);
@@ -39,7 +32,7 @@ function acceptRequest(id:string, body:string) {
     }, { 
      withCredentials: true 
     }).then((response:any) => {
-        if(response == 400)
+        if(response === 400)
         {
             const error = response.message || response.statusText;
             return Promise.reject(error);
@@ -48,38 +41,16 @@ function acceptRequest(id:string, body:string) {
     })   
 }
 
-function getById(id: any) {
-   //return axios.get(`${config.apiUrl}/localFiles/${id}`,)
-    return axios.get(`${config.apiUrl}/localFiles/1`,)
-    .then((response:any) => {
-        if(response == 403 || response == 404)
-        {
-            const error = response.message || response.statusText;
-            return Promise.reject(error);
-        }
-        return response.data;
-    })
-}
-
 function pendingRequests() {
     return axios.get(`${config.apiUrl}/friendRequest/pendingRequests`, { 
         withCredentials: true 
     })
     .then((response:any) => {
-        if(response == 403)
+        if(response === 403)
         {
             const error = response.message || response.statusText;
             return Promise.reject(error);
         }
         return response.data;
     })
-}
-
-function handleResponse(response:any) {
-    if(response.status == 400)
-    {
-        const error = response.message || response.statusText;
-        return Promise.reject(error);
-    }
-    return response.data;
 }

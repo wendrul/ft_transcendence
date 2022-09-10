@@ -5,8 +5,7 @@ import { alertActions } from '.';
 export const friendActions = {
     acceptRequest,
     pendingRequests,
-    getFriends,
-    getById
+    getFriends
 };
 
 function getFriends() {
@@ -47,27 +46,6 @@ function acceptRequest(id: string, body:string) {
     function request() { return { type: friendConstants.ACCEPT_REQUEST } }
     function success(user:any) { return { type: friendConstants.ACCEPT_SUCCESS, user} }
     function failure(error:any) { return { type: friendConstants.ACCEPT_FAILURE, error } }
-}
-
-function getById(id : any) {
-    return (dispatch:any) => {
-        dispatch(request());
-
-        friendService.getById(id)
-            .then(
-                img => {
-                    console.log(img);
-                    dispatch(success(img));
-                },
-                error => {
-                    dispatch(failure(error));
-                }
-            );
-    };
-
-    function request() { return { type: friendConstants.GETOTHER_REQUEST } }
-    function success(img:any) { return { type: friendConstants.GETOTHER_SUCCESS, img } }
-    function failure(error:any) { return { type: friendConstants.GETOTHER_FAILURE, error } }
 }
 
 function pendingRequests() {

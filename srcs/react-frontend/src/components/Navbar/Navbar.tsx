@@ -25,13 +25,11 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { friendActions, userActions } from '../../_actions';
-import { user } from '../../_reducers/user.reducer';
 
 export default function NavbarComponent() {
 
   const dispatch = useAppDispatch();
   const authentication = useAppSelector<any>(state => state.authentication);
-  const users = useAppSelector<any>(state => state.users);
   const friend_req = useAppSelector<any>(state => state.friend);
 
   const [showBasic, setShowBasic] = useState(false);
@@ -46,12 +44,12 @@ export default function NavbarComponent() {
       dispatch(userActions.whoami());
     }, 5000)
     return () => clearInterval(timerId);*/
-  }, [])
+  }, [dispatch])
   
   useEffect(()=> {
       if (authentication.loggedIn)
             dispatch(friendActions.pendingRequests())
-  },[authentication.loggedIn]) 
+  },[authentication.loggedIn, dispatch]) 
 
 	const logout = () => {
     dispatch(userActions.signout());
