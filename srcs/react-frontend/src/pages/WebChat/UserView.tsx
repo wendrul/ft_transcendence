@@ -38,21 +38,20 @@ function UserView (props : IProps){
 	const openConvView = () => {{
 	return(
 			<div className='d-flex flex-column'>
-					{history_conv && history_conv.map((item:Conv) => 
-				<div key={item.id} className='d-flex flex-row border-bottom m-3 justify-content-between'>
-					<div key={item.id} className='d-flex flex-row '>
-						<p key={item.id}> {item?.login}</p>
+					{history_conv && history_conv.map((item:Conv, i:number) => 
+					<div key={i} className='d-flex flex-row border-bottom m-3 justify-content-between'>
+						<div  className='d-flex flex-row '>
+							<p> {item?.login}</p>
+						</div>
+						
+						<div>
+							<button> Play</button>
+							<button onClick={() => window.open(window.location.origin + '/direct_message/' + item.login)}>
+								Chat
+							</button>
+							<button> Profile </button>
+						</div>
 					</div>
-					
-					<div>
-						<button> Play</button>
-						<button onClick={() => window.open(window.location.origin + '/direct_message/' + item.login)}>
-							Chat
-						</button>
-						<button> Profile </button>
-					</div>
-				</div>
-				
 				)}
 		</div>
 		);
