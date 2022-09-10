@@ -5,8 +5,29 @@ import { alertActions } from '.';
 export const friendActions = {
     acceptRequest,
     pendingRequests,
+    getFriends,
     getById
 };
+
+function getFriends() {
+    return (dispatch:any) => {
+        dispatch(request());
+
+        friendService.getFriends()
+            .then(
+                user => {
+                    dispatch(success(user));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            );
+    };
+
+    function request() { return { type: friendConstants.GETALL_FRIENDS_REQUEST } }
+    function success(users:any) { return { type: friendConstants.GETALL_FRIENDS_SUCCESS, users } }
+    function failure(error:any) { return { type: friendConstants.GETALL_FRIENDS_FAILURE, error } }
+}
 
 function acceptRequest(id: string, body:string) {
     return (dispatch:any) => {

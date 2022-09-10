@@ -5,12 +5,28 @@ import { UpdateUser } from '../interfaces/iUser'
 export const friendService = {
     acceptRequest,
     pendingRequests,
+    getFriends,
     getById
 };
 
 interface acceptParams {
     id: string,
     body: string
+}
+
+function getFriends() {
+    return axios.get(`${config.apiUrl}/friendRequest/friends`,
+    {
+        withCredentials: true
+    })
+    .then((response:any) => {
+        if(response == 403)
+        {
+            const error = response.message || response.statusText;
+            return Promise.reject(error);
+        }
+        return response.data;
+    })
 }
 
 function acceptRequest(id:string, body:string) {
