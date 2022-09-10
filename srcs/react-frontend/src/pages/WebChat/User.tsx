@@ -27,9 +27,9 @@ function User(){
 							<p> user: {users?.item?.login}</p>
 						</div>
 						<div>
+							<button> Play </button>
 							<button onClick={() => window.open(window.location.origin + '/direct_message/' + users?.item?.login)}> Chat</button>
-							<button> Block</button>
-							<button> Unblock</button>
+							<button> Profile </button>
 						</div>
 			</div> 
 		);
@@ -77,14 +77,11 @@ function User(){
 					<div>
 						<button onClick={() => handleFriend('friends')}> FRIENDS</button>
 					</div>
-					<div>
-						<button onClick={() => handleFriend('block')}> BLOCK</button>
-					</div>
 
 				</div>
 				<div className='webchatDiv3_1_2'>
 					<form onSubmit={createDivUser} > 
-						<input  type="search" onChange={handleUserSrch} placeholder="search user"/>
+						<input className="mx-3" type="search" onChange={handleUserSrch} placeholder="search user"/>
 					</form>
 					{searchView}
 				</div> 
@@ -94,7 +91,7 @@ function User(){
 			<div className='webchatDiv3_2'>
 
 				<div className='d-flex flex-row m-3'>
-					<p> {type} 10 </p>
+					<p> {type}</p>
 				</div>
 
 				<div id="allUser">

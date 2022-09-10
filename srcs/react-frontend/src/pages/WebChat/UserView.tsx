@@ -3,19 +3,6 @@ import { channelActions, userActions } from '../../_actions';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 
 
-const oneBlockUser = () => {{
-	return(
-		<div className='d-flex flex-row border-bottom m-3 justify-content-between'>
-		<div className='d-flex flex-row '>
-			<p> blocked user</p>
-		</div>
-		<div>
-		<button className='bg-primary'>Unlock</button>
-		</div>
-	</div>
-	);
-}}
-
 
 
 interface IProps{
@@ -62,6 +49,7 @@ function UserView (props : IProps){
 						<button onClick={() => window.open(window.location.origin + '/direct_message/' + item.login)}>
 							Chat
 						</button>
+						<button> Profile </button>
 					</div>
 				</div>
 				
@@ -77,9 +65,6 @@ function UserView (props : IProps){
 	}
 	else if (props.type == 'friends'){
 		// view = oneUser(props.type);
-	}
-	else if (props.type == 'block'){
-		view = oneBlockUser();
 	}
 
 	return(
