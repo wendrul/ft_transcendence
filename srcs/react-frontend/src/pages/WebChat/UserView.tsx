@@ -31,14 +31,14 @@ function UserView (props : IProps){
 
 	const LoadingView  = ()  => {
 		return (<div className="d-flex justify-content-center align-items-center mt-4">
-		<h1>Loading...</h1>
+		<h1>No user</h1>
 	</div>)
 	}
 
 	const openConvView = () => {{
 	return(
 			<div className='d-flex flex-column'>
-					{history_conv && history_conv.map((item:Conv, i:number) => 
+					{channel.data[0] != null && history_conv && history_conv.map((item:Conv, i:number) => 
 					<div key={i} className='d-flex flex-row border-bottom m-3 justify-content-between'>
 						<div  className='d-flex flex-row '>
 							<p> {item?.login}</p>
@@ -49,7 +49,9 @@ function UserView (props : IProps){
 							<button onClick={() => window.open(window.location.origin + '/direct_message/' + item.login)}>
 								Chat
 							</button>
-							<button> Profile </button>
+							<button onClick={() => window.open(window.location.origin + '/profile/' + item.login)}>							
+								Profile 
+							</button>
 						</div>
 					</div>
 				)}

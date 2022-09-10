@@ -25,7 +25,7 @@ function getFriends() {
     };
 
     function request() { return { type: friendConstants.GETALL_FRIENDS_REQUEST } }
-    function success(users:any) { return { type: friendConstants.GETALL_FRIENDS_SUCCESS, users } }
+    function success(user:any) { return { type: friendConstants.GETALL_FRIENDS_SUCCESS, user } }
     function failure(error:any) { return { type: friendConstants.GETALL_FRIENDS_FAILURE, error } }
 }
 

@@ -1,11 +1,9 @@
 import axios from "axios";
-import React, { useState, ChangeEvent,useEffect } from "react";
-import config from '../../config';
-import {UpdateUser} from "../../interfaces/iUser";
+import React, { useRef, useState, ChangeEvent,useEffect } from "react";
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
-import './ChatRoom.css'
 import { userActions } from "../../_actions";
-import { user } from "../../_reducers/user.reducer";
+import config from '../../config';
+import './ChatRoom.css'
 
 interface IProps{
 	chanName : string;
@@ -21,25 +19,24 @@ function Channel (props:IProps){
 	);
 }
 
+interface Messages{
+	id: number,
+	content: string,
+	reciverType: string,
+	senderId: number,
+	reciverUserId: number
+}
 
 function DirectMessage(){
+	const sendRef = useRef(null);
 	const [msg, setMsg] = useState("");
+	let [history_msg, setHistoryMsg] = useState<Messages[]>([]);
 	const curr_user = useAppSelector<any>(state => state.user);
 	const authentication = useAppSelector<any>(state => state.authentication);
 	const users = useAppSelector<any>(state => state.users);
 	const dispatch = useAppDispatch();
 	const recv = window.location.href.split("/").pop();
 	let view;
-
-	
-	interface Messages{
-		id: number,
-		content: string,
-		reciverType: string,
-		senderId: number,
-		reciverUserId: number
-	}
-	let [history_msg, setHistoryMsg] = useState<Messages[]>([]);
 
 	const receive = () => {
 		const id_user = users.item?.id;
@@ -62,26 +59,22 @@ function DirectMessage(){
 			receive()
 	},[users.item]);
 
-
-
-	
 const handleMsg = (e: ChangeEvent<HTMLInputElement>) => {
 		setMsg(e?.currentTarget?.value);
 }
 
-
 const handleResponse = (response:any) => {
 	if(response.status == 400)
 	{
-	    const error = response.message || response.statusText;
-	    return Promise.reject(error);
+	  const error = response.message || response.statusText;
+	  return Promise.reject(error);
 	}
 	return response.data;
 }
 
 // === CHAT ===
 
-const send = (event: React.FormEvent<HTMLFormElement>) => {
+const createMessageFor = (event: React.FormEvent<HTMLFormElement>) => {
 	event.preventDefault();
 	const id_user = users?.item?.id;
 	return axios.post(`${config.apiUrl}/chat/createMessageForUser/${id_user}`,
@@ -97,14 +90,17 @@ const send = (event: React.FormEvent<HTMLFormElement>) => {
 	});
 }
 
+const send = (event: React.FormEvent<HTMLFormElement>) => {
+	createMessageFor(event);
+}
+
 // === VIEW ===
 
 const LoadingView  = ()  => {
-	return (		<div className="d-flex justify-content-center align-items-center mt-4">
+	return (<div className="d-flex justify-content-center align-items-center mt-4">
 	<h1>Loading...</h1>
 </div>)
 }
-
 
 const err404View = () => {
 	return(
@@ -132,8 +128,8 @@ const defaultView = () => {
 					</div>
 				</div>
 			<div className='chatRoomDisplayMsgBar'>
-					<form onSubmit={send}>
-						<input onChange={handleMsg} className='chatRoomDisplayMsgBarInput' type="text" placeholder="Send message"/>
+					<form id="form_chat" onSubmit={send}>
+						<input ref={sendRef} onChange={handleMsg} className='chatRoomDisplayMsgBarInput' type="text" placeholder="Send message"/>
 					</form>
 			</div>
 

@@ -1,8 +1,9 @@
 import "./WebChat.css";
 import User from './User';
 import Channel from './Channel';
-import React, { useState} from "react";
+import React, { useEffect, useState} from "react";
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
+import { friendActions } from "../../_actions";
 
 
 
@@ -10,11 +11,15 @@ function WebChat (){
 	const authentication = useAppSelector<any>(state => state.authentication);
 	const users = useAppSelector<any>(state => state.users);
 	const [page, setPage] = useState('user');
+	const dispatch = useAppDispatch();
 
 	const handlePage = (s:string) => {
 		setPage(s);
 	};
 
+	useEffect(() => {
+		dispatch(friendActions.getFriends())
+	},[])
 
 	return(
 <>
