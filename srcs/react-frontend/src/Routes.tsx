@@ -16,6 +16,8 @@ import EditInfo from './pages/Profile/Edit/EditInfo';
 import EditPhoto from './pages/Profile/Edit/EditPhoto';
 
 import FriendRequest from './pages/Friends/FriendRequest';
+import Leaderboard from './pages/Leaderboard/Leaderboard';
+
 
 import CreateRoom from './pages/CreateRoom/CreateRoom';
 import UsernameRedirect from './pages/Username/UsernameRedirect';
@@ -44,6 +46,8 @@ class RoutesHandler extends React.Component {
         <Route  path ='/profile/:uuid' element={<UsernameRedirect component={<Profileuuid/>} />} />
         <Route  path ='/profile' element={<UsernameRedirect component={<Profile/>} />} />
 
+        <Route  path ='/Leaderboard' element={<UsernameRedirect component={<Leaderboard/>} />} />
+
         <Route  path ='/edit_profile' element={<UsernameRedirect component={<EditProfile/>} />} />
         <Route  path ='/edit_2fa' element={<UsernameRedirect component={<Edit2fa/>} />} />
         <Route  path ='/edit_info' element={<UsernameRedirect component={<EditInfo/>} />} />
@@ -55,7 +59,7 @@ class RoutesHandler extends React.Component {
         <Route  path ='/history/:uuid' element={<UsernameRedirect component={<Historyuuid/>} />} />
         <Route  path ='/web_chat' element={<WebChat/>} />
         <Route  path ='/chat_room' element={<ChatRoom/>} />
-        <Route  path ='/direct_message' element={<DirectMessage/>} />
+        <Route  path ='/direct_message/:id' element={<DirectMessage/>} />
         <Route
           path="*"
           element={

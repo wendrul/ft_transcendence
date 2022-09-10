@@ -3,32 +3,48 @@ import config from '../config';
 import { UpdateUser } from '../interfaces/iUser'
 
 export const friendService = {
+    acceptRequest,
     pendingRequests,
-    getById,
-    updateProfile
+    getFriends,
+    getById
 };
 
-function updateProfile(user:UpdateUser) {
-    console.log(user)
-    const JSobj = JSON.stringify(user)
-    console.log(JSobj)
-    return axios.patch(`${config.apiUrl}/users/myprofile`,
+interface acceptParams {
+    id: string,
+    body: string
+}
+
+function getFriends() {
+    return axios.get(`${config.apiUrl}/friendRequest/friends`,
     {
-     //   User
-        firstName: user?.firstName,
-        lastName: user?.lastName,
-        login: user?.login,
-       // twoFactorAuthenticationFlag: user?.twoFactorAuthenticationFlag,
-       // email: user?.email
+        withCredentials: true
+    })
+    .then((response:any) => {
+        if(response == 403)
+        {
+            const error = response.message || response.statusText;
+            return Promise.reject(error);
+        }
+        return response.data;
+    })
+}
+
+function acceptRequest(id:string, body:string) {
+    console.log(body)
+    const JSobj = JSON.stringify(body)
+    console.log(JSobj)
+    return axios.patch(`${config.apiUrl}/friendRequest/${id}`,
+    {
+        status: body
     }, { 
-        withCredentials: true 
+     withCredentials: true 
     }).then((response:any) => {
         if(response == 400)
         {
             const error = response.message || response.statusText;
             return Promise.reject(error);
         }
-        return user;
+        return response.data;
     })   
 }
 

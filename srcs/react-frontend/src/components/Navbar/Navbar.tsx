@@ -54,8 +54,8 @@ export default function NavbarComponent() {
   const onSerch = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
     dispatch(userActions.getAll());
-    navigate("/profile/" + userLogin)
-    window.location.reload();
+    const url = "/profile/" + userLogin;
+    navigate(url)
 	}
 
   const handleChangeUserLogin = function(event: ChangeEvent<HTMLInputElement>) {
@@ -96,7 +96,7 @@ export default function NavbarComponent() {
                 </MDBDropdownToggle>
                 <MDBDropdownMenu>
                   <MDBDropdownItem>
-                    <MDBDropdownLink>Leaderboard</MDBDropdownLink>
+                    <MDBDropdownLink href='/Leaderboard'>Leaderboard</MDBDropdownLink>
                   </MDBDropdownItem>
                   <MDBDropdownItem>
                     <MDBDropdownLink>Users connected</MDBDropdownLink>
@@ -117,31 +117,33 @@ export default function NavbarComponent() {
                 Disabled
               </MDBNavbarLink>
             </MDBNavbarItem>
-           */}
+           */
+          }
           </MDBNavbarNav>
-          <form className='d-flex input-group w-auto' onSubmit={onSerch}>
-            <input type='search' className='form-control' onChange={handleChangeUserLogin} placeholder='User ID' aria-label='Search' />
-            <MDBBtn color='primary'>Search</MDBBtn>
-          </form>
-          {
-            authentication.loggedIn &&
-            <MDBNavbarNav className='d-flex input-group w-auto'>
-              <MDBNavbarItem>
-                <MDBDropdown>
-                  <MDBDropdownToggle tag='a' className='nav-link'>
-                  <MDBIcon icon="user" />
-                  </MDBDropdownToggle>
-                  <MDBDropdownMenu>
-                    <MDBDropdownItem>
-                      <MDBDropdownLink href='/profile'>My Space</MDBDropdownLink>
-                    </MDBDropdownItem>
-                    <MDBDropdownItem>
-                      <MDBDropdownLink onClick={logout} >Logout</MDBDropdownLink>
-                    </MDBDropdownItem>
-                  </MDBDropdownMenu>
-                </MDBDropdown>
-              </MDBNavbarItem>
-            </MDBNavbarNav>
+          {  authentication.loggedIn &&
+            <>
+              <form className='d-flex input-group w-auto' onSubmit={onSerch}>
+                <input type='search' className='form-control' onChange={handleChangeUserLogin} placeholder='User ID' aria-label='Search' />
+                <MDBBtn color='primary'>Search</MDBBtn>
+              </form>
+              <MDBNavbarNav className='d-flex input-group w-auto'>
+                <MDBNavbarItem>
+                  <MDBDropdown>
+                    <MDBDropdownToggle tag='a' className='nav-link'>
+                    <MDBIcon icon="user" />
+                    </MDBDropdownToggle>
+                    <MDBDropdownMenu>
+                      <MDBDropdownItem>
+                        <MDBDropdownLink href='/profile'>My Space</MDBDropdownLink>
+                      </MDBDropdownItem>
+                      <MDBDropdownItem>
+                        <MDBDropdownLink onClick={logout} >Logout</MDBDropdownLink>
+                      </MDBDropdownItem>
+                    </MDBDropdownMenu>
+                  </MDBDropdown>
+                </MDBNavbarItem>
+              </MDBNavbarNav>
+            </>
           }
         </MDBCollapse>
       </MDBContainer>
