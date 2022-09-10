@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 
 import "./HomePage.css";
-import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
-import { useAppSelector } from '../../_helpers/hooks';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import img_user from '../../icon/utilisateur.png'
-import img_gear from '../../icon/gear.png'
 import axios from 'axios';
 
 function guestView(){

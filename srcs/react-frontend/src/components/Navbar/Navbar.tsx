@@ -24,7 +24,7 @@ import {
 } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
-import { userActions } from '../../_actions';
+import { friendActions, userActions } from '../../_actions';
 import { user } from '../../_reducers/user.reducer';
 
 export default function NavbarComponent() {
@@ -32,6 +32,7 @@ export default function NavbarComponent() {
   const dispatch = useAppDispatch();
   const authentication = useAppSelector<any>(state => state.authentication);
   const users = useAppSelector<any>(state => state.users);
+  const friend_req = useAppSelector<any>(state => state.friend);
 
   const [showBasic, setShowBasic] = useState(false);
   let navigate = useNavigate();
@@ -47,6 +48,11 @@ export default function NavbarComponent() {
     return () => clearInterval(timerId);*/
   }, [])
   
+  useEffect(()=> {
+      if (authentication.loggedIn)
+            dispatch(friendActions.pendingRequests())
+  },[authentication.loggedIn]) 
+
 	const logout = () => {
     dispatch(userActions.signout());
 	}
@@ -126,6 +132,11 @@ export default function NavbarComponent() {
                 <input type='search' className='form-control' onChange={handleChangeUserLogin} placeholder='User ID' aria-label='Search' />
                 <MDBBtn color='primary'>Search</MDBBtn>
               </form>
+              <MDBNavbarNav className='d-flex input-group w-auto'>
+                <MDBNavbarItem>
+                  <MDBNavbarLink href='/friend_request'>{ friend_req?.request.length }<MDBIcon icon="bell" /></MDBNavbarLink>
+                </MDBNavbarItem>
+              </MDBNavbarNav>
               <MDBNavbarNav className='d-flex input-group w-auto'>
                 <MDBNavbarItem>
                   <MDBDropdown>
