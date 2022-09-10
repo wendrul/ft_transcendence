@@ -117,31 +117,33 @@ export default function NavbarComponent() {
                 Disabled
               </MDBNavbarLink>
             </MDBNavbarItem>
-           */}
+           */
+          }
           </MDBNavbarNav>
-          <form className='d-flex input-group w-auto' onSubmit={onSerch}>
-            <input type='search' className='form-control' onChange={handleChangeUserLogin} placeholder='User ID' aria-label='Search' />
-            <MDBBtn color='primary'>Search</MDBBtn>
-          </form>
-          {
-            authentication.loggedIn &&
-            <MDBNavbarNav className='d-flex input-group w-auto'>
-              <MDBNavbarItem>
-                <MDBDropdown>
-                  <MDBDropdownToggle tag='a' className='nav-link'>
-                  <MDBIcon icon="user" />
-                  </MDBDropdownToggle>
-                  <MDBDropdownMenu>
-                    <MDBDropdownItem>
-                      <MDBDropdownLink href='/profile'>My Space</MDBDropdownLink>
-                    </MDBDropdownItem>
-                    <MDBDropdownItem>
-                      <MDBDropdownLink onClick={logout} >Logout</MDBDropdownLink>
-                    </MDBDropdownItem>
-                  </MDBDropdownMenu>
-                </MDBDropdown>
-              </MDBNavbarItem>
-            </MDBNavbarNav>
+          {  authentication.loggedIn &&
+            <>
+              <form className='d-flex input-group w-auto' onSubmit={onSerch}>
+                <input type='search' className='form-control' onChange={handleChangeUserLogin} placeholder='User ID' aria-label='Search' />
+                <MDBBtn color='primary'>Search</MDBBtn>
+              </form>
+              <MDBNavbarNav className='d-flex input-group w-auto'>
+                <MDBNavbarItem>
+                  <MDBDropdown>
+                    <MDBDropdownToggle tag='a' className='nav-link'>
+                    <MDBIcon icon="user" />
+                    </MDBDropdownToggle>
+                    <MDBDropdownMenu>
+                      <MDBDropdownItem>
+                        <MDBDropdownLink href='/profile'>My Space</MDBDropdownLink>
+                      </MDBDropdownItem>
+                      <MDBDropdownItem>
+                        <MDBDropdownLink onClick={logout} >Logout</MDBDropdownLink>
+                      </MDBDropdownItem>
+                    </MDBDropdownMenu>
+                  </MDBDropdown>
+                </MDBNavbarItem>
+              </MDBNavbarNav>
+            </>
           }
         </MDBCollapse>
       </MDBContainer>
