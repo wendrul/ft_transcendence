@@ -16,14 +16,16 @@ export function authentication(state = {
     case userConstants.WHOAMI_SUCCESS:
     case userConstants.LOGIN_SUCCESS:
       return {
-        loggedIn: true
+        loggedIn: true,
+        loggingIn: false
       };
     case userConstants.LOGOUT_SUCCESS:
     case userConstants.WHOAMI_FAILURE:
     case userConstants.SIGNUP_FAILURE:
     case userConstants.LOGIN_FAILURE:
       return {
-        loggedIn: false
+        loggedIn: false,
+        loggingIn: false
       };
     default:
       return state

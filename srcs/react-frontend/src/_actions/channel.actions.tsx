@@ -27,20 +27,20 @@ function createChannel(userLogins: string[], access: string,
 }
 
 
-function getOpenConversations(user: UpdateUser){
+function getOpenConversations(){
 		return (dispatch:any) => {
 			dispatch(request());
 
-			channelService.getOpenConversations(user)
+			channelService.getOpenConversations()
 					.then(
 							response => {
-									dispatch(success());
+									dispatch(success(response));
 							},
 							error => dispatch(failure(error))
 					);
 	};
 	function request() { return { type: channelConstants.OPEN_CONV_REQUEST } }
-	function success() { return { type: channelConstants.OPEN_CONV_SUCCESS } }
+	function success(response:any) { return { type: channelConstants.OPEN_CONV_SUCCESS, response } }
 	function failure(error:string) { return { type: channelConstants.OPEN_CONV_FAILURE, error } }
 }
 

@@ -25,15 +25,18 @@ function createChannel(userLogins: string[], access: string,
 		});
 }
 
-function getOpenConversations(user: UpdateUser){
-	return axios.get(`${config.apiUrl}/chat/openConversations`,)
-	.then(handleResponse).then(conversation => {
+function getOpenConversations(){
+	return axios.get(`${config.apiUrl}/chat/openConversations`,
+	{
+		withCredentials: true
+	},
+	 ).then(handleResponse).then(conversation => {
 		return conversation;
 	});
 }
 
 function handleResponse(response:any) {
-    if(response.status == 400)
+    if(response.status == 400 || response.status == 404)
     {
         const error = response.message || response.statusText;
         return Promise.reject(error);

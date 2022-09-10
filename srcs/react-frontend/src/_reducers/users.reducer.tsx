@@ -26,11 +26,7 @@ export function users(state : any = {
         initial: false,
       };
 		case userConstants.GETOTHER_SUCCESS:
-			return {
-				item: action.users,
-				loaded: true
-			};
-			case userConstants.GETLOGIN_SUCCESS:
+		case userConstants.GETLOGIN_SUCCESS:
 				return{...state,
 				item: action.users,
 				loged: true
@@ -38,9 +34,6 @@ export function users(state : any = {
 
 		// FAILURE
 		case userConstants.GETALL_FAILURE:
-      return { 
-        loaded: false
-      };
     case userConstants.GETOTHER_FAILURE:
       return {
         loaded: false,

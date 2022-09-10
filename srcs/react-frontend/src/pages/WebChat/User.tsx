@@ -58,6 +58,7 @@ function User(){
 		dispatch(userActions.getByLogin(userSrch));
 	}
 
+
 	if (users && users?.loged){
 		if (users?.item?.login != current_user.data.login)
 			searchView = UserFinded();
