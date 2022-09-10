@@ -26,7 +26,7 @@ export function friend(state = {
       return {...state,
         updating: false,
         updated: true,
-        friends: action.users
+        friends: action.user
       };
     case friendConstants.PENDING_SUCCESS:
       return {...state,

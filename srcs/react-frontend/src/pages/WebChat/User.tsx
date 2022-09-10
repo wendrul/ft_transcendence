@@ -2,7 +2,7 @@ import React, { useState, ChangeEvent, useEffect} from 'react';
 import UserView from './UserView';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import "./User.css";
-import { userActions } from '../../_actions';
+import { friendActions, userActions } from '../../_actions';
 
 
 interface Iprop {
@@ -15,10 +15,13 @@ function User(){
 	const [userSrch, setUserSrch] = useState('');
 	const users = useAppSelector<any>(state => state.users);
 	const current_user = useAppSelector<any>(state => state.user);
+	const friends = useAppSelector<any>(state => state.friend);
 	const dispatch = useAppDispatch();
 	let searchView;
 
-
+	useEffect(() => {
+		dispatch(friendActions.getFriends())
+	},[])
 
 	const UserFinded = () => {
 		return (

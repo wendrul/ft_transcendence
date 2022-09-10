@@ -93,13 +93,13 @@ function FriendRequest() {
                   empty
                 </p>
               }
-              { fRequest && fRequest.map((item:ApiData) =>
+              { fRequest && fRequest.map((item:ApiData, i:number) =>
                 
-                <MDBListGroupItem key={item.id} className='d-flex justify-content-between align-items-center'>
+                <MDBListGroupItem key={i} className='d-flex justify-content-between align-items-center'>
                   <div className='d-flex align-items-center'>
                     <div className='ms-3'>
-                      <p className='fw-bold mb-1'>{item.login}</p>
-                      <MDBBtn size='sm' href={"/profile/" + item.login} rounded color='link'>
+                      <p className='fw-bold mb-1'>{item?.login}</p>
+                      <MDBBtn size='sm' href={"/profile/" + item?.login} rounded color='link'>
                         View Profile
                       </MDBBtn>
                     </div>
