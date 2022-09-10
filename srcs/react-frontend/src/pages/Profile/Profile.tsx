@@ -90,21 +90,7 @@ function Profile(){
 					</div>
 					{avatarPath &&
 					<img className='user' src={ avatarPath } alt='user'></img>}
-					<p>AVAILABLE</p>
-					<div className="d-flex flex-row m-3 mb-1">
-						<button className="row-but2 border border-dark d-flex flex-row ">
-						<img className="row-img2"src={img_friends} alt='friends'></img>
-						</button>
-						<button className="row-but2 border border-dark d-flex flex-row ">
-						<img className="row-img2"src={img_chat} alt='chat'></img>
-						</button>
-						<button className="row-but2 border border-dark d-flex flex-row ">
-						<img className="row-img2"src={img_swords} alt='swords'></img>
-						</button>
-						<button className="row-but2 border border-dark d-flex flex-row ">
-						<img className="row-img2"src={img_prohibition} alt='prohibition'></img>
-						</button>
-					</div>
+					<p>    AVAILABLE    </p>
 				</div>
 
 				<div className='d-flex flex-column align-items-center justify-content-center'>

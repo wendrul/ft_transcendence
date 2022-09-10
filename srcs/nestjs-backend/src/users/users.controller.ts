@@ -180,6 +180,7 @@ export class UsersController {
 
 		if (user.twoFactorAuthenticationFlag) {
 			session.twoFactor = user.id;
+			res.redirect('http://localhost:3000/Authenticate2fa').send(user)
 		}
 
 		session.userId = user.id;
