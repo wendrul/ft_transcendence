@@ -54,8 +54,8 @@ export default function NavbarComponent() {
   const onSerch = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
     dispatch(userActions.getAll());
-    navigate("/profile/" + userLogin)
-    window.location.reload();
+    const url = "/profile/" + userLogin;
+    navigate(url)
 	}
 
   const handleChangeUserLogin = function(event: ChangeEvent<HTMLInputElement>) {
