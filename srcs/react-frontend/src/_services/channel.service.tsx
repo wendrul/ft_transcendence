@@ -4,8 +4,8 @@ import {UpdateUser} from "../interfaces/iUser";
 
 export const channelService = {
 		createChannel,
-		// createMessageForUser
-};
+		getOpenConversations
+	};
 
 function createChannel(userLogins: string[], access: string,
 	 password: string, name: string, owner: UpdateUser){
@@ -25,23 +25,18 @@ function createChannel(userLogins: string[], access: string,
 		});
 }
 
-// function createMessageForUser(content: string, user: UpdateUser, id: number){
-// 	return axios.post(`${config.apiUrl}/chat/createChannel`,
-// 	{
-// 		content : content,
-// 		user : user,
-// 		id : id
-// 	},
-// 	{
-// 		withCredentials: true
-// 	}).then(handleResponse).then(message => {
-// 		localStorage.setItem('message', JSON.stringify(message));
-// 		return message;
-// 	});
-// }
+function getOpenConversations(){
+	return axios.get(`${config.apiUrl}/chat/openConversations`,
+	{
+		withCredentials: true
+	},
+	 ).then(handleResponse).then(conversation => {
+		return conversation;
+	});
+}
 
 function handleResponse(response:any) {
-    if(response.status == 400)
+    if(response.status == 400 || response.status == 404)
     {
         const error = response.message || response.statusText;
         return Promise.reject(error);

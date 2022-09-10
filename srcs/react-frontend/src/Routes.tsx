@@ -59,7 +59,7 @@ class RoutesHandler extends React.Component {
         <Route  path ='/history/:uuid' element={<UsernameRedirect component={<Historyuuid/>} />} />
         <Route  path ='/web_chat' element={<WebChat/>} />
         <Route  path ='/chat_room' element={<ChatRoom/>} />
-        <Route  path ='/direct_message' element={<DirectMessage/>} />
+        <Route  path ='/direct_message/:id' element={<DirectMessage/>} />
         <Route
           path="*"
           element={
