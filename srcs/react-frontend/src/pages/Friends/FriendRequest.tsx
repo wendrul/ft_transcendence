@@ -188,7 +188,14 @@ function FriendRequest() {
                     }
                     { allfriends && allfriends.map((item:Friends, i:number) =>
                       <MDBListGroupItem key={i} className='d-flex justify-content-between align-items-center'>
+ 
                         <div className='d-flex align-items-center'>
+                        <img
+                            src={ "http://localhost:3002/localFiles/" + item.id }
+                            alt=''
+                            style={{ width: '45px', height: '45px' }}
+                            className='rounded-circle'
+                            />
                           <div className='ms-3'>
                             <p className='fw-bold mb-1'>{item?.login}</p>
                             <MDBBtn size='sm' href={"/profile/" + item?.login} rounded color='link'>
