@@ -5,7 +5,10 @@ import {UpdateUser} from "../interfaces/iUser";
 
 export const channelActions = {
 	createChannel,
-	getOpenConversations
+	getOpenConversations,
+	getMyChannelsByType,
+	getChannel
+
 };
 
 function createChannel(userLogins: string[], access: string,
@@ -15,14 +18,12 @@ function createChannel(userLogins: string[], access: string,
 
 			channelService.createChannel(userLogins, access, password, name, owner)
 					.then(
-							response => {
-									dispatch(success());
-							},
+							response => {dispatch(success(response));},
 							error => dispatch(failure(error))
 					);
 	};
 	function request() { return { type: channelConstants.CREATE_CHANNEL_REQUEST } }
-	function success() { return { type: channelConstants.CREATE_CHANNEL_SUCCESS } }
+	function success(response: any) { return { type: channelConstants.CREATE_CHANNEL_SUCCESS , response}}
 	function failure(error:string) { return { type: channelConstants.CREATE_CHANNEL_FAILURE, error } }
 }
 
@@ -43,5 +44,41 @@ function getOpenConversations(){
 	function success(response:any) { return { type: channelConstants.OPEN_CONV_SUCCESS, response } }
 	function failure(error:string) { return { type: channelConstants.OPEN_CONV_FAILURE, error } }
 }
+
+function getMyChannelsByType(type:string){
+	return (dispatch:any) => {
+		dispatch(request());
+
+		channelService.getMyChannelsByType(type)
+				.then(
+						response => {
+								dispatch(success(response));
+						},
+						error => dispatch(failure(error))
+					);
+};
+function request() { return { type: channelConstants.GET_MY_CHAN_REQUEST } }
+function success(response:any) { return { type: channelConstants.GET_MY_CHAN_SUCCESS, response } }
+function failure(error:string) { return { type: channelConstants.GET_MY_CHAN_FAILURE, error } }
+}
+
+
+function getChannel(name:string){
+	return (dispatch:any) => {
+		dispatch(request());
+
+		channelService.getChannel(name)
+				.then(
+						response => {
+								dispatch(success(response));
+						},
+						error => dispatch(failure(error))
+					);
+};
+function request() { return { type: channelConstants.GET_CHAN_REQUEST } }
+function success(response:any) { return { type: channelConstants.GET_CHAN_SUCCESS, response } }
+function failure(error:string) { return { type: channelConstants.GET_CHAN_FAILURE, error } }
+}
+
 
 

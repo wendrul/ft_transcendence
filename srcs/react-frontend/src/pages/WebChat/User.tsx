@@ -31,8 +31,12 @@ function User(){
 						</div>
 						<div>
 							<button> Play </button>
-							<button onClick={() => window.open(window.location.origin + '/direct_message/' + users?.item?.login)}> Chat</button>
-							<button> Profile </button>
+							<button onClick={() => window.open(window.location.origin + '/direct_message/' + users?.item?.login)}> 
+								Chat
+							</button>
+							<button onClick={() => window.open(window.location.origin + '/profile/' + users?.item?.login)}>
+								Profile 
+							</button>
 						</div>
 			</div> 
 		);
@@ -41,7 +45,6 @@ function User(){
 		return (
 			<div className='FriendSearch'>
 						<div>
-							<p> waiting for a valid login...</p>
 						</div>
 					</div> 
 		);

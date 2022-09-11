@@ -143,16 +143,16 @@ export class ChatService {
 		const channel: Channel = channels[0];
 
 		//check if user is in channel
-		const userRelations = channel.usersRelations;
-		let flag: boolean = false;
-		for (let i = 0; i < userRelations.length; i++) {
-			if (user.id === userRelations[i].user.id) {
-				flag = true;
-			} 
-		}
-		if (!flag) {
-			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-		}
+		// const userRelations = channel.usersRelations;
+		// let flag: boolean = false;
+		// for (let i = 0; i < userRelations.length; i++) {
+		// 	if (user.id === userRelations[i].user.id) {
+		// 		flag = true;
+		// 	} 
+		// }
+		// if (!flag) {
+		// 	throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+		// }
 
 		return channel;
 

@@ -10,6 +10,7 @@ import { friendActions } from "../../_actions";
 function WebChat (){
 	const authentication = useAppSelector<any>(state => state.authentication);
 	const users = useAppSelector<any>(state => state.users);
+	const user = useAppSelector<any>(state => state.user);
 	const [page, setPage] = useState('user');
 	const dispatch = useAppDispatch();
 
@@ -28,7 +29,7 @@ function WebChat (){
 		<div className='webchatDiv2'>
 
 			<div className='webchatDiv2_1'>
-				<p> My Profile</p>
+				<p> {user.data.login}</p>
 			</div>
 
 			<div className='webchatDiv2_2'>
