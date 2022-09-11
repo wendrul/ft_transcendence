@@ -1,0 +1,28 @@
+#allUser{
+	overflow-y: scroll;
+	margin-left: 10px;
+	margin-right: 10px;
+	height: 300px;
+}
+
+#allUser::-webkit-scrollbar{
+	background: grey;
+	border-radius: 20px;
+}
+
+#allUser::-webkit-scrollbar-track {
+	background:grey;
+	border-radius: 20px;
+}
+#allUser::-webkit-scrollbar-thumb {
+ background-color: #e9e9f2;
+ border-radius: 20px;
+}
+
+.FriendSearch{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 400px;
+	margin-left: 10px;
+}

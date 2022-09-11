@@ -1,0 +1,75 @@
+.RoomDiv1{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	height: 450px;
+	margin: 50px;
+	margin-top: 80px;
+}
+
+.RoomDiv2{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	box-shadow: 12px 12px 2px 1px black;
+	background-color: white;
+	margin: 50px;
+	width: 300px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+
+	border-radius: 10px;
+}
+
+.RoomButtonPen{
+	border:none;
+	background-color: white;
+	display: block;
+	margin-left: auto;
+}
+
+
+.RoomImgPen{
+	height: 20px;
+	width: 20px;
+	display: block;
+	margin-left: auto;
+}
+
+.RoomButtonSave{
+	width: 100px;
+	height: 30px;
+	margin: 20px;
+	font-weight: bold;
+	border: none;
+	border-radius: 3px;
+	color: white;
+	background-color: #1266f1;
+}
+
+.RoomInput{
+	border-radius: 10px;
+	height: 25px;
+}
+
+.RoomButtonPlay{
+	padding-left: 40px;
+	padding-right: 40px;
+	height: 50px;
+	border: none;
+	font-weight: bold;
+	border-radius: 3px;
+	color: white;
+	background-color: #f19d12;
+}
+
+.RoomH6{
+	margin: 0px;
+}
+
+.RoomRadioTxt{
+	font-size: 12px;
+
+}

@@ -1,0 +1,75 @@
+.dboard-avatar{
+	width: 200px;
+	height: 230px;
+	background-color: white;
+}
+
+.dboard-btn-sup{
+	width: 150px;
+	height: 30px;
+	font-weight: bold;
+	border: none;
+	border-radius: 3px;
+	color: white;
+	background-color: #1266f1;
+}
+
+.dboard-btn-sin{
+	width: 250px;
+	height: 50px;
+	border: none;
+	font-weight: bold;
+	border-radius: 3px;
+	color: white;
+	background-color: #f19d12;
+}
+
+bc-gr2{
+	background-color: #e9ebec;
+}
+
+
+
+.dboard-div-scroll{
+	display: flex;
+	flex-direction: row;
+	overflow: auto;
+	margin-top: 40px;
+	height: 550px;
+	width: 700px;
+}
+.img_gear{
+	height: 50px;
+	width: 50px;
+	margin: 5px;
+	transition: transform .7s ease-in-out;
+
+}
+
+.img_gear:hover {
+  transform: rotate(360deg);
+}
+
+.filter{
+	display: flex;
+	flex-direction: column;
+  width: 20%;
+  background-color: white;
+  min-height: 50px;
+
+}
+
+.dboard-tab{
+  width: 80%;
+  overflow: auto;
+	padding: 20px;
+}
+
+.filter-search{
+	width: 100px;
+	height: 30px;
+	padding: 7px;
+	border-radius: 20px;
+	border: solid grey 1px;
+	font-size: 12px;
+}

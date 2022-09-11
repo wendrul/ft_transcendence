@@ -1,0 +1,55 @@
+.webchatDiv1{
+	height: 500px;
+	display: flex;
+	flex-direction: row;
+	margin: 50px;
+}
+
+.webchatDiv2{
+	width: 10%;
+	background-color: #6a6a6d;
+}
+.webchatDiv2_1{
+	height: 20%;
+	margin-top: 30px;
+	border-bottom: solid 1px #b1b0b5;
+
+}
+
+.webchatDiv2_2{
+	height: 80%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+
+.webchatDiv3{
+	width: 90%;
+	background-color: #9f9ea3;
+}
+
+.webchatDiv3_1{
+	height: 20%;
+}
+
+.webchatDiv3_1_1{
+	height: 60%;
+	display: flex;
+	flex-direction: row;
+	justify-content:space-around;
+	align-items: center;
+}
+
+.webchatDiv3_1_2{
+	display: flex;
+	flex-direction: row;
+	height: 30%;
+}
+
+
+.webchatDiv3_2{
+	height: 80%;
+
+}
+

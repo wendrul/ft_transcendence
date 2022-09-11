@@ -2,6 +2,8 @@ version: '3.9'
 
 services:
   nestjs:
+    depends_on:
+      - postgres
     container_name: nestjs_api_dev
     image: nestjs-api-dev:1.0.0
     build:
@@ -9,7 +11,7 @@ services:
       target: development
     command: npm run start:dev
     ports:
-      - 3000:3000
+      - 3002:3000
       - 9229:9229
     networks:
       - transcendence-net
@@ -17,24 +19,42 @@ services:
       - ./srcs/react-frontend/src/game/shared:/usr/src/app/src/game/shared
       - ./srcs/nestjs-backend:/usr/src/app
       - /usr/src/app/node_modules
+      - ./srcs/avatars:/usr/src/avatars
     restart: unless-stopped
-  
-  react:
-    container_name: react_frontend_dev
-    image: react_frontend_dev:1.0.0
-    build:
-      context: ./srcs/react-frontend
-      target: development
-    command: npm run start
+
+  postgres:
+    image: postgres:alpine
+    container_name: "postgres"
+    environment:
+      DATABASE_HOST: "127.0.0.1"
+      POSTGRES_PASSWORD: "root"
+      POSTGRES_USER: "root"
+      POSTGRES_DB: "db"
+      PG_DATA: /var/lib/postgresql/data
     ports:
-      - 80:3000
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     networks:
       - transcendence-net
-    volumes:
-      - ./srcs/react-frontend:/usr/src/app
-      - /usr/src/app/node_modules
     restart: unless-stopped
+  
+  pgadmin:
+    depends_on:
+      - postgres
+    container_name: "container-pgadmin4"
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+    networks:
+      - transcendence-net
 
 
 networks:
   transcendence-net:
+volumes:
+  pgdata:

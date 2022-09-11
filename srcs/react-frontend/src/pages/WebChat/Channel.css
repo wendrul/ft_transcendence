@@ -1,0 +1,28 @@
+.channelPopup{
+	height: 400px;
+	width: 700px;
+	border: 1px solid black;
+	background-color: #6a6a6d;
+}
+
+
+#allChannel{
+	overflow-y: scroll;
+	margin-left: 10px;
+	margin-right: 10px;
+	height: 300px;
+}
+
+#allChannel::-webkit-scrollbar{
+	background: grey;
+	border-radius: 20px;
+}
+
+#allChannel::-webkit-scrollbar-track {
+	background:grey;
+	border-radius: 20px;
+}
+#allChannel::-webkit-scrollbar-thumb {
+ background-color: #e9e9f2;
+ border-radius: 20px;
+}

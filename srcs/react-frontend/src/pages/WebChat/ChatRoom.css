@@ -1,0 +1,104 @@
+
+.chatRoomDiv1{
+	height: 550px;
+	margin: 50px;
+	display: flex;
+	flex-direction: row;
+}
+
+.chatRoomDiv1_1{
+	width: 15%;
+	background-color: #6a6a6d;
+	padding: 10px;
+	padding-top: 30px;
+}
+
+.chatRoomDiv1_2{
+	width: 75%;
+	background-color: #9f9ea3;
+}
+
+.chatRoomCo{
+	display: flex;
+	flex-direction: column;
+	background-color: #202021;
+	height: 150px;
+	padding: 10px;
+	border-radius: 10px;
+	overflow: auto;
+}
+
+.chatRoomCo > p{
+	color: white;
+	text-align: start;
+	font-size: 15px;
+	margin-bottom: 5px;
+	margin-left: 10px;
+}
+
+
+.chatRoomDeco{
+	display: flex;
+	flex-direction: column;
+	background-color: #202021;
+	height: 150px;
+	padding: 10px;
+	border-radius: 10px;
+	overflow: auto;
+}
+
+.chatRoomDeco > p{
+	color: white;
+	text-align: start;
+	font-size: 15px;
+	margin-bottom: 5px;
+	margin-left: 10px;
+}
+
+.chatRoomDisplay{
+	width: 100%;
+	padding-left: 30px;
+	display: flex;
+ 	flex-direction: column;
+	background: #d3d3db;
+}
+
+.chatRoomDisplayMsg{
+	height: 90%;
+	overflow: auto;
+}
+
+.chatRoomDisplayMsg::-webkit-scrollbar{
+	background: grey;
+	border-radius: 20px;
+}
+
+.chatRoomDisplayMsg::-webkit-scrollbar-track {
+	background:grey;
+	border-radius: 20px;
+}
+.chatRoomDisplayMsg::-webkit-scrollbar-thumb {
+ background-color: #e9e9f2;
+ border-radius: 20px;
+}
+
+.chatRoomDisplayMsgBar{
+	height: 8%;
+	margin: 10px;
+
+}
+
+.chatRoomDisplayMsgBarInput{
+	width: 100%;
+	height: 100%;
+	border-radius: 20px;
+	padding-left: 10px;
+	background-color: #e9e9f2;
+	border: none;
+	outline: none;
+
+}
+
+.chatRoomDisplayMsgUser{
+	margin: 10px;
+}

@@ -1,44 +1,21 @@
-import "./App.css";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
-import RootPage from "./pages/RootPage";
-import Layout from "./components/layout/Layout";
-import NotFoundPage from "./pages/NotFoundPage";
-import ProfilePage from "./pages/ProfilePage";
-import GameComponent, { GameSettingsTest } from "./GameComponent";
+import React from 'react';
+import './App.css';
+//import { MDBBtn, MDBCol, MDBContainer, MDBRow } from 'mdb-react-ui-kit';
+import RoutesHandler from './Routes';
+import NavbarComponent from './components/Navbar/Navbar';
+import FooterComponent from './components/Footer/Footer';
 
 function App() {
   return (
-    <div className="app">
-      <BrowserRouter>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<RootPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/game" element={<GameSettingsTest />} />
-            <Route path="/game-test" element={<GameComponent username={"test1234"} roomID={""} spectator={false} premade={false} test={true}/>} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
-    </div>
+        <div className="h-100">
+          <NavbarComponent />
+          <div className="t_body h-100">
+            <RoutesHandler>
+            </RoutesHandler>
+          </div>
+       {/* <FooterComponent /> */} 
+        </div>
   );
 }
 
 export default App;
-
-// <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.tsx</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
