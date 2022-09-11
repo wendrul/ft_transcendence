@@ -112,9 +112,20 @@ function Profile(){
 		}
 	}
 
-	// function sendFriendRequest() {
-	// 	axios.post
-	// }
+	function sendFriendRequest() {
+		axios.post("http://localhost:3002/friendRequest/create",
+			{
+				login: users.item.login,
+			},
+			{
+				withCredentials: true,
+			}
+		).then(() => {
+
+		}).catch((err) => {
+			console.log(err);
+		})
+	}
 
 	return (
 		<>
@@ -147,7 +158,7 @@ function Profile(){
 						<p>AVAILABLE</p>
 						<div className="d-flex flex-row m-3 mb-1">
 							<button onClick={(e) => {
-									// sendFriendRequest();
+									sendFriendRequest();
 								}} className="row-but2 border border-dark d-flex flex-row ">
 							<img className="row-img2"src={img_friends} alt='friends'></img>
 							</button>

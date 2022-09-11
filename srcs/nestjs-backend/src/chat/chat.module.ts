@@ -12,6 +12,7 @@ import {LocalFile} from 'src/users/entities/localFiles.entity';
 import {LocalFilesService} from "src/users/localFiles.service";
 import {UsersInChannels} from './entities/usersInChannels.entity';
 import {AdminsInChannels} from  './entities/adminsInChannels.entity';
+import {MessagesGateway} from './chat.gateway';
 
 @Module({
 	imports: [
@@ -30,6 +31,7 @@ import {AdminsInChannels} from  './entities/adminsInChannels.entity';
 		ChatService,
 		UsersService,
 		LocalFilesService,
+		MessagesGateway,
 	]
 })
 

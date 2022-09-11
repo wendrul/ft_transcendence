@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import './ChatRoom.css'
 import { userActions } from "../../_actions";
 import { user } from "../../_reducers/user.reducer";
+import {io} from "socket.io-client";
 
 interface IProps{
 	chanName : string;
@@ -21,9 +22,9 @@ function Channel (props:IProps){
 	);
 }
 
-
 function DirectMessage(){
 	const [msg, setMsg] = useState("");
+	const [socket, setSocket] = useState<any>(null);
 	const curr_user = useAppSelector<any>(state => state.user);
 	const authentication = useAppSelector<any>(state => state.authentication);
 	const users = useAppSelector<any>(state => state.users);
@@ -31,25 +32,38 @@ function DirectMessage(){
 	const recv = window.location.href.split("/").pop();
 	let view;
 
-	
 	interface Messages{
 		id: number,
-		content: string,
-		reciverType: string,
-		senderId: number,
-		reciverUserId: number
+			content: string,
+			reciverType: string,
+			senderLogin: string,
+			reciverUserLogin: string
 	}
+
 	let [history_msg, setHistoryMsg] = useState<Messages[]>([]);
+
+	//conect sockets
+	useEffect(() => {
+		setSocket(io("http://localhost:3002"));
+	}, []);
+
+	//join direct message room
+	useEffect(() => {
+		socket?.on('joinedRoom', (msg: string) => {
+			console.log("joined to room", msg);
+		});	
+	}, [socket]);
+
 
 	const receive = () => {
 		const id_user = users.item?.id;
 		return axios.get(`${config.apiUrl}/chat/getMessagesWith/${id_user}`,
-		{
-			withCredentials: true
-		}).then(handleResponse).then(res => {
+			{
+				withCredentials: true
+			}).then(handleResponse).then(res => {
 				setHistoryMsg(res);
-			return res;
-		});
+				return res;
+			});
 	}
 
 	useEffect(() => {
@@ -62,103 +76,141 @@ function DirectMessage(){
 			receive()
 	},[users.item]);
 
-
-
-	
-const handleMsg = (e: ChangeEvent<HTMLInputElement>) => {
+	const handleMsg = (e: ChangeEvent<HTMLInputElement>) => {
 		setMsg(e?.currentTarget?.value);
-}
-
-
-const handleResponse = (response:any) => {
-	if(response.status == 400)
-	{
-	    const error = response.message || response.statusText;
-	    return Promise.reject(error);
 	}
-	return response.data;
-}
-
-// === CHAT ===
-
-const send = (event: React.FormEvent<HTMLFormElement>) => {
-	event.preventDefault();
-	const id_user = users?.item?.id;
-	return axios.post(`${config.apiUrl}/chat/createMessageForUser/${id_user}`,
-	{
-		content : msg,
-		curr_user : curr_user.data,
-		id : id_user
-	},
-	{
-		withCredentials: true
-	}).then(handleResponse).then(message => {
-		return message;
-	});
-}
-
-// === VIEW ===
-
-const LoadingView  = ()  => {
-	return (		<div className="d-flex justify-content-center align-items-center mt-4">
-	<h1>Loading...</h1>
-</div>)
-}
 
 
-const err404View = () => {
-	return(
-		<div className="d-flex justify-content-center align-items-center mt-4">
-			<h1>404 Error</h1>
-		</div>
-	)
-}
-
-const defaultView = () => {
-	return(
-	<>
-	{ authentication.loggedIn && users.items &&
-	<div className='chatRoomDiv1'>
-
-		<Channel chanName={'direct message'}></Channel>
-		<div className='chatRoomDisplay'>
-			<div className='chatRoomDisplayMsg'>
-				<div className='chatRoomDisplayMsgUser'>
-					{	history_msg && history_msg.map((item:Messages) =>
-					
-						<h3 key={item.id}> {users.items[item.senderId - 1]?.login}: {item.content}  </h3> 
-						
-					)}
-					</div>
-				</div>
-			<div className='chatRoomDisplayMsgBar'>
-					<form onSubmit={send}>
-						<input onChange={handleMsg} className='chatRoomDisplayMsgBarInput' type="text" placeholder="Send message"/>
-					</form>
-			</div>
-
-		</div>
-		
-	</div>
-			
+	const handleResponse = (response:any) => {
+		if(response.status == 400)
+		{
+			const error = response.message || response.statusText;
+			return Promise.reject(error);
 		}
-	</>
-	)
-}
+		return response.data;
+	}
 
-view = LoadingView();
+	// === CHAT ===
 
-if (users.loged === true &&
-	(curr_user?.data?.login !== users?.item?.login)){
+	let room_name: string;
+
+	useEffect(() => {
+		if (curr_user?.data?.id > users?.item?.id) {
+			room_name = curr_user?.data?.id + "." + users?.item?.id;
+		} else {
+			room_name = users?.item?.id + "." + curr_user?.data?.id;
+		}
+		console.log(room_name);
+
+		if (curr_user.data && users.item)
+			socket?.emit('joinRoom', room_name);
+
+	}, [curr_user.data && users.item && socket]);
+
+	const send = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		const id_user = users?.item?.id;
+		const my_id = curr_user?.data?.id;
+
+		return axios.post(`${config.apiUrl}/chat/createMessageForUser/${id_user}`,
+			{
+				content : msg,
+				curr_user : curr_user.data, //I don't know what is these for (David)
+				id : id_user								//I don't know what is these for (David)
+			},
+			{
+				withCredentials: true
+			}).then(handleResponse).then(message => {
+				return message;
+			}).then(message => {
+				let room: string;
+				if (my_id > id_user)
+					room = my_id + "." + id_user;
+				else
+					room = id_user + "." + my_id;
+				socket.emit('sendMessage', {sender: message.senderLogin, room: room, message: message.content});
+				console.log(room_name);
+			}).catch((err) => {console.log(err.response.data.message)});
+	}
+
+
+	//recive mesages with sockets and append
+	useEffect(() => {
+		socket?.on('messageFromChannel', (msg: {sender: string, room: string, message: string}) => {
+			setHistoryMsg(history_msg => [...history_msg,
+				{
+					id: 0,
+					content: msg.message,
+					reciverType: "User",
+					senderLogin: msg.sender,
+					reciverUserLogin: "adsf",
+				}
+			]);
+		});	
+	}, [socket]);
+
+	// === VIEW ===
+
+	const LoadingView  = ()  => {
+		return (		<div className="d-flex justify-content-center align-items-center mt-4">
+			<h1>Loading...</h1>
+		</div>)
+	}
+
+
+	const err404View = () => {
+		return(
+			<div className="d-flex justify-content-center align-items-center mt-4">
+				<h1>404 Error</h1>
+			</div>
+		)
+	}
+
+	const defaultView = () => {
+		return(
+			<>
+				{ authentication.loggedIn && users.items &&
+				<div className='chatRoomDiv1'>
+
+					<Channel chanName={'direct message'}></Channel>
+					<div className='chatRoomDisplay'>
+						<div className='chatRoomDisplayMsg'>
+							<div className='chatRoomDisplayMsgUser'>
+								{	history_msg && history_msg.map((item:Messages, i: number) =>
+
+								<h3 key={i}> {item.senderLogin}: {item.content}  </h3> 
+
+								)}
+							</div>
+						</div>
+						<div className='chatRoomDisplayMsgBar'>
+							<form onSubmit={send}>
+								<input onChange={handleMsg} className='chatRoomDisplayMsgBarInput' type="text" placeholder="Send message"/>
+							</form>
+						</div>
+
+					</div>
+
+				</div>
+
+				}
+			</>
+		)
+	}
+
+	view = LoadingView();
+
+	if (users.loged === true &&
+		(curr_user?.data?.login !== users?.item?.login)){
 		view = defaultView();
-}
-else if (users.loged === false)
-	view = err404View();
+	}
+	else if (users.loged === false)
+		view = err404View();
 
-return(
-	<>
-		{view}
-	</>
+	return(
+		<>
+			{view}
+		</>
 	);
 }
 
