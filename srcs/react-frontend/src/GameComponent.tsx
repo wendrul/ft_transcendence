@@ -92,8 +92,6 @@ export function GameSettingsTest(params: any) {
 
 function GameComponent(props: any) {
   const ref = useRef<HTMLDivElement>(null);
-  console.log("heyeyeye");
-  
 
   useEffect(() => {
     // On first render create our application

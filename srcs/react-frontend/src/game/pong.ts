@@ -31,15 +31,22 @@ export function gameSetup(
   },
   test = false
 ) {
-  if (!game_starting_for_good) {
-    //Hacky way to avoid running this twice, should be fixed in the future
-    game_starting_for_good = true;
-    return;
-  }
-  const socket = io(`${window.location.origin}:3000/game`, {
+
+  // if (!game_starting_for_good) {
+  //   //Hacky way to avoid running this twice, should be fixed in the future
+  //   game_starting_for_good = true;
+  //   return;
+  // }
+  // const socket = io(`${window.location.origin}:3002/game`, {
+  //   query: {...queryParameters, test},
+  // });
+  
+  const socket = io(`localhost:3002/game`, {
     query: {...queryParameters, test},
   });
 
+
+  console.log(socket);
   // fetch("http://localhost:3000").then((s) => console.log(s));
   // const socket = io(`${window.location.origin}:3000/game`, {
   //   query: { name: "Jhon", roomID: null, premade: false, spectator: false },
