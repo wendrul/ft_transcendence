@@ -16,6 +16,7 @@ services:
     networks:
       - transcendence-net
     volumes:
+      - ./srcs/react-frontend/src/game/shared:/usr/src/app/src/game/shared
       - ./srcs/nestjs-backend:/usr/src/app
       - /usr/src/app/node_modules
       - ./srcs/avatars:/usr/src/avatars
@@ -67,7 +68,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
-      - "5050:80"
+      - 5050:80
     networks:
       - transcendence-net
 
