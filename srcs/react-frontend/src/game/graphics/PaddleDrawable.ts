@@ -37,8 +37,8 @@ export default class PaddleDrawable extends Drawable {
       .drawTorus?.(
         cx,
         cy,
-        Paddle.racketRadius - Paddle.racketWidth / 2,
-        Paddle.racketRadius + Paddle.racketWidth / 2,
+        Paddle.racketRadius,// - Paddle.racketWidth / 2,
+        Paddle.racketRadius + 2 * Paddle.racketWidth / 2,
         phi - theta,
         phi + theta
       )

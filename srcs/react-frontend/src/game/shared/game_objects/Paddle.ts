@@ -19,16 +19,18 @@ export default class Paddle implements ICollider, IGameObject {
   private _target!: Vector2;
   public static maxAngle: number = (40 * Math.PI) / 360;
   velocity: any;
-  static vel_to_F_factor: any = 1;
-  static maxForce: any = 150;
+  static vel_to_F_factor: number = 2 / 100;
+  static maxForce: number = 0.001;
+  private velocities: number[];
   public get target(): Vector2 {
     return this._target;
   }
-  private set target(v: Vector2) {
+  public set target(v: Vector2) {
     this._target = v;
   }
+  private last_positions: number[];
 
-  private FTBO_K = 0.0005;
+  private FTBO_K = 0.0001;
 
   static readonly racketSize = 100;
   static readonly racketWidth = 10;
@@ -58,7 +60,8 @@ export default class Paddle implements ICollider, IGameObject {
       )
     );
     this.target = this.pos;
-    // this.positions = 
+    this.last_positions = new Array<number>(2).fill(0); 
+    this.velocities = new Array<number>(3).fill(0);
   }
 
   update(dt: number) {
@@ -70,11 +73,23 @@ export default class Paddle implements ICollider, IGameObject {
       )
     );
     this.updatePos(dt);
+    this.last_positions.push(this.phi);
+    this.last_positions.shift();
+    this.velocities.push((this.last_positions[1] - this.last_positions[0]) / dt);
+    this.velocities.shift();
+    this.velocity = Utils.mean(this.velocities);
+    // console.log(this.velocities);
+    // console.log(this.last_positions);
+    // console.log(this.velocity);
+    
+    
   }
 
   private updatePos(dt: number) {
     const diff = this.pos.y - this.target.y;
-    this.phi -= this.FTBO_K * diff * dt;
+    if (Math.abs(diff) > 0.000001) {
+      this.phi -= this.FTBO_K * diff * dt;
+    }
     this.phi = Utils.clamp(this.phi, -Paddle.maxAngle, +Paddle.maxAngle);
   }
 
@@ -132,8 +147,9 @@ export default class Paddle implements ICollider, IGameObject {
     const angle = Math.atan2(normal.cross(v), v.dot(normal)) * 2;
 
     collidingObject.velocity = collidingObject.velocity.rotate(
-      -angle + Math.PI
+      -angle + Math.PI + collidingObject.omega * 6000
     );
+    collidingObject.omega /= 10;
     collidingObject.magnusForce = new Vector2(
       0,
       Utils.clamp(

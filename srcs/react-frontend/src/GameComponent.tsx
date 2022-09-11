@@ -115,7 +115,8 @@ function GameComponent(props: any) {
       premade: props.premade,
       spectator: props.spectator,
     }
-    gameSetup(app, query);
+    if (props.test === undefined) gameSetup(app, query, false);
+    else gameSetup(app, query, true);
     return () => {
       // On unload completely destroy the application and all of it's children
       app.destroy(true, true);

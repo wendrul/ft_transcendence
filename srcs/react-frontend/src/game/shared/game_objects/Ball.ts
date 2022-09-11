@@ -5,6 +5,7 @@ import { cp } from "fs";
 import IGameObject from "./IGameObject";
 import Game from "../util/Game";
 import EventHandler from "../util/EventHandler";
+import { Utils } from "../util/Utils";
 
 enum BallStates {
   MOVING,
@@ -14,6 +15,7 @@ enum BallStates {
 class Ball implements IGameObject {
   pos!: Vector2;
   velocity!: Vector2;
+  omega!: number
   magnusForce: Vector2 = new Vector2(0, 0);
 
   state: BallStates = BallStates.MOVING;
@@ -52,7 +54,8 @@ class Ball implements IGameObject {
         this.enteringState = false;
         const newPos = this.pos.add(this.velocity.scale(delta / 60));
 
-        this.velocity = this.velocity.subtract(this.magnusForce)
+        this.velocity = this.velocity.rotate(this.omega * this.velocity.x);
+        this.omega += (delta / 1000) * Utils.clamp(this.magnusForce.y, -0.001, 0.001);
 
         const collidedObject = this.findPossibleCollision(
           this.pos,
@@ -114,8 +117,10 @@ class Ball implements IGameObject {
   }
 
   public reset() {
+    this.omega = 0;
     this.pos = new Vector2(Game.width / 2, Game.height / 2);
     this.velocity = new Vector2(0,0);
+    this.magnusForce = new Vector2(0,0);
   }
 }
 

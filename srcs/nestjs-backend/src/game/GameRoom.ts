@@ -50,6 +50,28 @@ class GameRoom {
     });
   }
 
+  public TESTconnection(client: Socket, name:string) {
+    if (this.settings.p1 == null) {
+      this.settings.p1 = client.id
+      this.game.paddle1.name = name;
+      this.pingBuffers[client.id] = new Array<number>(
+        GameRoom.movingAveragePeriod,
+      );
+      client.emit('assignController', { control: ['player1'] });
+    }
+    else if (this.settings.p2 == null) {
+      this.settings.p2 = client.id
+      this.game.paddle2.name = name;
+      this.pingBuffers[client.id] = new Array<number>(
+        GameRoom.movingAveragePeriod,
+      );
+      client.emit('assignController', { control: ['player2'] });
+    }
+    else {
+      client.disconnect();
+    }
+  }
+
   public connection(client: Socket, name: string, spectator: boolean = false) {
     if (spectator){
       this.pingBuffers[client.id] = new Array<number>(GameRoom.movingAveragePeriod);
@@ -133,6 +155,7 @@ class GameRoom {
         p2: { target: { x: game.paddle2.target.x, y: game.paddle2.target.y } },
         ballpos: { x: game.ball.pos.x, y: game.ball.pos.y },
         ballvel: { x: game.ball.velocity.x, y: game.ball.velocity.y },
+        magnus: {force: game.ball.magnusForce.y, omega: game.ball.omega},
         score: this.game.scoreboard,
         time: performance.now(),
       });

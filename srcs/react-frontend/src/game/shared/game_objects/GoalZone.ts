@@ -26,7 +26,6 @@ class GoalZone extends Wall {
       //The collider side is the line collider of the rectangle,
       //so for the left rectangle it's the right side;
     });
-    // GameStateMachine.getInstance().changeGameState(GameState.Scoring);
     return new Vector2(0, 0);
   }
 }

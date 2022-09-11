@@ -1,7 +1,9 @@
 // import * as PIXI from "pixi.js";
 // import { Graphics } from "pixi.js";
 import { ICollider, Ray, rayIntersection as lineIntersecton } from "../util/Collider";
+import { Utils } from "../util/Utils";
 import Vector2 from "../util/Vector2";
+import Ball from "./Ball";
 import IGameObject from "./IGameObject";
 
 class Wall implements IGameObject, ICollider {
@@ -77,17 +79,20 @@ class Wall implements IGameObject, ICollider {
     return normal;
   }
 
-  public onCollision(collidingObject: any): Vector2 {
+  public onCollision(collidingObject: Ball): Vector2 {
     const normal = this.normal(collidingObject.velocity);
     const v = collidingObject.velocity;
     const angle = Math.atan2(normal.cross(v), v.dot(normal)) * 2;
     
     collidingObject.velocity = collidingObject.velocity.rotate(
-      -angle + Math.PI
+      -angle + Math.PI + collidingObject.omega * 6000
     );
 
+    collidingObject.magnusForce = new Vector2(0,0);
+    collidingObject.omega /= 10;
+
     //Decrease velocity by 20% on bounce
-    collidingObject.velocity = collidingObject.velocity.scale(1);
+    collidingObject.velocity = collidingObject.velocity.scale(1.01);
     return normal;
   }
 

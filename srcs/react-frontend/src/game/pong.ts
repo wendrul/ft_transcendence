@@ -24,18 +24,21 @@ let game_starting_for_good = false;
 export function gameSetup(
   instantiatedApp: PIXI.Application,
   queryParameters: {
-      name: string;
-      roomID: string;
-      premade: boolean;
-      spectator: boolean;
-    }
+    name: string;
+    roomID: string;
+    premade: boolean;
+    spectator: boolean;
+  },
+  test = false
 ) {
   if (!game_starting_for_good) {
     //Hacky way to avoid running this twice, should be fixed in the future
     game_starting_for_good = true;
     return;
   }
-  const socket = io(`${window.location.origin}:3000/game`, {query: queryParameters});
+  const socket = io(`${window.location.origin}:3000/game`, {
+    query: {...queryParameters, test},
+  });
 
   // fetch("http://localhost:3000").then((s) => console.log(s));
   // const socket = io(`${window.location.origin}:3000/game`, {
@@ -57,6 +60,8 @@ export function gameSetup(
     game.ball.pos.y = gameState.ballpos.y;
     game.ball.velocity.x = gameState.ballvel.x;
     game.ball.velocity.y = gameState.ballvel.y;
+    game.ball.magnusForce.y = gameState.magnus.force;
+    game.ball.omega = gameState.magnus.omega;
     game.scoreboard.left = gameState.score.left;
     game.scoreboard.right = gameState.score.right;
     socket.emit("pingBack", { time: gameState.time });

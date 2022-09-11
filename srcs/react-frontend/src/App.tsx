@@ -15,6 +15,7 @@ function App() {
             <Route path="/" element={<RootPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/game" element={<GameSettingsTest />} />
+            <Route path="/game-test" element={<GameComponent username={"test1234"} roomID={""} spectator={false} premade={false} test={true}/>} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Layout>
