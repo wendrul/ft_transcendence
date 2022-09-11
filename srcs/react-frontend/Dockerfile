@@ -11,6 +11,8 @@ COPY package.json ./
 # RUN npm install --only=development
 RUN npm install 
 
+RUN mkdir node_modules/.cache && chmod -R 777 node_modules/.cache
+
 COPY . .
 
 # RUN npm run build
@@ -32,6 +34,6 @@ COPY . .
 
 # COPY --from=development /usr/src/app/dist ./dist
 
-RUN npm install -g serve
+# RUN npm install -g serve
 
 CMD npm run build && serve -s build
