@@ -40,24 +40,24 @@ class RoutesHandler extends React.Component {
 
         <Route  path ='/Authenticate2fa' element={<Authenticate2fa/>} />
 
-        <Route  path ='/create_room' element={<CreateRoom/>} /> {/* poner el component cuando todo sirva */}
-        <Route  path ='/room/:uuid' element={<Room/>} /> {/* poner el component cuando todo sirva */}
-        <Route  path ='/signin' element={<UsernameRedirect component={<SignIn/>} />} />
-        <Route  path ='/signup' element={<UsernameRedirect component={<SignUp/>} />} />
-        <Route  path ='/profile/:uuid' element={<UsernameRedirect component={<Profileuuid/>} />} />
-        <Route  path ='/profile' element={<UsernameRedirect component={<Profile/>} />} />
+        <Route  path ='/create_room' element={<CreateRoom/>} />
+        <Route  path ='/room/:uuid' element={<Room/>} />
+        <Route  path ='/signin' element={<SignIn/>}/>
+        <Route  path ='/signup' element={<SignUp/>}/>
+        <Route  path ='/profile/:uuid' element={<Profileuuid/>}/>
+        <Route  path ='/profile' element={<Profile/>}/>
 
-        <Route  path ='/Leaderboard' element={<UsernameRedirect component={<Leaderboard/>} />} />
+        <Route  path ='/Leaderboard' element={<Leaderboard/>}/>
 
-        <Route  path ='/edit_profile' element={<UsernameRedirect component={<EditProfile/>} />} />
-        <Route  path ='/edit_2fa' element={<UsernameRedirect component={<Edit2fa/>} />} />
-        <Route  path ='/edit_info' element={<UsernameRedirect component={<EditInfo/>} />} />
-        <Route  path ='/edit_photo' element={<UsernameRedirect component={<EditPhoto/>} />} />
+        <Route  path ='/edit_profile' element={<EditProfile/>}/>
+        <Route  path ='/edit_2fa' element={<Edit2fa/>}/>
+        <Route  path ='/edit_info' element={<EditInfo/>}/>
+        <Route  path ='/edit_photo' element={<EditPhoto/>}/>
 
-        <Route  path ='/friends' element={<UsernameRedirect component={<FriendRequest/>} />} />
+        <Route  path ='/friends' element={<FriendRequest/>}/>
 
-        <Route  path ='/history' element={<UsernameRedirect component={<History/>} />} />
-        <Route  path ='/history/:uuid' element={<UsernameRedirect component={<Historyuuid/>} />} />
+        <Route  path ='/history' element={<History/>}/>
+        <Route  path ='/history/:uuid' element={<Historyuuid/>}/>
         <Route  path ='/web_chat' element={<WebChat/>} />
         <Route  path ='/chat_room' element={<ChatRoom/>} />
         <Route  path ='/direct_message/:id' element={<DirectMessage/>} />
