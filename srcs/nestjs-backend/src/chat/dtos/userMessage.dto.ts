@@ -11,13 +11,13 @@ export class UserMessageDto {
 	@Expose()
 	reciverType: string;
 
-	@Transform(({ obj }) => obj.sender.id)
+	@Transform(({ obj }) => obj.sender.login)
 	@Expose()
-	senderId: number;
+	senderLogin: string;
 
-	@Transform(({ obj }) => obj.reciverUser.id)
+	@Transform(({ obj }) => obj.reciverUser.login)
 	@Expose()
-	reciverUserId: number;
+	reciverUserLogin: string;
 
 	@Transform(({ obj }) => obj.reciverChannel.id)
 	reciverChannelId: number;

@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  react:
+    depends_on:
+      - nestjs
+    container_name: react_frontend_dev
+    image: react_frontend_dev:1.0.0
+    build:
+      context: ./srcs/react-frontend
+      target: development
+    command: npm run start
+    ports:
+      - 3000:3000
+    networks:
+      - transcendence-net
+    volumes:
+      - ./srcs/react-frontend:/usr/src/app
+      - /usr/src/app/node_modules
+      - ./srcs/avatars:/usr/src/app/src/avatars
+    restart: unless-stopped
+
+networks:
+  transcendence-net:
+volumes:
+  pgdata:

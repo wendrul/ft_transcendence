@@ -117,7 +117,7 @@ function History (){
 						</button>
 					</div>
 
-					<div className='div-scroll border  bg-white border rounded'>
+					<div className='div-scroll bd  border bg-white border rounded'>
 						<div className='d-flex flex-column m-3'>
 							{ results && results.map((item: RealData) =>
 								<div key={item.id}>

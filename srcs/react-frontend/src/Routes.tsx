@@ -26,6 +26,7 @@ import WebChat from './pages/WebChat/WebChat';
 import ChatRoom from './pages/WebChat/ChatRoom';
 import DirectMessage from './pages/WebChat/DirectMessage';
 import Authenticate2fa from './pages/Authenticate2fa/Authenticate2fa';
+import GameComponent, { GameSettingsTest } from './GameComponent';
 
 class RoutesHandler extends React.Component {
   
@@ -60,6 +61,8 @@ class RoutesHandler extends React.Component {
         <Route  path ='/web_chat' element={<WebChat/>} />
         <Route  path ='/chat_room' element={<ChatRoom/>} />
         <Route  path ='/direct_message/:id' element={<DirectMessage/>} />
+        <Route  path ='/game-test' element={<GameSettingsTest />}/>
+        <Route  path ='/game-test2' element={<GameSettingsTest />}/>
         <Route
           path="*"
           element={

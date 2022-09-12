@@ -1,18 +1,21 @@
-FROM node:12.19.0-alpine3.9 AS development
+FROM node:alpine AS development
 
 WORKDIR /usr/src/app
 
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
-COPY package*.json ./
+COPY package.json ./
 
-RUN npm install glob rimraf
+# RUN npm install glob rimraf
 
-RUN npm install --only=development
+# RUN npm install --only=development
+RUN npm install 
+
+RUN mkdir node_modules/.cache && chmod -R 777 node_modules/.cache
 
 COPY . .
 
-RUN npm run build
+# RUN npm run build
 
 FROM node:alpine as production
 
@@ -23,7 +26,7 @@ WORKDIR /usr/src/app
 
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
-COPY package*.json ./
+COPY package.json ./
 
 RUN npm install --only=production
 
@@ -31,6 +34,6 @@ COPY . .
 
 # COPY --from=development /usr/src/app/dist ./dist
 
-RUN npm install -g serve
+# RUN npm install -g serve
 
 CMD npm run build && serve -s build
