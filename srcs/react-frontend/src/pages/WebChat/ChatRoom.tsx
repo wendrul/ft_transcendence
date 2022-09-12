@@ -22,7 +22,7 @@ function Channel (props:IProps){
 				<p> 3/12</p>
 			</div>
 
-			<p className='mb-0 text-start'>Connected</p>
+			<p className='mb-0 text-start'>Admins</p>
 			<div className='chatRoomCo'>
 				<p>user</p>
 				<p>user</p>
@@ -32,7 +32,7 @@ function Channel (props:IProps){
 				<p>user</p>
 			</div>
 
-			<p className='mt-3 mb-0 text-start'>Disconnected</p>
+			<p className='mt-3 mb-0 text-start'>Users</p>
 			<div className='chatRoomDeco'>
 				<p>user</p>
 				<p>user</p>

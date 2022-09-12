@@ -2,7 +2,7 @@ import React, { useState, ChangeEvent, useEffect} from 'react';
 import UserView from './UserView';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import "./User.css";
-import { userActions } from '../../_actions';
+import { friendActions, userActions } from '../../_actions';
 
 
 interface Iprop {
@@ -15,10 +15,13 @@ function User(){
 	const [userSrch, setUserSrch] = useState('');
 	const users = useAppSelector<any>(state => state.users);
 	const current_user = useAppSelector<any>(state => state.user);
+	const friends = useAppSelector<any>(state => state.friend);
 	const dispatch = useAppDispatch();
 	let searchView;
 
-
+	useEffect(() => {
+		dispatch(friendActions.getFriends())
+	},[])
 
 	const UserFinded = () => {
 		return (
@@ -28,8 +31,12 @@ function User(){
 						</div>
 						<div>
 							<button> Play </button>
-							<button onClick={() => window.open(window.location.origin + '/direct_message/' + users?.item?.login)}> Chat</button>
-							<button> Profile </button>
+							<button onClick={() => window.open(window.location.origin + '/direct_message/' + users?.item?.login)}> 
+								Chat
+							</button>
+							<button onClick={() => window.open(window.location.origin + '/profile/' + users?.item?.login)}>
+								Profile 
+							</button>
 						</div>
 			</div> 
 		);
@@ -38,7 +45,6 @@ function User(){
 		return (
 			<div className='FriendSearch'>
 						<div>
-							<p> waiting for a valid login...</p>
 						</div>
 					</div> 
 		);

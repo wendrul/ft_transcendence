@@ -90,7 +90,7 @@ function Profile(){
 					</div>
 					{avatarPath &&
 					<img className='user' src={ avatarPath } alt='user'></img>}
-					<p>    AVAILABLE    </p>
+					<p>    {(authentication.loggedIn) ? "Online" : "Offline"}    </p>
 				</div>
 
 				<div className='d-flex flex-column align-items-center justify-content-center'>

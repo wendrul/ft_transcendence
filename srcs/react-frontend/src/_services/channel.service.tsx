@@ -1,10 +1,14 @@
 import axios, { AxiosResponse } from 'axios';
 import config from '../config';
 import {UpdateUser} from "../interfaces/iUser";
+import {IJoinChan} from "../interfaces/IJoinChan";
 
 export const channelService = {
 		createChannel,
-		getOpenConversations
+		getOpenConversations,
+		getMyChannelsByType,
+		getChannel,
+		joinChannel
 	};
 
 function createChannel(userLogins: string[], access: string,
@@ -20,7 +24,7 @@ function createChannel(userLogins: string[], access: string,
 	{
 		withCredentials: true
 	}).then(handleResponse).then(channel => {
-			localStorage.setItem('channel', JSON.stringify(channel));
+			// localStorage.setItem('channel', JSON.stringify(channel));
 			return channel;
 		});
 }
@@ -34,6 +38,40 @@ function getOpenConversations(){
 		return conversation;
 	});
 }
+
+function	getMyChannelsByType(type: string){
+	return axios.get(`${config.apiUrl}/chat/getMyChannelsByType/${type}`,
+	{
+		withCredentials: true
+	},
+	 ).then(handleResponse).then(res => {
+		return res;
+	});
+}
+
+function	getChannel(name: string){
+	return axios.get(`${config.apiUrl}/chat/channelData/${name}`,
+	{
+		withCredentials: true
+	},
+	 ).then(handleResponse).then(res => {
+		return res;
+	});
+}
+
+function	joinChannel(channel: IJoinChan){
+	return axios.post(`${config.apiUrl}/chat/joinChannel`,
+	{
+		name: channel.name,
+		password: channel?.password
+	},
+	{
+		withCredentials: true
+	}).then(handleResponse).then(res => {
+		return res;
+	});
+}
+
 
 function handleResponse(response:any) {
     if(response.status == 400 || response.status == 404)

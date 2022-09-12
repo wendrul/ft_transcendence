@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 
 import "./HomePage.css";
-import { useSearchParams } from 'react-router-dom';
-import { useAppSelector } from '../../_helpers/hooks';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import img_user from '../../icon/utilisateur.png'
-import img_gear from '../../icon/gear.png'
 import axios from 'axios';
 
 function guestView(){
@@ -33,16 +32,20 @@ function UserView(user:any){
 	}
 	return (
 		<>
-		<div className="d-flex flex-row mt-4">
-			<div className="dboard-avatar shadow-lg rounded d-flex flex-column align-items-center m-4">
-			{ avatarPath &&
-						<img className='user' src={ avatarPath } alt='user'></img>}
-				<h3 className='text-dark mt-4'> Ranking #1</h3>
-				<h5 className='text-dark'> { user?.data?.login || "" } </h5>
-			</div>
-		</div>
-		<button className='m-3 dboard-btn-sin bg-warning display-6'>PLAY !</button>
-		<button className='m-3 dboard-btn-sup'>CREATE ROOM</button>
+		{ avatarPath &&
+			<>
+				<div className="d-flex flex-row mt-4">
+					<div className="dboard-avatar shadow-lg rounded d-flex flex-column align-items-center m-4">
+					{ avatarPath &&
+								<img className='user' src={ avatarPath } alt='user'></img>}
+						<h3 className='text-dark mt-4'> Ranking #1</h3>
+						<h5 className='text-dark'> { user?.data?.login || "" } </h5>
+					</div>
+				</div>
+				<button className='m-3 dboard-btn-sin bg-warning display-6'>PLAY !</button>
+				<button className='m-3 dboard-btn-sup'>CREATE ROOM</button>
+			</>
+		}
 	</>
 	);
 }
@@ -50,9 +53,11 @@ function UserView(user:any){
 function HomePage(){
 	const authentication = useAppSelector<any>(state => state.authentication);
 	const user = useAppSelector<any>(state => state.user);
-	/*const [params, setSearchParams] = useSearchParams();
+	const navigate = useNavigate();
+	const [params, setSearchParams] = useSearchParams();
 	params.get("__firebase_request_key")
-*/
+
+	const [url, seturl] = useState(params.get("twoFactor"));
 
 	interface Data {
 		login: string;
@@ -60,7 +65,17 @@ function HomePage(){
 		loses: number;
 		score: number;
 	}
-
+	useEffect(() =>{
+		if (params.get("twoFactor") === "true")
+			console.log("url[",url,"]");
+			if (url == "true")
+			{
+				navigate("/")
+				seturl(params.get("code"));
+				window.location.reload()
+			}
+	  }, [])
+	
 	useEffect(() => {
 		document.title = "Home";
 	/*	console.log();
@@ -95,7 +110,7 @@ function HomePage(){
 			<div className='bc-blue d-flex flex-row align-items-center justify-content-center border-start border-2 border-dark w-75'>
 
 				<div className='d-flex flex-row'>
-					<div className='dboard-div-scroll border bg-white border rounded mb-5'>
+					<div className='dboard-div-scroll justify-content-center border bg-white border rounded mb-5'>
 						<div className='dboard-tab'>
 							{ ladder && ladder.map((item: Data) =>  
 							<div key={item.login} className='div-score bc-green'>

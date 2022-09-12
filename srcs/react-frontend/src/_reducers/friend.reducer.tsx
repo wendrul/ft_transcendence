@@ -1,4 +1,3 @@
-import { request } from 'http';
 import { friendConstants } from '../_constants';
 
 export function friend(state = {
@@ -9,7 +8,7 @@ export function friend(state = {
   friends: []
 }, action:any) {
   switch (action.type) {
-    case friendConstants.PENDING_FAILURE:
+    case friendConstants.PENDING_REQUEST:
     case friendConstants.ACCEPT_REQUEST:
     case friendConstants.GETALL_FRIENDS_REQUEST:
       return {...state,
@@ -26,7 +25,7 @@ export function friend(state = {
       return {...state,
         updating: false,
         updated: true,
-        friends: action.users
+        friends: action.user
       };
     case friendConstants.PENDING_SUCCESS:
       return {...state,

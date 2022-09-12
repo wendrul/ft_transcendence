@@ -1,10 +1,11 @@
-import React, { useState, ChangeEvent} from 'react';
+import React, { useState, ChangeEvent, useEffect} from 'react';
 import Popup from 'reactjs-popup';
 import "./Channel.css";
 import { userActions } from '../../_actions';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import {channelActions} from '../../_actions/channel.actions'
 import {UpdateUser} from "../../interfaces/iUser";
+import {IJoinChan} from "../../interfaces/IJoinChan";
 import { users } from '../../_reducers/users.reducer';
 
 
@@ -13,10 +14,22 @@ function Channel (){
 	const [chanName, setChanName] = useState("");
 	const [password, setPassword] = useState("");
 	const [usersLogin, setUsersLogin] = useState("");
+	const [allChannel, setAllChannel] = useState([]);
+	const [inputSearch, setInputSearch] = useState("");
 	const dispatch = useAppDispatch();
 	const user = useAppSelector<any>(state => state.user);
+	const channel = useAppSelector<any>(state => state.channel);
 	const owner: UpdateUser = user.data;
 	let view;
+	let searchView;
+
+	useEffect(()=> {
+		dispatch(channelActions.getMyChannelsByType(type));
+	},[type]);
+
+	useEffect(()=> {
+		setAllChannel(channel.data);
+	},[channel.data]);
 
 
 	const handleChanType = (s: string) => {{
@@ -35,8 +48,31 @@ function Channel (){
 		setUsersLogin(e?.currentTarget?.value);
 	}
 	
+	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+		setInputSearch(e?.currentTarget?.value);
+	}
+	
+	const search = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		dispatch(channelActions.getChannel(inputSearch));
+	}
+
+	const join = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		let join_pass = e.currentTarget.join_pass?.value;
+		let join_data :IJoinChan = {
+			name: channel.search.name,
+		}
+		if (join_pass !== undefined)
+			join_data.password = join_pass;
+		
+		console.log("name entered: " + join_data.name);
+		console.log("password entered: " + join_data.password);
+		dispatch(channelActions.joinChannel(join_data));
+	}
+
 	const createPublicChan = (event: React.FormEvent<HTMLFormElement>) => {
-		// event.preventDefault();
+		event.preventDefault();
 		 dispatch(channelActions.createChannel(
 			[],
 			'public',
@@ -45,12 +81,42 @@ function Channel (){
 			owner
 		));
 	}
-	const createProtectChan = (event: React.FormEvent<HTMLFormElement>) => {
-		// event.preventDefault();
 
+	const channelFinded = () => {
+		const access : string = channel.search.access;
+		const name :string = channel.search.name;
+		const userIds = channel.search.userIds;
+
+		return (
+			<>
+			<p className='mx-2'> {access} channel:</p>
+			<p className='mx-3' style={{color : "orange"}}> {name} </p>
+			<form onSubmit={join}>
+				{access === "protected" &&
+					<input name="join_pass" type="password" placeholder='Enter password'/>
+				}
+				<button onClick={() => join}> Join </button>
+			</form>
+			<button onClick={() => window.open(window.location.origin + '/chat_room')}>Chat</button>
+			</>
+		);
+	}
+
+	const channelNoFinded = () => {
+		return (
+			<div className='FriendSearch'>
+						<div>
+						</div>
+			</div> 
+		);
+	}
+
+
+	const createProtectChan = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		 dispatch(channelActions.createChannel(
 			[],
-			'protect',
+			'protected',
 			password,
 			chanName,
 			owner
@@ -58,8 +124,7 @@ function Channel (){
 	}
 
 	const createPrivateChan = (event: React.FormEvent<HTMLFormElement>) => {
-		// event.preventDefault();
-
+		event.preventDefault();
 		 dispatch(channelActions.createChannel(
 			[usersLogin],
 			'private',
@@ -70,27 +135,30 @@ function Channel (){
 	}
 
 
-	function OneChannel(){
+	const displayChannel = () =>{
 		return(
-			<div className='d-flex flex-row border-bottom m-3 justify-content-between'>
-			<div className='d-flex flex-row '>
-				<p> Channel name</p>
-			</div>
-			<div>
-			<button onClick={() => window.open(window.location.origin + '/chat_room')}>Chat</button>
-			<button className='bg-danger'>Delete</button>
-			</div>
-		</div>
+			<>
+			{channel.data[0] && allChannel && allChannel.map((item: any, i: number) =>
+			<div key={i} className='d-flex flex-row border-bottom m-3 justify-content-between'>
+				<div className='d-flex flex-row '>
+					<p> {item?.name} </p>
+				</div>
+
+				<div>
+				<button onClick={() => window.open(window.location.origin + '/chat_room')}>Chat</button>
+				</div>
+				</div>
+			)}
+			</>
 		);
 	}
-	
-	
-	function ViewProtect(){
+		
+	const ViewProtect = () =>{
 		return(
 			<>
 			<div className='d-flex flex-row m-3'>
 				<div>
-					<p> Protect channel</p>
+					<p> Protected channel</p>
 				</div>
 				<div className='mx-2'>
 	
@@ -114,15 +182,7 @@ function Channel (){
 		</div> 
 		
 		<div id="allChannel">
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-	
+			{displayChannel()}
 		</div>
 		</>
 		);
@@ -154,15 +214,7 @@ function Channel (){
 		</div> 
 		
 		<div id="allChannel">
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-	
+			{displayChannel()}
 		</div>
 		</>
 		);
@@ -198,21 +250,11 @@ function Channel (){
 		</div> 
 		
 		<div id="allChannel">
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-			{OneChannel()}
-	
+			{displayChannel()}	
 		</div>
 		</>
 		);
 	}
-
-
 
 	if (type === 'public')
 		view = ViewPublic();
@@ -220,6 +262,11 @@ function Channel (){
 		view = ViewProtect();
 	else if (type === 'private')
 		view = ViewPrivate();
+
+	if (channel && channel.search)
+		searchView = channelFinded();
+	else
+		searchView = channelNoFinded();
 
 	return (
 		<div className='webchatDiv3'>
@@ -238,7 +285,10 @@ function Channel (){
 
 				</div>
 				<div className='webchatDiv3_1_2'>
-					<input className='mx-3' type="text" placeholder="search channel"/>
+					<form onSubmit={search}>
+						<input onChange={handleSearch} className='mx-3' type="text" placeholder="search channel"/>
+					</form>
+					{searchView}
 				</div>
 			</div>
 

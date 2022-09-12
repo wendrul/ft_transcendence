@@ -207,7 +207,6 @@ function getById(id : any) {
         userService.getById(id)
             .then(
                 user => {
-                    console.log(user);
                     dispatch(success(user));
                 },
                 error => {
@@ -226,7 +225,6 @@ function getByLogin(login: string){
 			dispatch(request());
 			userService.getByLogin(login)
 			.then( user =>{
-				console.log(user);
 				dispatch(success(user));
 			}, 
 				error => {

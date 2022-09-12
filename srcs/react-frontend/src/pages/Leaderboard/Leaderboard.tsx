@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
 // Image
-import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
+import { useAppSelector } from '../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
-import { userActions } from '../../_actions';
-import { MDBBadge, MDBBtn, MDBIcon, MDBTable, MDBTableBody, MDBTableHead } from 'mdb-react-ui-kit';
+import { MDBBadge, MDBBtn, MDBTable, MDBTableBody, MDBTableHead } from 'mdb-react-ui-kit';
 import axios from 'axios';
 
 /*
@@ -17,12 +16,9 @@ import axios from 'axios';
 */
 
 function Leaderboard(){ 
-	const dispatch = useAppDispatch();
 	const authentication = useAppSelector<any>(state => state.authentication);
-	const user = useAppSelector<any>(state => state.user);
 	const navigate = useNavigate();
-	const users = useAppSelector<any>(state => state.users);
-	const alert = useAppSelector<any>(state => state.alert);
+	//const alert = useAppSelector<any>(state => state.alert);
 
 	useEffect(() => {
 		document.title = "Leaderboard";
@@ -40,7 +36,7 @@ function Leaderboard(){
 	useEffect(() => {
 	if(!authentication.loggedIn && !authentication.loggingIn && !authentication.initial)
 		navigate("/");
-	}, [authentication])
+	}, [authentication, navigate])
 
 	//Geting rank position
 	useEffect(() => {
@@ -52,11 +48,6 @@ function Leaderboard(){
 			})
 			.catch(() => {})
 	}, []);
-
-	//Geting performance
-	let performance = 100;
-	if (user?.data?.wins !== 0 || user?.data?.loses !== 0)
-			performance = Math.floor((user?.data?.wins / (user?.data?.wins + user?.data?.loses)) * 100);
 
 	return (
 	<>

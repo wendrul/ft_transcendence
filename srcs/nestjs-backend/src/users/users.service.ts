@@ -262,6 +262,8 @@ export class UsersService {
 				throw new BadRequestException(['login in use']);
 			}
 		}
+		if (!user)
+			throw new BadRequestException(['no no no']);
 		Object.assign(user, attrs);
 		return this.repo.save(user);	
 	}

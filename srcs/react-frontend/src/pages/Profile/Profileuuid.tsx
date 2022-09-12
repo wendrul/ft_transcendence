@@ -155,19 +155,19 @@ function Profile(){
 					align-items-center m-4">
 						{ avatarPath &&
 						<img className='user' src={ avatarPath } alt='user'></img>}
-						<p>AVAILABLE</p>
+						<p> { users.item.online ? "Online" : "Offline" } </p>
 						<div className="d-flex flex-row m-3 mb-1">
 							<button onClick={(e) => {
 									sendFriendRequest();
 								}} className="row-but2 border border-dark d-flex flex-row ">
 							<img className="row-img2"src={img_friends} alt='friends'></img>
 							</button>
-							<button className="row-but2 border border-dark d-flex flex-row ">
-							<img className="row-img2"src={img_chat} alt='chat'></img>
-							</button>
-							<button className="row-but2 border border-dark d-flex flex-row ">
-							<img className="row-img2"src={img_swords} alt='swords'></img>
-							</button>
+							{/* <button className="row-but2 border border-dark d-flex flex-row "> */}
+							{/* <img className="row-img2"src={img_chat} alt='chat'></img> */}
+							{/* </button> */}
+							{/* <button className="row-but2 border border-dark d-flex flex-row "> */}
+							{/* <img className="row-img2"src={img_swords} alt='swords'></img> */}
+							{/* </button> */}
 							<button onClick={(e) => {
 								changeBlockStatus();
 								}} className="row-but2 border border-dark d-flex flex-row ">
