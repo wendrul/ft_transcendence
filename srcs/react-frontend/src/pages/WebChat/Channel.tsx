@@ -63,8 +63,11 @@ function Channel (){
 		let join_data :IJoinChan = {
 			name: channel.search.name,
 		}
-		if (join_pass !== undefined)
+		if (type == "protected")
 			join_data.password = join_pass;
+		else if (type === "private")
+			join_data.password = ""
+
 		
 		console.log("name entered: " + join_data.name);
 		console.log("password entered: " + join_data.password);
@@ -72,7 +75,6 @@ function Channel (){
 	}
 
 	const createPublicChan = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
 		 dispatch(channelActions.createChannel(
 			[],
 			'public',
@@ -113,7 +115,6 @@ function Channel (){
 
 
 	const createProtectChan = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
 		 dispatch(channelActions.createChannel(
 			[],
 			'protected',
@@ -123,10 +124,17 @@ function Channel (){
 		));
 	}
 
+	const parseUser = (users:string):string[] => {
+		let res :string[];
+		res = users.split('/');
+		return (res);
+	}
+
 	const createPrivateChan = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
+		const users :string[] = parseUser(usersLogin);
+		console.log(users);
 		 dispatch(channelActions.createChannel(
-			[usersLogin],
+			users,
 			'private',
 			'',
 			chanName,
