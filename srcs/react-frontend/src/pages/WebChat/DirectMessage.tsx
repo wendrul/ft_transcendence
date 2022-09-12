@@ -80,7 +80,6 @@ function DirectMessage(){
 		setMsg(e?.currentTarget?.value);
 	}
 
-
 	const handleResponse = (response:any) => {
 		if(response.status == 400)
 		{
@@ -111,6 +110,9 @@ function DirectMessage(){
 		event.preventDefault();
 		const id_user = users?.item?.id;
 		const my_id = curr_user?.data?.id;
+
+		//remove the message when sended
+		setMsg("");
 
 		return axios.post(`${config.apiUrl}/chat/createMessageForUser/${id_user}`,
 			{
@@ -166,6 +168,13 @@ function DirectMessage(){
 		)
 	}
 
+	useEffect(() => {
+		const el = document.getElementById('chat');
+		if (el) {
+			el.scrollTop = el.scrollHeight;
+		}
+	}, [history_msg]);
+
 	const defaultView = () => {
 		return(
 			<>
@@ -174,7 +183,7 @@ function DirectMessage(){
 
 					<Channel chanName={'direct message'}></Channel>
 					<div className='chatRoomDisplay'>
-						<div className='chatRoomDisplayMsg'>
+						<div id='chat' className='chatRoomDisplayMsg'>
 							<div className='chatRoomDisplayMsgUser'>
 								{	history_msg && history_msg.map((item:Messages, i: number) =>
 
@@ -185,7 +194,7 @@ function DirectMessage(){
 						</div>
 						<div className='chatRoomDisplayMsgBar'>
 							<form onSubmit={send}>
-								<input onChange={handleMsg} className='chatRoomDisplayMsgBarInput' type="text" placeholder="Send message"/>
+								<input onChange={handleMsg} value={msg} className='chatRoomDisplayMsgBarInput' type="text" placeholder="Send message"/>
 							</form>
 						</div>
 

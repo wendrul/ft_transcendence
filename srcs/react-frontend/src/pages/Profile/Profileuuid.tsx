@@ -162,12 +162,12 @@ function Profile(){
 								}} className="row-but2 border border-dark d-flex flex-row ">
 							<img className="row-img2"src={img_friends} alt='friends'></img>
 							</button>
-							<button className="row-but2 border border-dark d-flex flex-row ">
-							<img className="row-img2"src={img_chat} alt='chat'></img>
-							</button>
-							<button className="row-but2 border border-dark d-flex flex-row ">
-							<img className="row-img2"src={img_swords} alt='swords'></img>
-							</button>
+							{/* <button className="row-but2 border border-dark d-flex flex-row "> */}
+							{/* <img className="row-img2"src={img_chat} alt='chat'></img> */}
+							{/* </button> */}
+							{/* <button className="row-but2 border border-dark d-flex flex-row "> */}
+							{/* <img className="row-img2"src={img_swords} alt='swords'></img> */}
+							{/* </button> */}
 							<button onClick={(e) => {
 								changeBlockStatus();
 								}} className="row-but2 border border-dark d-flex flex-row ">
