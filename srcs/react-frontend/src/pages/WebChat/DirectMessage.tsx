@@ -168,6 +168,7 @@ function DirectMessage(){
 		)
 	}
 
+	//delete mesage on submit
 	useEffect(() => {
 		const el = document.getElementById('chat');
 		if (el) {
