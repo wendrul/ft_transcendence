@@ -64,7 +64,7 @@ function Profile(){
 	//Geting rank position
     const [rank, setrank] = useState("");
 	useEffect(() => {
-		if (users?.item?.login) {
+		if (user && user?.data && user?.data?.login) {
 			axios.get("http://localhost:3002/users/rankPositionByLogin/" + users.item.login,
 				{
 					withCredentials: true,

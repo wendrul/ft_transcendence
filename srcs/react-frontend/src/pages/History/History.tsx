@@ -36,7 +36,7 @@ function History (){
 
 	//Geting rank position
 	const [rank, setrank] = useState("");
-	if (user)
+	if (user && user?.data && user?.data?.login)
 		axios.get("http://localhost:3002/users/rankPositionByLogin/" + user?.data?.login,
 			{
 				withCredentials: true,
@@ -71,7 +71,8 @@ function History (){
 	const [history, setHistory] = useState<Data[]>([]);
 
 	useEffect(() => {
-		axios.get("http://localhost:3002/users/matchHistory/" + user.data.login,
+		if (user && user?.data && user?.data?.login)
+		axios.get("http://localhost:3002/users/matchHistory/" + user?.data?.login,
 			{
 				withCredentials: true,
 			})

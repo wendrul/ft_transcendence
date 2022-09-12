@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { userActions } from '../../_actions';
 import { MDBIcon } from 'mdb-react-ui-kit';
 import axios from 'axios';
+import SpinnerPage from '../../components/Spinner/Spinner';
 
 function Profile(){ 
 	const dispatch = useAppDispatch();
@@ -41,7 +42,7 @@ function Profile(){
 
 	//Geting rank position
    const [rank, setrank] = useState("");
-	if (user)
+   if (user && user?.data && user?.data?.login)
 	axios.get("http://localhost:3002/users/rankPositionByLogin/" + user?.data?.login,
 		{
 			withCredentials: true,
