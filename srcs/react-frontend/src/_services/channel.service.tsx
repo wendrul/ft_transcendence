@@ -1,12 +1,14 @@
 import axios, { AxiosResponse } from 'axios';
 import config from '../config';
 import {UpdateUser} from "../interfaces/iUser";
+import {IJoinChan} from "../interfaces/IJoinChan";
 
 export const channelService = {
 		createChannel,
 		getOpenConversations,
 		getMyChannelsByType,
-		getChannel
+		getChannel,
+		joinChannel
 	};
 
 function createChannel(userLogins: string[], access: string,
@@ -53,6 +55,19 @@ function	getChannel(name: string){
 		withCredentials: true
 	},
 	 ).then(handleResponse).then(res => {
+		return res;
+	});
+}
+
+function	joinChannel(channel: IJoinChan){
+	return axios.post(`${config.apiUrl}/chat/joinChannel`,
+	{
+		name: channel.name,
+		password: channel?.password
+	},
+	{
+		withCredentials: true
+	}).then(handleResponse).then(res => {
 		return res;
 	});
 }

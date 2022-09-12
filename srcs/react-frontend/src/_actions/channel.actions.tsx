@@ -2,12 +2,14 @@ import { channelConstants } from '../_constants';
 import { channelService } from '../_services';
 import { alertActions } from '.';
 import {UpdateUser} from "../interfaces/iUser";
+import {IJoinChan} from "../interfaces/IJoinChan";
 
 export const channelActions = {
 	createChannel,
 	getOpenConversations,
 	getMyChannelsByType,
-	getChannel
+	getChannel,
+	joinChannel
 
 };
 
@@ -81,4 +83,19 @@ function failure(error:string) { return { type: channelConstants.GET_CHAN_FAILUR
 }
 
 
+function joinChannel (channel:IJoinChan){
+	return (dispatch:any) => {
+		dispatch(request());
 
+		channelService.joinChannel(channel)
+				.then(
+						response => {
+								dispatch(success(response));
+						},
+						error => dispatch(failure(error))
+					);
+};
+function request() { return { type: channelConstants.JOIN_CHAN_REQUEST } }
+function success(response:any) { return { type: channelConstants.JOIN_CHAN_SUCCESS, response } }
+function failure(error:string) { return { type: channelConstants.JOIN_CHAN_FAILURE, error } }
+}

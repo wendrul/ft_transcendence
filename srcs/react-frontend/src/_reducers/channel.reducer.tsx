@@ -7,6 +7,10 @@ export function channel(state = {
   switch (action.type) {
 
 	//REQUEST,
+  case channelConstants.JOIN_CHAN_REQUEST:
+		return {...state,
+			joining: true
+		}
   case channelConstants.GET_CHAN_REQUEST:
 		return{...state,
 			searching: true,
@@ -18,7 +22,13 @@ export function channel(state = {
 			updating: true,
 			updated: false
     };
+
 		//SUCCESS
+	case channelConstants.JOIN_CHAN_SUCCESS:
+		return {...state,
+			joined: true,
+			joining: false
+		}
 	case channelConstants.GET_CHAN_SUCCESS:
 		return{...state,
 		search: action.response,
@@ -32,7 +42,14 @@ export function channel(state = {
 			updating: false,
 			updated: true
     };
+
+
 	//FAILURE
+	case channelConstants.JOIN_CHAN_FAILURE:
+		return {...state,
+			joined: false,
+			joining: false
+		}
 	case channelConstants.GET_CHAN_FAILURE:
 		return{...state,
 			search: null,

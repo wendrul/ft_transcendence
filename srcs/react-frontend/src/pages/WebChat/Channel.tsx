@@ -5,6 +5,7 @@ import { userActions } from '../../_actions';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import {channelActions} from '../../_actions/channel.actions'
 import {UpdateUser} from "../../interfaces/iUser";
+import {IJoinChan} from "../../interfaces/IJoinChan";
 import { users } from '../../_reducers/users.reducer';
 
 
@@ -56,7 +57,18 @@ function Channel (){
 		dispatch(channelActions.getChannel(inputSearch));
 	}
 
-	const join = () => {
+	const join = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		let join_pass = e.currentTarget.join_pass?.value;
+		let join_data :IJoinChan = {
+			name: channel.search.name,
+		}
+		if (join_pass !== undefined)
+			join_data.password = join_pass;
+		
+		console.log("name entered: " + join_data.name);
+		console.log("password entered: " + join_data.password);
+		dispatch(channelActions.joinChannel(join_data));
 	}
 
 	const createPublicChan = (event: React.FormEvent<HTMLFormElement>) => {
@@ -71,14 +83,20 @@ function Channel (){
 	}
 
 	const channelFinded = () => {
-		const access = channel.search.access;
-		const name = channel.search.name;
+		const access : string = channel.search.access;
+		const name :string = channel.search.name;
 		const userIds = channel.search.userIds;
+
 		return (
 			<>
 			<p className='mx-2'> {access} channel:</p>
 			<p className='mx-3' style={{color : "orange"}}> {name} </p>
-			<button onClick={() => join}> Join </button>
+			<form onSubmit={join}>
+				{access === "protected" &&
+					<input name="join_pass" type="password" placeholder='Enter password'/>
+				}
+				<button onClick={() => join}> Join </button>
+			</form>
 			<button onClick={() => window.open(window.location.origin + '/chat_room')}>Chat</button>
 			</>
 		);
@@ -98,7 +116,7 @@ function Channel (){
 		event.preventDefault();
 		 dispatch(channelActions.createChannel(
 			[],
-			'protect',
+			'protected',
 			password,
 			chanName,
 			owner
@@ -140,7 +158,7 @@ function Channel (){
 			<>
 			<div className='d-flex flex-row m-3'>
 				<div>
-					<p> Protect channel</p>
+					<p> Protected channel</p>
 				</div>
 				<div className='mx-2'>
 	
@@ -240,7 +258,7 @@ function Channel (){
 
 	if (type === 'public')
 		view = ViewPublic();
-	else if (type === 'protect')
+	else if (type === 'protected')
 		view = ViewProtect();
 	else if (type === 'private')
 		view = ViewPrivate();
@@ -259,7 +277,7 @@ function Channel (){
 						<button onClick={() => handleChanType('public')}> PUBLIC</button>
 					</div>
 					<div>
-						<button onClick={() => handleChanType('protect')}> PROTECTED</button>
+						<button onClick={() => handleChanType('protected')}> PROTECTED</button>
 					</div>
 					<div>
 						<button onClick={() => handleChanType('private')}> PRIVATE</button>
