@@ -3,6 +3,7 @@ import "./Username.css";
 import { useAppSelector } from '../../_helpers/hooks';
 
 import Username from './Username';
+import SpinnerPage from "../../components/Spinner/Spinner";
 
 function UsernameRedirect(props: { component: any }) {
 
@@ -18,6 +19,7 @@ function UsernameRedirect(props: { component: any }) {
     else if(loading)
         return (
             <>
+                <SpinnerPage className="spinner-border" />
             </>
         )
     else
