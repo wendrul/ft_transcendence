@@ -106,7 +106,7 @@ function HomePage(){
 			<div className='bc-blue d-flex flex-row align-items-center justify-content-center border-start border-2 border-dark w-75'>
 
 				<div className='d-flex flex-row'>
-					<div className='dboard-div-scroll border bg-white border rounded mb-5'>
+					<div className='dboard-div-scroll justify-content-center border bg-white border rounded mb-5'>
 						<div className='dboard-tab'>
 							{ ladder && ladder.map((item: Data) =>  
 							<div key={item.login} className='div-score bc-green'>
