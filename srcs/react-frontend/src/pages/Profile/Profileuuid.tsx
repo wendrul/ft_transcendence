@@ -19,6 +19,7 @@ import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { useNavigate, useParams } from 'react-router-dom';
 import { userActions } from '../../_actions';
 import axios from 'axios';
+import config from '../../config';
 
 function blockButton() {
 	return (
@@ -59,13 +60,13 @@ function Profile(){
 	}, [])
 
 	let avatarPath = undefined;
-	if(users?.item?.id) { avatarPath = "http://localhost:3002/localFiles/" + users.item.id; }
+	if(users?.item?.id) { avatarPath = `${config.apiUrl}/localFiles/${users?.item?.id}`; }
 
 	//Geting rank position
     const [rank, setrank] = useState("");
 	useEffect(() => {
 		if (user && user?.data && user?.data?.login) {
-			axios.get("http://localhost:3002/users/rankPositionByLogin/" + users.item.login,
+			axios.get(`${config.apiUrl}/users/rankPositionByLogin/${users?.item?.login}`,
 				{
 					withCredentials: true,
 				}
@@ -85,7 +86,7 @@ function Profile(){
 	const [blockedFlag, setBlockedFlag] = useState<boolean>(false);
 	useEffect(() => {
 		if (users?.item?.login) {
-			axios.get("http://localhost:3002/users/isUserBlocked/" + users.item.login,
+			axios.get(`${config.apiUrl}/users/isUserBlocked/${users?.item?.login}`,
 				{
 					withCredentials: true,
 				}
@@ -98,13 +99,13 @@ function Profile(){
 
 	function changeBlockStatus() {
 		if (blockedFlag){
-			axios.get("http://localhost:3002/users/unblock/" + users.item.login,
+			axios.get(`${config.apiUrl}/users/unblock/${users?.item?.login}`,
 				{
 					withCredentials: true,
 				}
 			).then(() => window.location.reload()).catch((error: any) => {console.log(error)})
 		} else {
-			axios.get("http://localhost:3002/users/block/" + users.item.login,
+			axios.get(`${config.apiUrl}/users/block/${users?.item?.login}`,
 				{
 					withCredentials: true,
 				}
@@ -113,7 +114,7 @@ function Profile(){
 	}
 
 	function sendFriendRequest() {
-		axios.post("http://localhost:3002/friendRequest/create",
+		axios.post(`${config.apiUrl}/friendRequest/create`,
 			{
 				login: users.item.login,
 			},

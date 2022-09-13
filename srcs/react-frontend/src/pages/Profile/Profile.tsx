@@ -2,11 +2,6 @@ import React, { useEffect, useState } from 'react';
 import "./Profile.css";
 
 // Image
-import img_friends from '../../icon/friends.png'
-import img_chat from '../../icon/chat.png'
-import img_swords from '../../icon/swords.png'
-import img_prohibition from '../../icon/prohibition.png'
-
 import img_pingpong from '../../icon/ping-pong.png'
 import img_stats from '../../icon/statistiques.png'
 import img_check from '../../icon/check.png'
@@ -19,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { userActions } from '../../_actions';
 import { MDBIcon } from 'mdb-react-ui-kit';
 import axios from 'axios';
-import SpinnerPage from '../../components/Spinner/Spinner';
+import config from '../../config';
 
 function Profile(){ 
 	const dispatch = useAppDispatch();
@@ -38,12 +33,12 @@ function Profile(){
 
 	//Geting avatar
 	let avatarPath = undefined;
-	if(user?.data?.id) { avatarPath = "http://localhost:3002/localFiles/" + user.data.id; }
+	if(user?.data?.id) { avatarPath = `${config.apiUrl}/localFiles/${user.data.id}`; }
 
 	//Geting rank position
    const [rank, setrank] = useState("");
    if (user && user?.data && user?.data?.login)
-	axios.get("http://localhost:3002/users/rankPositionByLogin/" + user?.data?.login,
+		axios.get(`${config.apiUrl}/users/rankPositionByLogin/${user?.data?.login}`,
 		{
 			withCredentials: true,
 		}

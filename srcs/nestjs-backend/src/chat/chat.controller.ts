@@ -80,10 +80,10 @@ export class ChatController {
 	}
 
 	@Serialize(ChannelMessageDto)
-	@Post('/createMessageForChannel/:id')
+	@Post('/createMessageForChannel/:name')
 	@UseGuards(AuthGuardApi)
-	async createMessageForChannel(@CurrentUser() user: User, @Param('id') id: string, @Body() body: CreateMessageDto) {
-		const message = await this.chatService.createMessageForChannel(body.content, user, parseInt(id));
+	async createMessageForChannel(@CurrentUser() user: User, @Param('name') name: string, @Body() body: CreateMessageDto) {
+		const message = await this.chatService.createMessageForChannel(body.content, user, name);
 		return message;
 	}
 

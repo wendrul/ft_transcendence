@@ -287,13 +287,13 @@ export class ChatService {
 
 		}
 
-		async createMessageForChannel(content: string, sender: User, id: number) {
+		async createMessageForChannel(content: string, sender: User, name: string) {
 
 			//search the channel by id
 			const channels = await this.channelRepo.find({
 				relations: ['usersRelations', 'usersRelations.user'],
 				where: {
-					id: id,
+					name: name,
 				}
 			});
 
@@ -400,10 +400,10 @@ export class ChatService {
 		if (userRelations[n].ban) {
 			throw new HttpException('You have been banned from this channel', HttpStatus.FORBIDDEN);
 		}
+		let messages = channel.messages;
+		messages.reverse();
 
 		//check if you have blocked a user
-		let messages = channel.messages;
-
 		for (let i = 0; i < messages.length; i++) {
 			let blocked = await this.blockRepo.findOne({
 				relations: ["blocked", "blocker"],
@@ -414,7 +414,7 @@ export class ChatService {
 			});
 
 			if (blocked) {
-				messages[i].content = null;	
+				messages[i].content = "";	
 			}
 			
 		}

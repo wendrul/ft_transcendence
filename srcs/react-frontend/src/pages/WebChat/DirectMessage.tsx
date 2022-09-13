@@ -36,21 +36,21 @@ function DirectMessage(){
 	let view;
 
 	interface Messages{
-		id: number,
-			content: string,
-			reciverType: string,
-			senderLogin: string,
-			reciverUserLogin: string
+		id: number;
+		content: string;
+		reciverType: string;
+		senderLogin: string;
+		reciverUserLogin: string
 	}
 
 	let [history_msg, setHistoryMsg] = useState<Messages[]>([]);
 
 	//conect sockets
 	useEffect(() => {
-		setSocket(io("http://localhost:3002"));
+		setSocket(io(`${config.apiUrl}`));
 	}, []);
 
-	//join direct message room
+	//listening on join direct message room
 	useEffect(() => {
 		socket?.on('joinedRoom', (msg: string) => {
 			console.log("joined to room", msg);
@@ -94,6 +94,7 @@ function DirectMessage(){
 
 	// === CHAT ===
 
+	//join room
 	let room_name: string;
 
 	useEffect(() => {
@@ -113,6 +114,9 @@ function DirectMessage(){
 		event.preventDefault();
 		const id_user = users?.item?.id;
 		const my_id = curr_user?.data?.id;
+		
+		if(msg === "")
+			return ;
 
 		//remove the message when sended
 		setMsg("");
