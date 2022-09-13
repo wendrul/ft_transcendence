@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle, MDBIcon } from 'mdb-react-ui-kit';
 import React, {ChangeEvent, useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom';
 import {io} from 'socket.io-client';
@@ -68,6 +69,18 @@ function Channel (props:IProps){
 		SetAdminsInChannel(channel?.adminLogins);
 	}, [channel])
 
+	const UserMute = () => {
+		console.log("mute")
+	}
+
+	const UserBan = () => {
+		console.log("ban")
+	}
+
+	const UserAdmin = () => {
+		console.log("ban")
+	}
+
 	return(
 		<>
 		<div className='chatRoomDiv1_1'>
@@ -79,10 +92,26 @@ function Channel (props:IProps){
 
 			<p className='mb-0 text-start'>Admins</p>
 			<div className='chatRoomCo'>
-				<div className="channelAdmins">
-					{ adminsInChannel && adminsInChannel.map((item: string, i: number) => 
-					<h4 key={i} style={{ color: 'White' }}> {item}</h4>
+				<div className="channelAdmins row">
+					<div className="row">
+					{ adminsInChannel && adminsInChannel.map((item: string, i: number) => 	
+						<MDBDropdown key={i} group>
+							<MDBDropdownToggle tag='a'>
+								{item}
+							</MDBDropdownToggle>
+							<MDBDropdownMenu>
+							<MDBDropdownItem link onClick={UserMute}>
+								{/* <MDBDropdownLink href='/profile'>My Space</MDBDropdownLink> */}
+								<MDBIcon icon="microphone-alt-slash" /> Mute
+							</MDBDropdownItem>
+							<MDBDropdownItem link onClick={UserBan}>
+								{/* <MDBDropdownLink onClick={logout} >Logout</MDBDropdownLink> */}
+								<MDBIcon icon="ban" /> Ban
+							</MDBDropdownItem>
+							</MDBDropdownMenu>
+						</MDBDropdown>
 					)}
+					</div>
 				</div>
 			</div>
 
@@ -90,7 +119,22 @@ function Channel (props:IProps){
 			<div className='chatRoomDeco'>
 				<div className="channelUsers">
 					{ usersInChannel && usersInChannel.map((item: string, i: number) => 
-					<h4 key={i} style={{ color: 'White' }}> {item}</h4>
+						<MDBDropdown key={i} group>
+							<MDBDropdownToggle tag='a'>
+								{item}
+							</MDBDropdownToggle>
+							<MDBDropdownMenu>
+								<MDBDropdownItem link onClick={UserAdmin}>
+									<MDBIcon fab icon="superpowers" /> admin
+								</MDBDropdownItem>
+								<MDBDropdownItem link onClick={UserMute}>
+									<MDBIcon icon="microphone-alt-slash" /> Mute
+								</MDBDropdownItem>
+								<MDBDropdownItem link onClick={UserBan}>
+									<MDBIcon icon="ban" /> Ban
+								</MDBDropdownItem>
+							</MDBDropdownMenu>
+						</MDBDropdown>
 					)}
 				</div>
 
