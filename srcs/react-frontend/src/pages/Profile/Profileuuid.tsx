@@ -57,7 +57,10 @@ function Profile(){
 
 
 	useEffect(() => {
-		dispatch(userActions.getById(uuid));
+		if (uuid === user?.data?.login)
+			navigate("/profile")
+		else
+			dispatch(userActions.getById(uuid));
 	}, [])
 
 	let avatarPath = undefined;
@@ -131,7 +134,7 @@ function Profile(){
 
 	return (
 		<>
-		{ authentication.loggedIn && users.loaded && users.item &&
+		{ authentication.loggedIn && users.loaded && users.item && uuid !== user?.data?.login &&
 			
 				<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
 				<p className="register_btn mb-1 display-2">
