@@ -6,6 +6,7 @@ import Ball from "../shared/game_objects/Ball";
 import Drawable from "./Drawable";
 import Vector2 from "../shared/util/Vector2";
 import addKeyListeners from "../shared/util/Interaction";
+import Whaff from "../Whaff";
 
 export default class BallDrawable extends Drawable {
   private ball: Ball;
@@ -110,7 +111,7 @@ export default class BallDrawable extends Drawable {
     this.gfx!.pivot.y = Ball.radius;
 
     this.emitter.updateOwnerPos(this.pos.x, this.pos.y);
-    if (globalThis.debugMode) {
+    if (Whaff.debugMode) {
       const col_start = this.pos;
       const col_end = this.velocity
         .scale(0.1)

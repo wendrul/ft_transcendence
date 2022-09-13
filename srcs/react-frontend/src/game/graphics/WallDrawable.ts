@@ -8,6 +8,7 @@ import Vector2 from "../shared/util/Vector2";
 import addKeyListeners from "../shared/util/Interaction";
 import { ICollider, Ray } from "../shared/util/Collider";
 import IGameObject from "../shared/game_objects/IGameObject";
+import Whaff from "../Whaff";
 
 export default class WallDrawable extends Drawable {
     private wall: Wall;
@@ -42,7 +43,7 @@ export default class WallDrawable extends Drawable {
             .drawRect(this.pos.x, this.pos.y, this.width, this.height)
             .endFill();
 
-        if (globalThis.debugMode) {
+        if (Whaff.debugMode) {
             const line_width = 10;
             const rotation_dir =
                 this.colliderSide === "right" || this.colliderSide === "top"

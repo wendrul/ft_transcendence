@@ -5,12 +5,13 @@ import Paddle from "../game_objects/Paddle";
 import Powerup from "../game_objects/powerups/Powerup";
 import Wall from "../game_objects/Wall";
 import EventHandler from "./EventHandler";
-import Vector2 from "./Vector2";
+import { Utils } from "./Utils";
 
 export enum GameEvents {
   BallScore = "ballScore",
   GameUpdate = "gameUpdate",
   PointStart = "pointStart",
+  GameEnd = "gameEnd"
 }
 
 export default class Game {
@@ -21,7 +22,7 @@ export default class Game {
   public static deathCooldown = 3000;
 
   private static ballStartSpeed = 200;
-  private static dt = 1000.0 / 120.0;
+  static readonly dt = 1000.0 / 120.0;
 
   /* Logic */
   leftGoal: Wall;
@@ -30,6 +31,7 @@ export default class Game {
   scoreboard = { left: 0, right: 0 };
 
   /* class variables */
+  private gameEnd = false;
   private gameObjects: Array<IGameObject> = [];
   private gameTime: number;
   private _currentFrame: number;
@@ -41,6 +43,7 @@ export default class Game {
 
   fieldHeight: number;
   fieldWidth: number;
+  winCondition: number;
   public get currentFrame(): number {
     return this._currentFrame;
   }
@@ -83,10 +86,11 @@ export default class Game {
 
   public updateEvents: Function[] = [];
 
-  constructor() {
+  constructor(winCondition: number = 2) {
     this.gameTime = performance.now();
     this._currentFrame = 0;
 
+    this.winCondition = Utils.clamp(winCondition, 1, 99);
     this.eventHandler = new EventHandler(GameEvents);
 
     this.fieldWidth = Game.width;
@@ -128,6 +132,11 @@ export default class Game {
   private update() {
     const newTime = performance.now();
     let timeElapsed = newTime - this.gameTime;
+
+    if (!this.gameEnd && (this.scoreboard.left >= this.winCondition || this.scoreboard.right >= this.winCondition)) {
+      this.gameEnd = true;
+      this.eventHandler.call_callbacks(GameEvents.GameEnd, this.scoreboard);
+    }
 
     while (timeElapsed > Game.dt) {
       this.currentFrame += 1;

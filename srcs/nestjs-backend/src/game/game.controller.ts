@@ -8,6 +8,6 @@ export class GameController {
 
 	@Post('/createMatch')
 	async createMatch(@Body() body: {winerLogin: string, losserLogin: string, winerScore: number, losserScore: number}) {
-		return this.gameService.createMatch(body.winerLogin, body.losserLogin, body.winerScore, body.losserScore);
+		return this.gameService.addMatchResults(body.winerLogin, body.losserLogin, body.winerScore, body.losserScore);
 	}
 }

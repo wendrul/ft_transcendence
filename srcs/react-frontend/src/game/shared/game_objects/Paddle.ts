@@ -33,7 +33,7 @@ export default class Paddle implements ICollider, IGameObject {
   private FTBO_K = 0.0001;
 
   static readonly racketSize = 100;
-  static readonly racketWidth = 10;
+  static readonly racketWidth = 5;
   static readonly fieldSize = 700;
   static readonly racketRadius = 600;
 
