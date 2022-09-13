@@ -41,6 +41,52 @@ export class ChatService {
 		private userService: UsersService,
 	) {}
 
+	async leaveChannel(user: User, name: string) {
+		const channel = await this.channelRepo.findOne({
+			relations: ['owner', 'adminRelations', 'adminRelations.user', 'usersRelations', 'usersRelations.user'],
+			where: {
+				name: name,					
+			}
+		});	
+		if (!channel) {
+			throw new NotFoundException('Channel not found');
+		}		
+		if (channel.owner.id === user.id) {
+			throw new BadRequestException('The owner cant leave the channel');
+		}
+
+		const usersRelations = channel.usersRelations;
+		let	n: number;
+		let flag: boolean = false;
+		for (let i = 0; i < usersRelations.length; i++) {
+			if (user.id === usersRelations[i].user.id) {
+				flag = true;
+				n = i;
+			} 
+		}
+		if (!flag) {
+			throw new HttpException('User not in channel', HttpStatus.FORBIDDEN);
+		}
+		if (usersRelations[n].ban) {
+			throw new HttpException("You can't leave the channel if you are banned", HttpStatus.FORBIDDEN);
+		}
+
+		const adminRelations = channel.adminRelations;
+		let	m: number;
+		let adminFlag: boolean = false;
+		for (let i = 0; i < adminRelations.length; i++) {
+			if (user.id === adminRelations[i].user.id) {
+				adminFlag = true;
+				m = i;
+			} 
+		}
+		if (adminFlag) {
+			await this.adminsInChannelsRepo.remove(adminRelations[m]);
+		}
+
+		return this.usersInChannelsRepo.remove(usersRelations[n]);	
+	}
+
 	async changePasswordForChannel(user: User, id: number, password: string) {
 		const channel = await this.channelRepo.findOne({
 			relations: ['owner'],

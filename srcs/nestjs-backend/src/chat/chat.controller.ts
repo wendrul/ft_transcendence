@@ -172,4 +172,10 @@ export class ChatController {
 		return messages;
 	}
 
+	@UseGuards(AuthGuardApi)
+	@Get('/leaveChannel/:name')
+	async leaveChannel(@CurrentUser() user: User, @Param('name') name: string) {
+		return this.chatService.leaveChannel(user, name);	
+	}
+
 }
