@@ -31,7 +31,7 @@ export default class Game {
   scoreboard = { left: 0, right: 0 };
 
   /* class variables */
-  private gameEnd = false;
+  public gameEnd = false;
   private gameObjects: Array<IGameObject> = [];
   private gameTime: number;
   private _currentFrame: number;
@@ -44,7 +44,6 @@ export default class Game {
   fieldHeight: number;
   fieldWidth: number;
   winCondition: number;
-  isPaused: boolean = false;
   public get currentFrame(): number {
     return this._currentFrame;
   }
@@ -145,7 +144,6 @@ export default class Game {
 
     while (timeElapsed > Game.dt) {
       this.currentFrame += 1;
-      if (this.isPaused) continue;
 
       //EVENT Game Update
       this.eventHandler.call_callbacks(
@@ -191,10 +189,10 @@ export default class Game {
 
   private gameLoop() {
     this.update();
-    if (this.gameEnd) {
-      return;
+    if (!this.gameEnd) {
+      setTimeout(() => this.gameLoop(), 5);
     }
-    setTimeout(() => this.gameLoop(), 5);
+    
   }
 
   public on(eventName: GameEvents, callback: Function) {
@@ -206,11 +204,4 @@ export default class Game {
     return this.powerups[i];
   }
 
-  public pause() {
-    this.isPaused = true;
-  }
-
-  public resume() {
-    this.isPaused = false;
-  }
 }

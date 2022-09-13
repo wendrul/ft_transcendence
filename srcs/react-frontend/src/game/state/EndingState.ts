@@ -1,4 +1,4 @@
-import Game from "../Game";
+import Game from "../shared/util/Game";
 import { GameStateMachine } from "./GameStateMachine";
 import { IState } from "./StateMachine";
 
@@ -13,7 +13,6 @@ export default class EndingState implements IState {
     }
 
     onEnter() {
-        this.game.pause();
     }
 
     onExit() {

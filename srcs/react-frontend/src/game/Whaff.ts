@@ -8,26 +8,26 @@ import PaddleDrawable from "./graphics/PaddleDrawable";
 import WallDrawable from "./graphics/WallDrawable";
 import { GraphicalDebugger } from "./graphics/Debug";
 import Game, { GameEvents } from "./shared/util/Game";
-import {
-  GameState,
-  GameStateMachine,
-} from "./shared/util/state/GameStateMachine";
-import ScoreBoardDrawable from "./graphics/ScoreBoardDrawable";
 import WhaffHUD from "./graphics/WhaffHUD";
+import { GameState, GameStateMachine } from "./state/GameStateMachine";
 
 class Whaff {
   static debugMode: boolean;
   static debugTool: GraphicalDebugger;
+  
   app: PIXI.Application;
+  
   game: Game;
-  hud: WhaffHUD;
   stateMachine: GameStateMachine;
-  socket: Socket;
+  hud: WhaffHUD;
+  
   controlable: string[] = [];
+  winner: any;
   debugInfo = {
     pings: {},
   };
-  winner: any;
+  
+  socket: Socket;
 
   constructor(
     instantiatedApp: PIXI.Application,
@@ -39,41 +39,21 @@ class Whaff {
     },
     test = false
   ) {
-    // if (!game_starting_for_good) {
-    //   //Hacky way to avoid running this twice, should be fixed in the future
-    //   game_starting_for_good = true;
-    //   return;
-    // }
-    // const socket = io(`${window.location.origin}:3002/game`, {
-    //   query: {...queryParameters, test},
-    // });
-
     this.socket = io(`localhost:3002/game`, {
       query: { ...queryParameters, test },
     });
 
-    // fetch("http://localhost:3000").then((s) => console.log(s));
-    // const socket = io(`${window.location.origin}:3000/game`, {
-    //   query: { name: "Jhon", roomID: null, premade: false, spectator: false },
-    // });
     this.defineSocketEvents();
     this.app = instantiatedApp;
 
     this.game = new Game();
-    this.stateMachine = new GameStateMachine(this.game);
-    /*DRAWABLES */
-    const p1 = new PaddleDrawable(this.game.paddle1, this.app);
-    const p2 = new PaddleDrawable(this.game.paddle2, this.app);
+
+    this.makeDrawables();
+
     const players = {
       player1: this.game.paddle1,
       player2: this.game.paddle2,
     };
-    const ball = new BallDrawable(this.game.ball, this.app);
-    this.game.walls.forEach((w) => new WallDrawable(w, this.app));
-    new WallDrawable(this.game.leftGoal, this.app, 0x00ffff);
-    new WallDrawable(this.game.rightGoal, this.app, 0x00ffff);
-    /* END DRAWABLES */
-
     this.app.stage.interactive = true;
     this.app.stage.on("pointermove", (e) => {
       const pos = e.data.global;
@@ -89,22 +69,29 @@ class Whaff {
     };
     Whaff.debugMode = false;
     Whaff.debugTool = new GraphicalDebugger(this.app);
+    
+    this.hud = new WhaffHUD(this.app, this.game, this.debugInfo);
 
     console.log("Finished Game setup");
 
-    this.hud = new WhaffHUD(this.app, this.game, this.debugInfo);
-
+    
+    this.stateMachine = new GameStateMachine(this.game, this);
     this.game.on(GameEvents.GameUpdate, (frame: number) => {
-      if (frame % 6 == 0) {
-        for (const pkey of this.controlable) {
-          const p = players[pkey as keyof typeof players];
-          this.socket.emit("inputUpdate", {
-            target: { x: p.target.x, y: p.target.y },
-          });
-        }
-      }
+      this.stateMachine.currentState.onUpdate(frame);
     });
-    // this.createEndScreen({ reason: "Won by being better" });
+  }
+
+  private makeDrawables() {
+    const p1 = new PaddleDrawable(this.game.paddle1, this.app);
+    const p2 = new PaddleDrawable(this.game.paddle2, this.app);
+    const players = {
+      player1: this.game.paddle1,
+      player2: this.game.paddle2,
+    };
+    const ball = new BallDrawable(this.game.ball, this.app);
+    this.game.walls.forEach((w) => new WallDrawable(w, this.app));
+    new WallDrawable(this.game.leftGoal, this.app, 0x00ffff);
+    new WallDrawable(this.game.rightGoal, this.app, 0x00ffff);
   }
 
   private defineSocketEvents() {
@@ -138,6 +125,9 @@ class Whaff {
       this.game.scoreboard.right = data.score.right;
       this.winner = data.winner;
       this.createEndScreen(data);
+    });
+    this.socket.on("startGame", () => {
+      this.stateMachine.changeGameState(GameState.Passive, {});
     });
   }
 

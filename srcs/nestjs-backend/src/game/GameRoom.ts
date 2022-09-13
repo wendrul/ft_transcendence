@@ -4,14 +4,14 @@ import Game from './shared/util/Game';
 import { GameEvents } from './shared/util/Game';
 import { Utils } from './shared/util/Utils';
 import {
-  GameState,
-  GameStateMachine,
-} from './shared/util/state/GameStateMachine';
+  ServerGameState,
+  ServerGameStateMachine,
+} from './state/ServerGameStateMachine';
 import { GameService } from './game.service';
 
 class GameRoom {
   private game: Game;
-  private stateMachine: GameStateMachine;
+  private stateMachine: ServerGameStateMachine;
 
   private _id: string;
   private gameEnded: boolean = false;
@@ -50,15 +50,14 @@ class GameRoom {
 
     this.spectators = new Map<string, any>();
     this.game = new Game();
-    this.stateMachine = new GameStateMachine(this.game);
+    this.stateMachine = new ServerGameStateMachine(this.game, ServerGameState.Waiting);
 
     this.game.on(GameEvents.GameUpdate, (frame) => this.update(frame));
     this.game.on(GameEvents.BallScore, (data) => {
-      this.stateMachine.changeGameState(GameState.Scoring, data);
+      this.stateMachine.changeGameState(ServerGameState.Scoring, data);
     });
     this.game.on(GameEvents.GameEnd, (score) => {
       // this.stateMachine.changeGameState(GameState.Ending, score);
-      
 
       this.gameEnded = true;
       
@@ -156,6 +155,9 @@ class GameRoom {
         );
         client.emit('assignController', { control: ['player2'] });
         this.gameService.userInGame(username);
+        //Start Game
+        this.stateMachine.changeGameState(ServerGameState.Running, {});
+        this.socket.emit('startGame', {});
       } else {
         this.logger.error('Player tried connecting to a full match');
         client.disconnect();
@@ -245,7 +247,7 @@ class GameRoom {
   }
 
   private update(frame: number) {
-    if (frame % 6 == 0) {
+    if (frame % 3 == 0) {
       const game = this.game;
       this.socket.volatile.emit('gameUpdate', {
         frame: frame,

@@ -3,6 +3,9 @@ import { Application } from "pixi.js";
 import Game from "./game/shared/util/Game";
 import { io } from "socket.io-client";
 import Whaff from "./game/Whaff";
+import { useAppDispatch, useAppSelector } from "./_helpers/hooks";
+import { userActions } from "./_actions";
+import { useNavigate } from "react-router-dom";
 
 export function GameSettingsTest(params: any) {
   // const username = useRef(null);
@@ -105,39 +108,63 @@ export function GameSettingsTest(params: any) {
 function GameComponent(props: any) {
   const ref = useRef<HTMLDivElement>(null);
 
+  const user = useAppSelector<any>(state => state.user);
+  const authentication = useAppSelector<any>(state => state.authentication);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!authentication.loggedIn)
+      navigate("/")
+  }, [])
+
   useEffect(() => {
     // On first render create our application
-    const app = new Application({
-      width: Game.width,
-      height: Game.height,
-      backgroundColor: 0x5bba6f,
-      // resolution: 2,
-      antialias: true,
-    });
+    if (authentication.loggedIn)
+    {
+      const app = new Application({
+        width: Game.width,
+        height: Game.height,
+        backgroundColor: 0x5bba6f,
+        // resolution: 2,
+        antialias: true,
+      });
 
-    // Add app to DOM
-    ref.current?.appendChild(app.view);
-    // Start the PixiJS app
-    app.start();
-    const query = {
-      name: props.username,
-      roomID: props.roomID,
-      premade: props.premade,
-      spectator: props.spectator,
-    };
-    let game;
-    if (props.test === undefined) {
-      game = new Whaff(app, query, false);
-    } else {
-      game = new Whaff(app, query, true);
+      // Add app to DOM
+      ref.current?.appendChild(app.view);
+      // Start the PixiJS app
+      app.start();
+      console.log(user.data);
+      
+      const query = {
+        name: user?.data?.login,
+        roomID: props.roomID,
+        premade: props.premade,
+        spectator: props.spectator,
+      };
+      let game;
+      if (props.test === undefined) {
+        game = new Whaff(app, query, false);
+      } else {
+        game = new Whaff(app, query, true);
+      }
+      return () => {
+        // On unload completely destroy the application and all of it's children
+        app.destroy(true, true);
+      };
     }
-    return () => {
-      // On unload completely destroy the application and all of it's children
-      app.destroy(true, true);
-    };
-  }, []);
+  }, [authentication]);
 
-  return <div ref={ref} />;
+  return (
+    <>
+      { authentication.loggingIn &&
+        <p>loading</p>
+      }
+      { authentication.loggedIn &&
+       <div ref={ref} />
+      }
+    </>
+  )
 }
 
 export default GameComponent;

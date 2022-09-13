@@ -43,7 +43,9 @@ function UserView(user:any){
 						<h5 className='text-dark'> { user?.data?.login || "" } </h5>
 					</div>
 				</div>
-				<button className='m-3 dboard-btn-sin bg-warning display-6'>PLAY !</button>
+				<a href="/play">
+					<button className='m-3 dboard-btn-sin bg-warning display-6' >PLAY !</button>
+				</a>
 				<button className='m-3 dboard-btn-sup'>CREATE ROOM</button>
 			</>
 		}
