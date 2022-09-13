@@ -43,7 +43,7 @@ export class GameStateMachine extends StateMachine {
         this.searchingState = new SearchingState(this);
         this.runningState = new RunningState(this.game, this);
         this.scoringState = new ScoringState(this.game, this);
-        this.endingState = new EndingState(this);
+        this.endingState = new EndingState(this.game, this);
     }
 
     public changeGameState(newGameState: GameState, data: any): void {

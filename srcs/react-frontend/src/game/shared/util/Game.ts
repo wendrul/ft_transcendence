@@ -11,7 +11,7 @@ export enum GameEvents {
   BallScore = "ballScore",
   GameUpdate = "gameUpdate",
   PointStart = "pointStart",
-  GameEnd = "gameEnd"
+  GameEnd = "gameEnd",
 }
 
 export default class Game {
@@ -44,6 +44,7 @@ export default class Game {
   fieldHeight: number;
   fieldWidth: number;
   winCondition: number;
+  isPaused: boolean = false;
   public get currentFrame(): number {
     return this._currentFrame;
   }
@@ -133,13 +134,18 @@ export default class Game {
     const newTime = performance.now();
     let timeElapsed = newTime - this.gameTime;
 
-    if (!this.gameEnd && (this.scoreboard.left >= this.winCondition || this.scoreboard.right >= this.winCondition)) {
+    if (
+      !this.gameEnd &&
+      (this.scoreboard.left >= this.winCondition ||
+        this.scoreboard.right >= this.winCondition)
+    ) {
       this.gameEnd = true;
       this.eventHandler.call_callbacks(GameEvents.GameEnd, this.scoreboard);
     }
 
     while (timeElapsed > Game.dt) {
       this.currentFrame += 1;
+      if (this.isPaused) continue;
 
       //EVENT Game Update
       this.eventHandler.call_callbacks(
@@ -185,6 +191,9 @@ export default class Game {
 
   private gameLoop() {
     this.update();
+    if (this.gameEnd) {
+      return;
+    }
     setTimeout(() => this.gameLoop(), 5);
   }
 
@@ -193,7 +202,15 @@ export default class Game {
   }
 
   public getRandomPowerup() {
-    let i = Math.floor((Math.random() * this.powerups.length) + 1);
+    let i = Math.floor(Math.random() * this.powerups.length + 1);
     return this.powerups[i];
+  }
+
+  public pause() {
+    this.isPaused = true;
+  }
+
+  public resume() {
+    this.isPaused = false;
   }
 }
