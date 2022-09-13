@@ -95,7 +95,7 @@ function Channel (props:IProps){
 				<div className="channelAdmins row">
 					<div className="row">
 					{ adminsInChannel && adminsInChannel.map((item: string, i: number) => 	
-						<MDBDropdown key={i} group>
+						<MDBDropdown key={i}>
 							<MDBDropdownToggle tag='a'>
 								{item}
 							</MDBDropdownToggle>
@@ -119,7 +119,7 @@ function Channel (props:IProps){
 			<div className='chatRoomDeco'>
 				<div className="channelUsers">
 					{ usersInChannel && usersInChannel.map((item: string, i: number) => 
-						<MDBDropdown key={i} group>
+						<MDBDropdown key={i}>
 							<MDBDropdownToggle tag='a'>
 								{item}
 							</MDBDropdownToggle>

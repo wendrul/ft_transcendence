@@ -1,3 +1,6 @@
+.dropdown-toggle::after {
+	display: none !important; 
+  }
 
 .chatRoomDiv1{
 	height: 550px;
