@@ -31,6 +31,20 @@ export class ChannelDto {
 	userIds: number[];
 
 	@Transform(({ obj }) => {
+		if (!obj.usersRelations) {
+			return ;
+		}
+
+		let usersLogin: string[] = [];
+		for (let i = 0; i < obj.usersRelations.length; i++) {
+			usersLogin.push(obj.usersRelations[i].user.login);
+		}
+		return usersLogin;
+	})
+	@Expose()
+	userLogins: string[];
+
+	@Transform(({ obj }) => {
 		if (!obj.adminRelations) {
 			return ;
 		}
@@ -44,6 +58,21 @@ export class ChannelDto {
 	})
 	@Expose()
 	adminIds: number[];
+
+	@Transform(({ obj }) => {
+		if (!obj.adminRelations) {
+			return ;
+		}
+
+		let adminLogin: string[] = [];
+		for (let i = 0; i < obj.adminRelations.length; i++) {
+			adminLogin.push(obj.adminRelations[i].user.login)
+		}
+
+		return adminLogin;
+	})
+	@Expose()
+	adminLogins: string[];
 
 	@Expose()
 	access: string;

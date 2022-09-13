@@ -13,6 +13,7 @@ import { alertActions, userActions } from '../../../_actions';
 import AlertPage from '../../../components/Alerts/Alert';
 import axios from 'axios';
 import { blob } from 'stream/consumers';
+import config from '../../../config';
 
 function EditPhoto() {
 	const dispatch = useAppDispatch();
@@ -34,48 +35,11 @@ function EditPhoto() {
       setUser(userData.data);
 	}, [authentication])
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   const [selectedFile, setSelectedFile] = React.useState("");
 
   const handleFileSelect = (event: any) => {
     setSelectedFile(event.target.files[0])
   }
-/*
-	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-    console.log(selectedFile);
-    //dispatch(alertActions.clear());
-    //dispatch(userActions.updateProfile(user));
-    //navigate("/profile");
-
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-
-
-      console.log(formData)
-      fetch( "http://localhost:3002/users/avatar",
-        {
-          method: 'POST',
-          body: formData,
-          credentials: 'include'
-        }
-      )
-    .catch((error) => {console.log(error)})
-
-
-	}*/
 
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -89,7 +53,7 @@ function EditPhoto() {
 
 
       console.log(formData)
-      fetch( "http://localhost:3002/users/avatar",
+      fetch( `${config.apiUrl}/users/avatar`,
         {
           method: 'POST',
           body: formData,

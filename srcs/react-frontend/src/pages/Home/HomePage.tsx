@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import img_user from '../../icon/utilisateur.png'
 import axios from 'axios';
+import config from '../../config';
 
 function guestView(){
 	return (
@@ -28,7 +29,7 @@ function guestView(){
 function UserView(user:any){
 	let avatarPath = undefined;
 	if(user?.data?.id) {
-		avatarPath = "http://localhost:3002/localFiles/" + user.data.id;
+		avatarPath = `${config.apiUrl}/localFiles/` + user.data.id;
 	}
 	return (
 		<>
@@ -37,7 +38,7 @@ function UserView(user:any){
 				<div className="d-flex flex-row mt-4">
 					<div className="dboard-avatar shadow-lg rounded d-flex flex-column align-items-center m-4">
 					{ avatarPath &&
-								<img className='user' src={ avatarPath } alt='user'></img>}
+								<img className='userHome' src={ avatarPath } alt='user'></img>}
 						<h3 className='text-dark mt-4'> Ranking #1</h3>
 						<h5 className='text-dark'> { user?.data?.login || "" } </h5>
 					</div>
@@ -92,7 +93,7 @@ function HomePage(){
 	]);
 
 	useEffect(() => {
-		axios.get("http://localhost:3002/users/ladder")
+		axios.get(`${config.apiUrl}/users/ladder`)
 			.then((res: any) => {
 				const ladder = res.data;
 				setladder(ladder);

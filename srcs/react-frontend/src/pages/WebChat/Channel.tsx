@@ -7,14 +7,19 @@ import {channelActions} from '../../_actions/channel.actions'
 import {UpdateUser} from "../../interfaces/iUser";
 import {IJoinChan} from "../../interfaces/IJoinChan";
 import { users } from '../../_reducers/users.reducer';
+import {wait} from '@testing-library/user-event/dist/utils';
 
+interface channelInterface {
+	id: number;
+	name: string;
+}
 
 function Channel (){
 	const [type, setType] = useState("public");
 	const [chanName, setChanName] = useState("");
 	const [password, setPassword] = useState("");
 	const [usersLogin, setUsersLogin] = useState("");
-	const [allChannel, setAllChannel] = useState([]);
+	const [allChannel, setAllChannel] = useState<channelInterface[]>([]);
 	const [inputSearch, setInputSearch] = useState("");
 	const dispatch = useAppDispatch();
 	const user = useAppSelector<any>(state => state.user);
@@ -57,19 +62,39 @@ function Channel (){
 		dispatch(channelActions.getChannel(inputSearch));
 	}
 
+	useEffect(() => {
+		if(channel?.joined) {
+			if (!allChannel.length) {
+				setAllChannel([channel.search]);
+				return ;
+			}
+			setAllChannel(allChannel => [...allChannel, channel.search]);
+		}
+	},[channel.joined])
+
 	const join = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		let join_pass = e.currentTarget.join_pass?.value;
 		let join_data :IJoinChan = {
 			name: channel.search.name,
 		}
-		if (join_pass !== undefined)
+		if (type == "protected")
 			join_data.password = join_pass;
+		else if (type === "private")
+			join_data.password = ""
+
 		
 		console.log("name entered: " + join_data.name);
 		console.log("password entered: " + join_data.password);
 		dispatch(channelActions.joinChannel(join_data));
 	}
+	
+	useEffect(() => {
+		if (channel?.created) {
+			window.location.reload();
+		}
+	}, [channel.created]);
+
 
 	const createPublicChan = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -97,7 +122,7 @@ function Channel (){
 				}
 				<button onClick={() => join}> Join </button>
 			</form>
-			<button onClick={() => window.open(window.location.origin + '/chat_room')}>Chat</button>
+			<button onClick={() =>  window.open(window.location.origin + '/chat_room/' + name)}>Chat</button>
 			</>
 		);
 	}
@@ -123,10 +148,18 @@ function Channel (){
 		));
 	}
 
+	const parseUser = (users:string):string[] => {
+		let res :string[];
+		res = users.split('/');
+		return (res);
+	}
+
 	const createPrivateChan = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
+		const users :string[] = parseUser(usersLogin);
+		console.log(users);
 		 dispatch(channelActions.createChannel(
-			[usersLogin],
+			users,
 			'private',
 			'',
 			chanName,
@@ -138,14 +171,13 @@ function Channel (){
 	const displayChannel = () =>{
 		return(
 			<>
-			{channel.data[0] && allChannel && allChannel.map((item: any, i: number) =>
+			{channel &&  channel?.data && channel.data[0] && allChannel && allChannel.map((item: any, i: number) =>
 			<div key={i} className='d-flex flex-row border-bottom m-3 justify-content-between'>
 				<div className='d-flex flex-row '>
 					<p> {item?.name} </p>
 				</div>
-
 				<div>
-				<button onClick={() => window.open(window.location.origin + '/chat_room')}>Chat</button>
+				<button onClick={() => window.open(window.location.origin + '/chat_room/' + item?.name)}>Chat</button>
 				</div>
 				</div>
 			)}

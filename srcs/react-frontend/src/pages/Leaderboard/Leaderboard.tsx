@@ -5,6 +5,7 @@ import { useAppSelector } from '../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
 import { MDBBadge, MDBBtn, MDBTable, MDBTableBody, MDBTableHead } from 'mdb-react-ui-kit';
 import axios from 'axios';
+import config from '../../config';
 
 /*
 	<img
@@ -40,7 +41,7 @@ function Leaderboard(){
 
 	//Geting rank position
 	useEffect(() => {
-		axios.get("http://localhost:3002/users/ladder")
+		axios.get(`${config.apiUrl}/users/ladder`)
 			.then((res: any) => {
 				const ladder = res.data;
 				console.log(ladder)

@@ -17,6 +17,7 @@ import { friendActions } from '../../_actions';
 //import AlertPage from '../../components/Alerts/Alert';
 
 import "./FriendRequest.css";
+import config from '../../config';
 
 
 function renderElement(Online:boolean, inGame:boolean){
@@ -154,7 +155,7 @@ function FriendRequest() {
                       <MDBListGroupItem key={i} className='d-flex justify-content-between align-items-center'>
                         <div className='d-flex align-items-center'>
                         <img
-                            src={ "http://localhost:3002/localFiles/" + item?.id }
+                            src={ `${config.apiUrl}/localFiles/` + item?.id }
                             alt=''
                             style={{ width: '45px', height: '45px' }}
                             className='rounded-circle'
@@ -197,7 +198,7 @@ function FriendRequest() {
  
                         <div className='d-flex align-items-center'>
                         <img
-                            src={ "http://localhost:3002/localFiles/" + item?.id }
+                            src={ `${config.apiUrl}/localFiles/` + item?.id }
                             alt=''
                             style={{ width: '45px', height: '45px' }}
                             className='rounded-circle'
