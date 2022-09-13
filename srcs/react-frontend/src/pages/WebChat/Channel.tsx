@@ -63,6 +63,10 @@ function Channel (){
 
 	useEffect(() => {
 		if(channel?.joined) {
+			if (!allChannel.length) {
+				setAllChannel([channel.search]);
+				return ;
+			}
 			setAllChannel(allChannel => [...allChannel, channel.search]);
 		}
 	},[channel.joined])

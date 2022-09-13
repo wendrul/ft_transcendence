@@ -2,6 +2,7 @@ import { channelConstants } from '../_constants';
 
 export function channel(state = {
   updating: false,
+	joined: false,
 	data : []
 }, action:any) {
   switch (action.type) {
@@ -9,7 +10,8 @@ export function channel(state = {
 	//REQUEST,
   case channelConstants.JOIN_CHAN_REQUEST:
 		return {...state,
-			joining: true
+			joining: true,
+			joined: false
 		}
   case channelConstants.GET_CHAN_REQUEST:
 		return{...state,
