@@ -148,8 +148,14 @@ function ChannelChat(){
 				isInChannel = true;
 				setHistoryMsg(res.data);
 			}).catch((err) => {
-				console.log(err.response.data.message)
+				let error = err.response.data.message;
+				console.log(error)
+				if (error === "You have been banned from this channel") {
+					isInChannel = true;
+					setHistoryMsg(history_msg => [...history_msg, {id:0, senderLogin: "TU", content: "TE MAMASTE", reciverChannelName: "", reciverType: ""}]);
+				} else {
 				navigate('/404');
+				}
 			});
 		}
 	}, [recv]);
@@ -227,7 +233,7 @@ function ChannelChat(){
 	// render(){
 	return(
 		<>
-			{ authentication.loggedIn && isInChannel &&
+			{ authentication.loggedIn &&
 	
 			<div className='chatRoomDiv1'>
 

@@ -24,7 +24,7 @@ function App() {
             <RoutesHandler>
             </RoutesHandler>
           </div>
-       {/* <FooterComponent /> */} 
+       <FooterComponent /> 
         </div>
   );
 }

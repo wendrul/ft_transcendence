@@ -20,16 +20,17 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { userActions } from '../../_actions';
 import axios from 'axios';
 import config from '../../config';
+import {MDBIcon} from 'mdb-react-ui-kit';
 
 function blockButton() {
 	return (
-		<img className="row-img2"src={img_prohibition} alt='prohibition'></img>
+		<MDBIcon className="row-img2" fas icon="ban" size="lg"/>
 	)
 }
 
 function unblockButton() {
 	return (
-		<img className="row-img2"src={img_friends} alt='prohibition'></img>
+		<MDBIcon className="row-img2" fas icon="check-square" size="lg"/>
 	)
 }
 
@@ -159,9 +160,9 @@ function Profile(){
 						<p> { users.item.online ? "Online" : "Offline" } </p>
 						<div className="d-flex flex-row m-3 mb-1">
 							<button onClick={(e) => {
-									sendFriendRequest();
+								sendFriendRequest();
 								}} className="row-but2 border border-dark d-flex flex-row ">
-							<img className="row-img2"src={img_friends} alt='friends'></img>
+								<MDBIcon className="row-img2" fas icon="hippo" size="lg"/>
 							</button>
 							{/* <button className="row-but2 border border-dark d-flex flex-row "> */}
 							{/* <img className="row-img2"src={img_chat} alt='chat'></img> */}

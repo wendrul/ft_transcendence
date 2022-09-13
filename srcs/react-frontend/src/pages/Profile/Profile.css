@@ -53,16 +53,18 @@
 }
 
 .user{
-	height: 100px;
-	width: 100px;
+	height: 150px;
+	width: 150px;
 	padding: 10px;
 	margin-top: 20px;
+	border-radius: 600px;
 }
 
 
 .row-img2{
 	height: 20px;
 	width: 20px;
+	padding-top: 3px;
 	margin: 5px;
 }
 .row-but2{

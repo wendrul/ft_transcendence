@@ -85,7 +85,7 @@ function Profile(){
 					</form>
 					</div>
 					{avatarPath &&
-					<img className='user' src={ avatarPath } alt='user'></img>}
+					<img className='user'  src={ avatarPath } alt='user'></img>}
 					<p>    {(authentication.loggedIn) ? "Online" : "Offline"}    </p>
 				</div>
 
