@@ -3,6 +3,7 @@ import { channelConstants } from '../_constants';
 export function channel(state = {
   updating: false,
 	joined: false,
+	created: false,
 	data : []
 }, action:any) {
   switch (action.type) {
@@ -17,8 +18,13 @@ export function channel(state = {
 		return{...state,
 			searching: true,
 		}
-  case channelConstants.GET_MY_CHAN_REQUEST:
   case channelConstants.CREATE_CHANNEL_REQUEST:
+		return{
+			updating: true,
+			updated: false,
+			crated: false,
+		}
+  case channelConstants.GET_MY_CHAN_REQUEST:
 	case channelConstants.OPEN_CONV_REQUEST:
     return {...state,
 			updating: true,
@@ -36,8 +42,14 @@ export function channel(state = {
 		search: action.response,
 		searching: false
 	}
-	case channelConstants.GET_MY_CHAN_SUCCESS:
   case channelConstants.CREATE_CHANNEL_SUCCESS:
+		return {
+			created: true,
+			data: action.response,
+			updating: false,
+			updated: true
+		}
+	case channelConstants.GET_MY_CHAN_SUCCESS:
 	case channelConstants.OPEN_CONV_SUCCESS:
     return {...state,
 			data: action.response,

@@ -7,6 +7,7 @@ import {channelActions} from '../../_actions/channel.actions'
 import {UpdateUser} from "../../interfaces/iUser";
 import {IJoinChan} from "../../interfaces/IJoinChan";
 import { users } from '../../_reducers/users.reducer';
+import {wait} from '@testing-library/user-event/dist/utils';
 
 interface channelInterface {
 	id: number;
@@ -87,8 +88,16 @@ function Channel (){
 		console.log("password entered: " + join_data.password);
 		dispatch(channelActions.joinChannel(join_data));
 	}
+	
+	useEffect(() => {
+		if (channel?.created) {
+			window.location.reload();
+		}
+	}, [channel.created]);
+
 
 	const createPublicChan = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		 dispatch(channelActions.createChannel(
 			[],
 			'public',
@@ -129,6 +138,7 @@ function Channel (){
 
 
 	const createProtectChan = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		 dispatch(channelActions.createChannel(
 			[],
 			'protected',
@@ -145,6 +155,7 @@ function Channel (){
 	}
 
 	const createPrivateChan = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		const users :string[] = parseUser(usersLogin);
 		console.log(users);
 		 dispatch(channelActions.createChannel(
@@ -160,7 +171,7 @@ function Channel (){
 	const displayChannel = () =>{
 		return(
 			<>
-			{channel.data[0] && allChannel && allChannel.map((item: any, i: number) =>
+			{channel &&  channel?.data && channel.data[0] && allChannel && allChannel.map((item: any, i: number) =>
 			<div key={i} className='d-flex flex-row border-bottom m-3 justify-content-between'>
 				<div className='d-flex flex-row '>
 					<p> {item?.name} </p>
