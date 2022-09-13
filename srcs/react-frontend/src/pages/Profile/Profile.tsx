@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { userActions } from '../../_actions';
 import { MDBIcon } from 'mdb-react-ui-kit';
 import axios from 'axios';
+import config from '../../config';
 
 function Profile(){ 
 	const dispatch = useAppDispatch();
@@ -37,12 +38,12 @@ function Profile(){
 
 	//Geting avatar
 	let avatarPath = undefined;
-	if(user?.data?.id) { avatarPath = "http://localhost:3002/localFiles/" + user.data.id; }
+	if(user?.data?.id) { avatarPath = `${config.apiUrl}/localFiles/${user.data.id}`; }
 
 	//Geting rank position
    const [rank, setrank] = useState("");
 	if (user)
-	axios.get("http://localhost:3002/users/rankPositionByLogin/" + user?.data?.login,
+	axios.get(`${config.apiUrl}/users/rankPositionByLogin/${user?.data?.login}`,
 		{
 			withCredentials: true,
 		}

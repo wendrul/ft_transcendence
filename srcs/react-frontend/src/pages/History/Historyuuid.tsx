@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom';
+import config from '../../config';
 import {userActions} from '../../_actions';
 import {useAppDispatch, useAppSelector} from '../../_helpers/hooks';
 import './History.css';
@@ -49,7 +50,7 @@ function History (){
 	//Geting rank position
 	const [rank, setrank] = useState("");
 	if (users?.item?.login)
-		axios.get("http://localhost:3002/users/rankPositionByLogin/" + users?.item?.login,
+		axios.get(`${config.apiUrl}/users/rankPositionByLogin/` + users?.item?.login,
 			{
 				withCredentials: true,
 			}
@@ -84,7 +85,7 @@ function History (){
 
 	useEffect(() => {
 		if (users?.item?.login !== undefined) {
-		axios.get("http://localhost:3002/users/matchHistory/" + users.item.login,
+		axios.get(`${config.apiUrl}/users/matchHistory/` + users.item.login,
 			{
 				withCredentials: true,
 			})

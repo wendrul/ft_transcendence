@@ -261,6 +261,11 @@ export class UsersService {
 			if (login.length) {
 				throw new BadRequestException(['login in use']);
 			}
+
+			if (attrs.login.length > 11) {
+				throw new BadRequestException(['why so long?']);
+			}
+
 		}
 		Object.assign(user, attrs);
 		return this.repo.save(user);	

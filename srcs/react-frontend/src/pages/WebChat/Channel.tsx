@@ -8,13 +8,17 @@ import {UpdateUser} from "../../interfaces/iUser";
 import {IJoinChan} from "../../interfaces/IJoinChan";
 import { users } from '../../_reducers/users.reducer';
 
+interface channelInterface {
+	id: number;
+	name: string;
+}
 
 function Channel (){
 	const [type, setType] = useState("public");
 	const [chanName, setChanName] = useState("");
 	const [password, setPassword] = useState("");
 	const [usersLogin, setUsersLogin] = useState("");
-	const [allChannel, setAllChannel] = useState([]);
+	const [allChannel, setAllChannel] = useState<channelInterface[]>([]);
 	const [inputSearch, setInputSearch] = useState("");
 	const dispatch = useAppDispatch();
 	const user = useAppSelector<any>(state => state.user);
@@ -57,6 +61,12 @@ function Channel (){
 		dispatch(channelActions.getChannel(inputSearch));
 	}
 
+	useEffect(() => {
+		if(channel?.joined) {
+			setAllChannel(allChannel => [...allChannel, channel.search]);
+		}
+	},[channel.joined])
+
 	const join = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		let join_pass = e.currentTarget.join_pass?.value;
@@ -97,7 +107,7 @@ function Channel (){
 				}
 				<button onClick={() => join}> Join </button>
 			</form>
-			<button onClick={() => window.open(window.location.origin + '/chat_room')}>Chat</button>
+			<button onClick={() =>  window.open(window.location.origin + '/chat_room/' + name)}>Chat</button>
 			</>
 		);
 	}
@@ -143,9 +153,8 @@ function Channel (){
 				<div className='d-flex flex-row '>
 					<p> {item?.name} </p>
 				</div>
-
 				<div>
-				<button onClick={() => window.open(window.location.origin + '/chat_room')}>Chat</button>
+				<button onClick={() => window.open(window.location.origin + '/chat_room/' + item?.name)}>Chat</button>
 				</div>
 				</div>
 			)}
