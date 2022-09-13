@@ -8,6 +8,7 @@ import {UpdateUser} from "../../interfaces/iUser";
 import {IJoinChan} from "../../interfaces/IJoinChan";
 import { users } from '../../_reducers/users.reducer';
 import {wait} from '@testing-library/user-event/dist/utils';
+import axios from 'axios';
 
 interface channelInterface {
 	id: number;
@@ -165,6 +166,11 @@ function Channel (){
 			chanName,
 			owner
 		));
+	}
+
+	const test = ()  => {
+		axios.get('http://localhost:3002/chat/isUserBanned', {params: {user: "david", channel: "channel"}
+		}).then((res) => {console.log(res.data)}).catch((err) => {console.log(err)});		
 	}
 
 
