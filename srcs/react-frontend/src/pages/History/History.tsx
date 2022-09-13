@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom';
+import config from '../../config';
 import {useAppDispatch, useAppSelector} from '../../_helpers/hooks';
 import './History.css';
 
@@ -36,8 +37,8 @@ function History (){
 
 	//Geting rank position
 	const [rank, setrank] = useState("");
-	if (user)
-		axios.get("http://localhost:3002/users/rankPositionByLogin/" + user?.data?.login,
+	if (user && user?.data && user?.data?.login)
+		axios.get(`${config.apiUrl}/users/rankPositionByLogin/` + user?.data?.login,
 			{
 				withCredentials: true,
 			}
@@ -70,17 +71,18 @@ function History (){
 
 	const [history, setHistory] = useState<Data[]>([]);
 
-	useEffect(() => {
-		axios.get("http://localhost:3002/users/matchHistory/" + user.data.login,
-			{
-				withCredentials: true,
-			})
-			.then((res: any) => {
-				const history = res.data;
-				setHistory(history);
-			})
-			.catch(() => {})
-	}, []);
+			useEffect(() => {
+				if (user && user?.data && user?.data?.login)
+					axios.get(`${config.apiUrl}/users/matchHistory/` + user.data.login,
+						{
+							withCredentials: true,
+						})
+						.then((res: any) => {
+							const history = res.data;
+							setHistory(history);
+						})
+						.catch(() => {})
+			}, []);
 
 	let results: RealData[] = [];
 	for(let i = 0; i < history?.length; i++) {
@@ -117,7 +119,7 @@ function History (){
 						</button>
 					</div>
 
-					<div className='div-scroll border  bg-white border rounded'>
+					<div className='div-scroll bd  border bg-white border rounded'>
 						<div className='d-flex flex-column m-3'>
 							{ results && results.map((item: RealData) =>
 								<div key={item.id}>

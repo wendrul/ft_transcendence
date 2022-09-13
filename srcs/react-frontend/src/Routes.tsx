@@ -26,6 +26,7 @@ import WebChat from './pages/WebChat/WebChat';
 import ChatRoom from './pages/WebChat/ChatRoom';
 import DirectMessage from './pages/WebChat/DirectMessage';
 import Authenticate2fa from './pages/Authenticate2fa/Authenticate2fa';
+import GameComponent, { GameSettingsTest } from './GameComponent';
 
 class RoutesHandler extends React.Component {
   
@@ -39,8 +40,8 @@ class RoutesHandler extends React.Component {
 
         <Route  path ='/Authenticate2fa' element={<Authenticate2fa/>} />
 
-        <Route  path ='/create_room' element={<CreateRoom/>} /> {/* poner el component cuando todo sirva */}
-        <Route  path ='/room/:uuid' element={<Room/>} /> {/* poner el component cuando todo sirva */}
+        <Route  path ='/create_room' element={<CreateRoom/>} />
+        <Route  path ='/room/:uuid' element={<Room/>} />
         <Route  path ='/signin' element={<UsernameRedirect component={<SignIn/>} />} />
         <Route  path ='/signup' element={<UsernameRedirect component={<SignUp/>} />} />
         <Route  path ='/profile/:uuid' element={<UsernameRedirect component={<Profileuuid/>} />} />
@@ -53,13 +54,15 @@ class RoutesHandler extends React.Component {
         <Route  path ='/edit_info' element={<UsernameRedirect component={<EditInfo/>} />} />
         <Route  path ='/edit_photo' element={<UsernameRedirect component={<EditPhoto/>} />} />
 
-        <Route  path ='/friend_request' element={<UsernameRedirect component={<FriendRequest/>} />} />
+        <Route  path ='/friends' element={<UsernameRedirect component={<FriendRequest/>} />} />
 
         <Route  path ='/history' element={<UsernameRedirect component={<History/>} />} />
         <Route  path ='/history/:uuid' element={<UsernameRedirect component={<Historyuuid/>} />} />
         <Route  path ='/web_chat' element={<WebChat/>} />
-        <Route  path ='/chat_room' element={<ChatRoom/>} />
+				<Route  path ='/chat_room/:id' element={<ChatRoom/>} />
         <Route  path ='/direct_message/:id' element={<DirectMessage/>} />
+        <Route  path ='/game-test' element={<GameSettingsTest />}/>
+        <Route  path ='/game-test2' element={<GameSettingsTest />}/>
         <Route
           path="*"
           element={

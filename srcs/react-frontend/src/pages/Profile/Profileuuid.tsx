@@ -19,16 +19,18 @@ import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { useNavigate, useParams } from 'react-router-dom';
 import { userActions } from '../../_actions';
 import axios from 'axios';
+import config from '../../config';
+import {MDBIcon} from 'mdb-react-ui-kit';
 
 function blockButton() {
 	return (
-		<img className="row-img2"src={img_prohibition} alt='prohibition'></img>
+		<MDBIcon className="row-img2" fas icon="ban" size="lg"/>
 	)
 }
 
 function unblockButton() {
 	return (
-		<img className="row-img2"src={img_friends} alt='prohibition'></img>
+		<MDBIcon className="row-img2" fas icon="check-square" size="lg"/>
 	)
 }
 
@@ -55,17 +57,20 @@ function Profile(){
 
 
 	useEffect(() => {
-		dispatch(userActions.getById(uuid));
+		if (uuid === user?.data?.login)
+			navigate("/profile")
+		else
+			dispatch(userActions.getById(uuid));
 	}, [])
 
 	let avatarPath = undefined;
-	if(users?.item?.id) { avatarPath = "http://localhost:3002/localFiles/" + users.item.id; }
+	if(users?.item?.id) { avatarPath = `${config.apiUrl}/localFiles/${users?.item?.id}`; }
 
 	//Geting rank position
     const [rank, setrank] = useState("");
 	useEffect(() => {
-		if (users?.item?.login) {
-			axios.get("http://localhost:3002/users/rankPositionByLogin/" + users.item.login,
+		if (user && user?.data && user?.data?.login) {
+			axios.get(`${config.apiUrl}/users/rankPositionByLogin/${users?.item?.login}`,
 				{
 					withCredentials: true,
 				}
@@ -85,7 +90,7 @@ function Profile(){
 	const [blockedFlag, setBlockedFlag] = useState<boolean>(false);
 	useEffect(() => {
 		if (users?.item?.login) {
-			axios.get("http://localhost:3002/users/isUserBlocked/" + users.item.login,
+			axios.get(`${config.apiUrl}/users/isUserBlocked/${users?.item?.login}`,
 				{
 					withCredentials: true,
 				}
@@ -98,13 +103,13 @@ function Profile(){
 
 	function changeBlockStatus() {
 		if (blockedFlag){
-			axios.get("http://localhost:3002/users/unblock/" + users.item.login,
+			axios.get(`${config.apiUrl}/users/unblock/${users?.item?.login}`,
 				{
 					withCredentials: true,
 				}
 			).then(() => window.location.reload()).catch((error: any) => {console.log(error)})
 		} else {
-			axios.get("http://localhost:3002/users/block/" + users.item.login,
+			axios.get(`${config.apiUrl}/users/block/${users?.item?.login}`,
 				{
 					withCredentials: true,
 				}
@@ -112,9 +117,24 @@ function Profile(){
 		}
 	}
 
+	function sendFriendRequest() {
+		axios.post(`${config.apiUrl}/friendRequest/create`,
+			{
+				login: users.item.login,
+			},
+			{
+				withCredentials: true,
+			}
+		).then(() => {
+
+		}).catch((err) => {
+			console.log(err);
+		})
+	}
+
 	return (
 		<>
-		{ authentication.loggedIn && users.loaded && users.item &&
+		{ authentication.loggedIn && users.loaded && users.item && uuid !== user?.data?.login &&
 			
 				<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
 				<p className="register_btn mb-1 display-2">
@@ -140,17 +160,19 @@ function Profile(){
 					align-items-center m-4">
 						{ avatarPath &&
 						<img className='user' src={ avatarPath } alt='user'></img>}
-						<p>AVAILABLE</p>
+						<p> { users.item.online ? "Online" : "Offline" } </p>
 						<div className="d-flex flex-row m-3 mb-1">
-							<button className="row-but2 border border-dark d-flex flex-row ">
-							<img className="row-img2"src={img_friends} alt='friends'></img>
+							<button onClick={(e) => {
+								sendFriendRequest();
+								}} className="row-but2 border border-dark d-flex flex-row ">
+								<MDBIcon className="row-img2" fas icon="hippo" size="lg"/>
 							</button>
-							<button className="row-but2 border border-dark d-flex flex-row ">
-							<img className="row-img2"src={img_chat} alt='chat'></img>
-							</button>
-							<button className="row-but2 border border-dark d-flex flex-row ">
-							<img className="row-img2"src={img_swords} alt='swords'></img>
-							</button>
+							{/* <button className="row-but2 border border-dark d-flex flex-row "> */}
+							{/* <img className="row-img2"src={img_chat} alt='chat'></img> */}
+							{/* </button> */}
+							{/* <button className="row-but2 border border-dark d-flex flex-row "> */}
+							{/* <img className="row-img2"src={img_swords} alt='swords'></img> */}
+							{/* </button> */}
 							<button onClick={(e) => {
 								changeBlockStatus();
 								}} className="row-but2 border border-dark d-flex flex-row ">

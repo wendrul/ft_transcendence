@@ -35,6 +35,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { TwoFactorGuard } from 'src/guards/twoFactor.guard';
 import {UserLadderDto} from './dtos/userLadder.dto';
 import {MatchDto} from './dtos/match.dto';
+import { session } from 'passport';
 
 @ApiTags('Users')
 @Controller('users')
@@ -79,7 +80,12 @@ export class UsersController {
 	@Get('/whoami')
 	@Serialize(UserDto)
 	@UseGuards(AuthGuardApi)
-	whoAmI(@CurrentUser() user: User) {
+	whoAmI(@CurrentUser() user: User, @Session() session: any) {
+		if (!user) {
+			console.log("no user");
+			session.userId = null;
+			session.twoFactor = null;
+		}
 		return user;
 	}
 
@@ -180,6 +186,7 @@ export class UsersController {
 
 		if (user.twoFactorAuthenticationFlag) {
 			session.twoFactor = user.id;
+			res.redirect('http://localhost:3000/Authenticate2fa?twoFactor=true').send(user);
 		}
 
 		session.userId = user.id;
@@ -268,11 +275,3 @@ export class UsersController {
 		return this.userService.update(user, body);
 	}
 }
-function La(La: any) {
-	throw new Error('Function not implemented.');
-}
-
-function Pu(arg0: string) {
-	throw new Error('Function not implemented.');
-}
-

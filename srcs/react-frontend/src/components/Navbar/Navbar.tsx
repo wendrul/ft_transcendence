@@ -19,19 +19,18 @@ import {
   MDBDropdownToggle,
   MDBDropdownMenu,
   MDBDropdownItem,
-  MDBDropdownLink,
+  // MDBDropdownLink,
   MDBCollapse
 } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
-import { userActions } from '../../_actions';
-import { user } from '../../_reducers/user.reducer';
+import { friendActions, userActions } from '../../_actions';
 
 export default function NavbarComponent() {
 
   const dispatch = useAppDispatch();
   const authentication = useAppSelector<any>(state => state.authentication);
-  const users = useAppSelector<any>(state => state.users);
+  const friend_req = useAppSelector<any>(state => state.friend);
 
   const [showBasic, setShowBasic] = useState(false);
   let navigate = useNavigate();
@@ -45,16 +44,21 @@ export default function NavbarComponent() {
       dispatch(userActions.whoami());
     }, 5000)
     return () => clearInterval(timerId);*/
-  }, [])
+  }, [dispatch])
   
+  useEffect(()=> {
+      if (authentication.loggedIn)
+            dispatch(friendActions.pendingRequests())
+  },[authentication.loggedIn, dispatch]) 
+
 	const logout = () => {
     dispatch(userActions.signout());
 	}
 
   const onSerch = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
     dispatch(userActions.getAll());
     const url = "/profile/" + userLogin;
+    console.log(userLogin)
     navigate(url)
 	}
 
@@ -95,17 +99,21 @@ export default function NavbarComponent() {
                   Game
                 </MDBDropdownToggle>
                 <MDBDropdownMenu>
-                  <MDBDropdownItem>
-                    <MDBDropdownLink href='/Leaderboard'>Leaderboard</MDBDropdownLink>
+                  <MDBDropdownItem link href='/Leaderboard'>
+                    {/* <MDBDropdownLink href='/Leaderboard'>Leaderboard</MDBDropdownLink> */}
+                    Leaderboard
+                  </MDBDropdownItem>
+                  <MDBDropdownItem link>
+                    {/* <MDBDropdownLink>Users connected</MDBDropdownLink> */}
+                    Users connected
+                  </MDBDropdownItem>
+                  <MDBDropdownItem link href='/create_room'>
+                    {/* <MDBDropdownLink href='/create_room'>Create Room</MDBDropdownLink> */}
+                    Create Room
                   </MDBDropdownItem>
                   <MDBDropdownItem>
-                    <MDBDropdownLink>Users connected</MDBDropdownLink>
-                  </MDBDropdownItem>
-                  <MDBDropdownItem>
-                    <MDBDropdownLink href='/create_room'>Create Room</MDBDropdownLink>
-                  </MDBDropdownItem>
-                  <MDBDropdownItem>
-                    <MDBDropdownLink>Quick game</MDBDropdownLink>
+                    {/* <MDBDropdownLink>Quick game</MDBDropdownLink> */}
+                    <a>Quick game</a>
                   </MDBDropdownItem>
                 </MDBDropdownMenu>
               </MDBDropdown>
@@ -128,16 +136,23 @@ export default function NavbarComponent() {
               </form>
               <MDBNavbarNav className='d-flex input-group w-auto'>
                 <MDBNavbarItem>
+                  <MDBNavbarLink href='/friends'><MDBIcon color={ friend_req?.request.length > 0 ? "danger": "muted" } icon="bell" animate={ friend_req?.request.length > 0 ? "spin": "beat" }/></MDBNavbarLink>
+                </MDBNavbarItem>
+              </MDBNavbarNav>
+              <MDBNavbarNav className='d-flex input-group w-auto'>
+                <MDBNavbarItem>
                   <MDBDropdown>
                     <MDBDropdownToggle tag='a' className='nav-link'>
                     <MDBIcon icon="user" />
                     </MDBDropdownToggle>
                     <MDBDropdownMenu>
-                      <MDBDropdownItem>
-                        <MDBDropdownLink href='/profile'>My Space</MDBDropdownLink>
+                      <MDBDropdownItem link href='/profile'>
+                        {/* <MDBDropdownLink href='/profile'>My Space</MDBDropdownLink> */}
+                        My Space
                       </MDBDropdownItem>
-                      <MDBDropdownItem>
-                        <MDBDropdownLink onClick={logout} >Logout</MDBDropdownLink>
+                      <MDBDropdownItem link onClick={logout}>
+                        {/* <MDBDropdownLink onClick={logout} >Logout</MDBDropdownLink> */}
+                        Logout
                       </MDBDropdownItem>
                     </MDBDropdownMenu>
                   </MDBDropdown>

@@ -1,8 +1,9 @@
-FROM node:12.19.0-alpine3.9 AS development
+FROM node:alpine AS development
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package.json ./
+COPY package-lock.json ./
 
 #RUN npm install glob rimraf
 
@@ -12,7 +13,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
+# RUN npm run build
 
 FROM node:alpine as production
 
@@ -21,7 +22,8 @@ ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package.json ./
+COPY package-lock.json ./
 
 RUN npm install --only=production
 

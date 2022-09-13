@@ -11,11 +11,11 @@ export class ChannelMessageDto {
 	@Expose()
 	reciverType: string;
 
-	@Transform(({ obj }) => obj.sender.id)
+	@Transform(({ obj }) => obj.sender.login)
 	@Expose()
-	senderId: number;
+	senderLogin: string;
 
-	@Transform(({ obj }) => obj.reciverChannel.id)
+	@Transform(({ obj }) => obj.reciverChannel.name)
 	@Expose()
-	reciverChannelId: number;
+	reciverChannelName: number;
 }

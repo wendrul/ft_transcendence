@@ -13,6 +13,7 @@
 .bc-gr{
 	background-color: #d6d6d6;
 	box-shadow: active;
+	padding: 0px 20px 0px 20px;
 }
 
 .h-px{
@@ -52,16 +53,24 @@
 }
 
 .user{
-	height: 100px;
-	width: 100px;
+	height: 150px;
+	width: 150px;
 	padding: 10px;
 	margin-top: 20px;
+	border-radius: 600px;
+}
+
+.userHome{
+	height: 120px;
+	width: 120px;
+	border-radius: 600px;
 }
 
 
 .row-img2{
 	height: 20px;
 	width: 20px;
+	padding-top: 3px;
 	margin: 5px;
 }
 .row-but2{

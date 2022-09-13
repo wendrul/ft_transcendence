@@ -2,11 +2,6 @@ import React, { useEffect, useState } from 'react';
 import "./Profile.css";
 
 // Image
-import img_friends from '../../icon/friends.png'
-import img_chat from '../../icon/chat.png'
-import img_swords from '../../icon/swords.png'
-import img_prohibition from '../../icon/prohibition.png'
-
 import img_pingpong from '../../icon/ping-pong.png'
 import img_stats from '../../icon/statistiques.png'
 import img_check from '../../icon/check.png'
@@ -19,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { userActions } from '../../_actions';
 import { MDBIcon } from 'mdb-react-ui-kit';
 import axios from 'axios';
+import config from '../../config';
 
 function Profile(){ 
 	const dispatch = useAppDispatch();
@@ -37,12 +33,12 @@ function Profile(){
 
 	//Geting avatar
 	let avatarPath = undefined;
-	if(user?.data?.id) { avatarPath = "http://localhost:3002/localFiles/" + user.data.id; }
+	if(user?.data?.id) { avatarPath = `${config.apiUrl}/localFiles/${user.data.id}`; }
 
 	//Geting rank position
    const [rank, setrank] = useState("");
-	if (user)
-	axios.get("http://localhost:3002/users/rankPositionByLogin/" + user?.data?.login,
+   if (user && user?.data && user?.data?.login)
+		axios.get(`${config.apiUrl}/users/rankPositionByLogin/${user?.data?.login}`,
 		{
 			withCredentials: true,
 		}
@@ -89,22 +85,8 @@ function Profile(){
 					</form>
 					</div>
 					{avatarPath &&
-					<img className='user' src={ avatarPath } alt='user'></img>}
-					<p>AVAILABLE</p>
-					<div className="d-flex flex-row m-3 mb-1">
-						<button className="row-but2 border border-dark d-flex flex-row ">
-						<img className="row-img2"src={img_friends} alt='friends'></img>
-						</button>
-						<button className="row-but2 border border-dark d-flex flex-row ">
-						<img className="row-img2"src={img_chat} alt='chat'></img>
-						</button>
-						<button className="row-but2 border border-dark d-flex flex-row ">
-						<img className="row-img2"src={img_swords} alt='swords'></img>
-						</button>
-						<button className="row-but2 border border-dark d-flex flex-row ">
-						<img className="row-img2"src={img_prohibition} alt='prohibition'></img>
-						</button>
-					</div>
+					<img className='user'  src={ avatarPath } alt='user'></img>}
+					<p>    {(authentication.loggedIn) ? "Online" : "Offline"}    </p>
 				</div>
 
 				<div className='d-flex flex-column align-items-center justify-content-center'>

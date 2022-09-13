@@ -13,6 +13,7 @@ import { AdminsInChannels } from "src/chat/entities/adminsInChannels.entity";
 import { UsersInChannels } from "src/chat/entities/usersInChannels.entity";
 import { BlockedUser } from "src/users/entities/blockedUsers.entity";
 import { GameController } from "./game.controller";
+import { GameGateway } from "./game.gateway";
 
 @Module({
 	imports: [
@@ -34,6 +35,7 @@ import { GameController } from "./game.controller";
 		GameService,
 		UsersService,
 		LocalFilesService,
+		GameGateway
 	]
 })
 
