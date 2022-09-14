@@ -1,4 +1,4 @@
-import {IsEmail, IsNotEmpty, IsOptional, IsString, NotContains} from "class-validator";
+import {IsBoolean, IsEmail, IsNotEmpty, IsOptional, IsString, NotContains} from "class-validator";
 import { ApiProperty } from "@nestjs/swagger"
 
 export class UpdateUserDto {
@@ -36,7 +36,7 @@ export class UpdateUserDto {
 	login: string;
 
 	@IsOptional()
-	@IsString()
+	@IsBoolean()
 	@ApiProperty()
-	status: string;
+	online: boolean;
 }

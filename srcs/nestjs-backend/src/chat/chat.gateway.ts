@@ -1,5 +1,4 @@
 import {
-	MessageBody,
 	OnGatewayConnection,
 	OnGatewayDisconnect,
 	OnGatewayInit,
@@ -7,10 +6,14 @@ import {
 	WebSocketGateway,
 	WebSocketServer,
 } from "@nestjs/websockets";
-import {CreateMessageDto} from "./dtos/create-message.dto";
 import {Socket, Server} from "socket.io";
 import {Logger, UseGuards} from "@nestjs/common";
-import {AuthGuardApi} from "src/guards/auth.guard";
+import {UsersService} from "src/users/users.service";
+
+interface userIds {
+	socketId: string;
+	userLogin: string;
+}
 
 @WebSocketGateway({
 	cors: {
@@ -19,11 +22,12 @@ import {AuthGuardApi} from "src/guards/auth.guard";
 	// namespace: '/web_chat',
 })
 export class MessagesGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect{
-	// constructor(private chatSocketService: ChatSocketService) {}	
+	constructor(private userService: UsersService) {}	
 
 	@WebSocketServer() server: Server;
 
 	private logger: Logger = new Logger('ChatGateway');
+	private	usersMap = new Map<string, string>();
 
 	afterInit(server: Server) {
 		this.logger.log('Initialized!');
@@ -31,11 +35,20 @@ export class MessagesGateway implements OnGatewayInit, OnGatewayConnection, OnGa
 
 	handleConnection(client: Socket, ...args: any[]) {
 		this.logger.log(`Client connected: ${client.id}`);
+		// client.emit('youAreOnline', true, client.id);
 
 	}
 
-	handleDisconnect(client: Socket) {
+	async handleDisconnect(client: Socket) {
 		this.logger.log(`Client disconnected: ${client.id}`);
+		let login: string;
+		console.log(this.usersMap);
+		login = this.usersMap.get(client.id);
+		this.usersMap.delete(client.id);
+		const user = await this.userService.findOneLogin(login);
+		if (user)
+			this.userService.update(user, {online: false});
+		console.log(login);
 	}
 
 	// @SubscribeMessage('createMessageForUser')
@@ -43,11 +56,14 @@ export class MessagesGateway implements OnGatewayInit, OnGatewayConnection, OnGa
 	// 	return this.chatSocketService.createMessageForUser();
 	// }
 	
-	// @UseGuards(AuthGuardApi)
-	@SubscribeMessage('sendMessageToUser')
-	sendMessageToUser(client: Socket, message: any) {
-		// console.log('funciona');
-		this.server.emit('message', message);
+	@SubscribeMessage('online')
+	sendMessageToUser(client: Socket) {
+		client.emit('youAreOnline', true);
+	}
+
+	@SubscribeMessage('setId')
+	setId(client: Socket, login: string) {
+		this.usersMap.set(client.id, login);
 	}
 
 	@SubscribeMessage('sendMessage')
