@@ -65,11 +65,7 @@ function Channel (){
 
 	useEffect(() => {
 		if(channel?.joined) {
-			if (!allChannel.length) {
-				setAllChannel([channel.search]);
-				return ;
-			}
-			setAllChannel(allChannel => [...allChannel, channel.search]);
+			setAllChannel(allChannel => [...allChannel, {id: channel?.search?.id, name: channel?.search?.name}]);
 		}
 	},[channel.joined])
 
@@ -177,7 +173,7 @@ function Channel (){
 	const displayChannel = () =>{
 		return(
 			<>
-			{channel &&  channel?.data && channel.data[0] && allChannel && allChannel.map((item: any, i: number) =>
+			{allChannel && allChannel.map((item: any, i: number) =>
 			<div key={i} className='d-flex flex-row border-bottom m-3 justify-content-between'>
 				<div className='d-flex flex-row '>
 					<p> {item?.name} </p>

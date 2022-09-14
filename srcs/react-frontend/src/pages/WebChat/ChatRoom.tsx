@@ -124,21 +124,6 @@ function Channel (props:IProps){
 			}).catch((err) => {console.log(err)});
 	}
 
-
-
-	function isUserBanned(user: string)  {
-		let flag = false;
-		// axios.get('http://localhost:3002/chat/isUserBanned',
-		// 	{
-		// 		params: {user: user, channel: channel?.name},
-		// 		withCredentials: true,
-		// 		}).then((res) => {
-		// 			flag = res.data;
-		// 		}).catch((err) => {console.log(err)});		
-
-		return flag ;
-	}
-
 	return(
 		<>
 		<div className='chatRoomDiv1_1'>
