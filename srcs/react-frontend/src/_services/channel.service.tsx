@@ -2,13 +2,15 @@ import axios, { AxiosResponse } from 'axios';
 import config from '../config';
 import {UpdateUser} from "../interfaces/iUser";
 import {IJoinChan} from "../interfaces/IJoinChan";
+import { accessibilityOverscanIndicesGetter } from 'react-virtualized';
 
 export const channelService = {
 		createChannel,
 		getOpenConversations,
 		getMyChannelsByType,
 		getChannel,
-		joinChannel
+		joinChannel,
+		removePassChan
 	};
 
 function createChannel(userLogins: string[], access: string,
@@ -70,6 +72,15 @@ function	joinChannel(channel: IJoinChan){
 	}).then(handleResponse).then(res => {
 		return res;
 	});
+}
+
+function removePassChan(id : string) {
+	return axios.patch(`${config.apiUrl}/chat/removePassChan/${id}`,
+	{
+		withCredentials: true
+	}).then(handleResponse).then(res => {
+		return res;
+	})
 }
 
 

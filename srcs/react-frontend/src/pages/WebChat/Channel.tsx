@@ -154,6 +154,12 @@ function Channel (){
 
 
 	const displayChannel = () =>{
+		const removePass = (e: any, id :string) => {
+			e.preventDefault();
+			console.log("id " + id);
+			// dispatch(channelActions.removePassChan(id));
+		}
+
 		return(
 			<>
 			{channel.data[0] && allChannel && allChannel.map((item: any, i: number) =>
@@ -169,7 +175,7 @@ function Channel (){
 				{item?.access === "protected" &&
 					<>
 					<button> Edit Pass</button>
-					<button> Delete Pass</button>
+					<button onClick={(e) => removePass(e, item?.id)}> Remove Pass</button>
 					</>
 				}
 				</div>

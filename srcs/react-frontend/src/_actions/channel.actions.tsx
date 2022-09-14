@@ -9,7 +9,8 @@ export const channelActions = {
 	getOpenConversations,
 	getMyChannelsByType,
 	getChannel,
-	joinChannel
+	joinChannel,
+	removePassChan
 
 };
 
@@ -98,4 +99,22 @@ function joinChannel (channel:IJoinChan){
 function request() { return { type: channelConstants.JOIN_CHAN_REQUEST } }
 function success(response:any) { return { type: channelConstants.JOIN_CHAN_SUCCESS, response } }
 function failure(error:string) { return { type: channelConstants.JOIN_CHAN_FAILURE, error } }
+}
+
+
+function removePassChan(id: string){
+	return (dispatch:any) => {
+		dispatch(request());
+
+		channelService.removePassChan(id)
+				.then(
+						response => {
+								dispatch(success(response));
+						},
+						error => dispatch(failure(error))
+					);
+};
+function request() { return { type: channelConstants.RM_CHAN_REQUEST } }
+function success(response:any) { return { type: channelConstants.RM_CHAN_SUCCESS, response } }
+function failure(error:string) { return { type: channelConstants.RM_CHAN_FAILURE, error } }
 }

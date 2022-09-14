@@ -15,6 +15,7 @@ export function channel(state = {
 		return{...state,
 			searching: true,
 		}
+	case channelConstants.RM_CHAN_REQUEST:
   case channelConstants.GET_MY_CHAN_REQUEST:
   case channelConstants.CREATE_CHANNEL_REQUEST:
 	case channelConstants.OPEN_CONV_REQUEST:
@@ -34,6 +35,7 @@ export function channel(state = {
 		search: action.response,
 		searching: false
 	}
+	case channelConstants.RM_CHAN_SUCCESS:
 	case channelConstants.GET_MY_CHAN_SUCCESS:
   case channelConstants.CREATE_CHANNEL_SUCCESS:
 	case channelConstants.OPEN_CONV_SUCCESS:
@@ -55,6 +57,7 @@ export function channel(state = {
 			search: null,
 			searching: false
 		}
+	case channelConstants.RM_CHAN_FAILURE:
 	case channelConstants.GET_MY_CHAN_FAILURE:
 	case channelConstants.CREATE_CHANNEL_FAILURE:
 	case channelConstants.OPEN_CONV_FAILURE:
