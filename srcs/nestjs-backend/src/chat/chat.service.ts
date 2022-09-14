@@ -41,6 +41,36 @@ export class ChatService {
 		private userService: UsersService,
 	) {}
 
+	async isUserBanned(login: string, name: string) {
+		const channel = await this.channelRepo.findOne({
+			relations: ['usersRelations', 'usersRelations.user'],
+			where: {
+				name: name,
+			}
+		});
+		if (!channel) {
+			throw new NotFoundException('Channel not found');
+		}
+
+		const user = await this.userService.findOneLogin(login);
+		if (!user) {
+			throw new NotFoundException('User not found');
+		}
+
+		const relation = await this.usersInChannelsRepo.findOne({
+			relations: ['user', 'channel'],
+			where: {
+				user: user,
+				channel: channel
+			}
+		});
+		if (!relation) {
+			throw new NotFoundException('User not in channel');
+		}
+
+		return relation.ban;
+	}
+
 	async leaveChannel(user: User, name: string) {
 		const channel = await this.channelRepo.findOne({
 			relations: ['owner', 'adminRelations', 'adminRelations.user', 'usersRelations', 'usersRelations.user'],
@@ -327,6 +357,16 @@ export class ChatService {
 			throw new NotFoundException('user not found');	
 		}
 
+		flag = true;
+		for (let i = 0; i < adminRelations.length; i++) {
+			if (login === adminRelations[i].user.login) {
+				flag = false;	
+			}
+		}
+		if (!flag) {
+			throw new HttpException('Already an admin', HttpStatus.FORBIDDEN);
+		}
+
 		//add new admin
 			const adminInChannel = this.adminsInChannelsRepo.create({ user: newAdmin, channel });
 			return this.adminsInChannelsRepo.save(adminInChannel);
@@ -533,7 +573,12 @@ export class ChatService {
 			} 
 		}
 		if (!flag) {
-			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+			throw new HttpException('you need to be admin', HttpStatus.FORBIDDEN);
+		}
+
+		//check if it's you
+		if (bannedUser.id === user.id) {
+			throw new HttpException("Can't unban yourself", HttpStatus.FORBIDDEN);
 		}
 
 		const userRelation = await this.usersInChannelsRepo.findOne({
@@ -579,7 +624,12 @@ export class ChatService {
 			} 
 		}
 		if (!flag) {
-			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+			throw new HttpException('You need to be admin', HttpStatus.FORBIDDEN);
+		}
+
+		//check if it's you
+		if (user.id === bannedUser.id) {
+			throw new HttpException("Can't ban yourself", HttpStatus.FORBIDDEN);
 		}
 
 		//check if you try to ban the channel owner
@@ -596,6 +646,10 @@ export class ChatService {
 		});
 		if (!userRelation) {
 			throw new BadRequestException('user is not in channel');
+		}
+		
+		if (userRelation.ban) {
+			throw new BadRequestException('already banned');
 		}
 		
 		return this.usersInChannelsRepo.update(userRelation.id, {

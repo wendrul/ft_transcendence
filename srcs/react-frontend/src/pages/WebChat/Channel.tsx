@@ -8,6 +8,7 @@ import {UpdateUser} from "../../interfaces/iUser";
 import {IJoinChan} from "../../interfaces/IJoinChan";
 import { users } from '../../_reducers/users.reducer';
 import {wait} from '@testing-library/user-event/dist/utils';
+import axios from 'axios';
 
 interface channelInterface {
 	id: number;
@@ -64,11 +65,7 @@ function Channel (){
 
 	useEffect(() => {
 		if(channel?.joined) {
-			if (!allChannel.length) {
-				setAllChannel([channel.search]);
-				return ;
-			}
-			setAllChannel(allChannel => [...allChannel, channel.search]);
+			setAllChannel(allChannel => [...allChannel, {id: channel?.search?.id, name: channel?.search?.name}]);
 		}
 	},[channel.joined])
 
@@ -167,11 +164,16 @@ function Channel (){
 		));
 	}
 
+	const test = ()  => {
+		axios.get('http://localhost:3002/chat/isUserBanned', {params: {user: "david", channel: "channel"}
+		}).then((res) => {console.log(res.data)}).catch((err) => {console.log(err)});		
+	}
+
 
 	const displayChannel = () =>{
 		return(
 			<>
-			{channel &&  channel?.data && channel.data[0] && allChannel && allChannel.map((item: any, i: number) =>
+			{allChannel && allChannel.map((item: any, i: number) =>
 			<div key={i} className='d-flex flex-row border-bottom m-3 justify-content-between'>
 				<div className='d-flex flex-row '>
 					<p> {item?.name} </p>

@@ -6,6 +6,7 @@ import {
 	Param,
 	Patch,
 	Post,
+	Query,
 	UseGuards,
 } from "@nestjs/common";
 import {AuthGuardApi} from "src/guards/auth.guard";
@@ -119,6 +120,12 @@ export class ChatController {
 	async setAdmin(@CurrentUser() user: User, @Body() body: SetAdminDto) {
 		const admin = await this.chatService.setAdmin(user, body.name, body.login);
 		return admin;
+	}
+
+	@Get('/isUserBanned')
+	@UseGuards(AuthGuardApi)
+	async isUserBanned(@Query() query: UnmuteUserDto) {
+		return this.chatService.isUserBanned(query.user, query.channel);
 	}
 
 	@Serialize(ChannelDto)
