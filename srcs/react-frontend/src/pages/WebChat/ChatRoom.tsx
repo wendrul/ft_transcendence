@@ -43,7 +43,7 @@ function Channel (props:IProps){
 	interface ChannelData {
 		id: number;
 		name: string;
-		ownerId: number;
+		ownerId: string;
 		userIds: number[];
 		userLogins: string[];
 		adminIds: number[];
@@ -104,6 +104,23 @@ function Channel (props:IProps){
 		console.log("mute for: ", time)
 	}
 
+	const userKick = (event: any, user: string) => {
+		event.preventDefault();
+		axios.post(`${config.apiUrl}/chat/kick`,
+			{
+				user: user,
+				channel: channel?.name,
+			},
+			{
+				withCredentials: true, 
+			}).then(() => {
+				SetAdminsInChannel(adminsInChannel.filter((item: string) => item !== user));	
+				SetUsersInChannel(usersInChannel.filter((item: string) => item !== user));	
+			}).catch((err) => {
+				console.log(err);
+			});
+	}
+
 	const userBan = async (event: any, user: string) => {
 		event.preventDefault();
 		let flag = false;
@@ -160,7 +177,10 @@ function Channel (props:IProps){
 					<p> {channel?.access} </p>
 					<p> {channel?.name}</p>
 				</div>
-
+				<p className='mb-0 text-start' > Owner</p>
+				<div className='chatRoomOwner'>
+					<h6 style={{color: 'white'}}>{channel?.ownerId}</h6>
+				</div>
 				<p className='mb-0 text-start'>Admins</p>
 				<div className='chatRoomCo'>
 					<div className="channelAdmins row">
@@ -182,6 +202,9 @@ function Channel (props:IProps){
 									</MDBDropdownItem>
 									<MDBDropdownItem link onClick={event => userBan(event, item)}>
 										<MDBIcon icon="ban" /> Ban / Unban
+									</MDBDropdownItem>
+									<MDBDropdownItem link onClick={event => userKick(event, item)}>
+										<MDBIcon fas icon="running" /> Kick
 									</MDBDropdownItem>
 								</MDBDropdownMenu>
 							</MDBDropdown>
@@ -213,6 +236,9 @@ function Channel (props:IProps){
 								</MDBDropdownItem>
 								<MDBDropdownItem link onClick={event => userBan(event, item)}>
 									<MDBIcon icon="ban" /> Ban / Unban
+								</MDBDropdownItem>
+								<MDBDropdownItem link onClick={event => userKick(event, item)}>
+									<MDBIcon fas icon="running" /> Kick
 								</MDBDropdownItem>
 							</MDBDropdownMenu>
 						</MDBDropdown>
