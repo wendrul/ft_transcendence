@@ -10,7 +10,8 @@ export const channelActions = {
 	getMyChannelsByType,
 	getChannel,
 	joinChannel,
-	removePassChan
+	removePassChan,
+	editPassChan
 
 };
 
@@ -117,4 +118,21 @@ function removePassChan(id: string){
 function request() { return { type: channelConstants.RM_CHAN_REQUEST } }
 function success(response:any) { return { type: channelConstants.RM_CHAN_SUCCESS, response } }
 function failure(error:string) { return { type: channelConstants.RM_CHAN_FAILURE, error } }
+}
+
+function editPassChan(id: string, pwd: string){
+	return (dispatch:any) => {
+		dispatch(request());
+
+		channelService.editPassChan(id, pwd)
+				.then(
+						response => {
+								dispatch(success(response));
+						},
+						error => dispatch(failure(error))
+					);
+};
+function request() { return { type: channelConstants.EDIT_PWD_CHAN_REQUEST } }
+function success(response:any) { return { type: channelConstants.EDIT_PWD_CHAN_SUCCESS, response } }
+function failure(error:string) { return { type: channelConstants.EDIT_PWD_CHAN_FAILURE, error } }
 }

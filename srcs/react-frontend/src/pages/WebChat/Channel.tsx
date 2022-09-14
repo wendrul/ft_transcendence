@@ -16,6 +16,7 @@ interface channelInterface {
 function Channel (){
 	const [type, setType] = useState("public");
 	const [chanName, setChanName] = useState("");
+	const [edit, setEdit] = useState("");
 	const [password, setPassword] = useState("");
 	const [usersLogin, setUsersLogin] = useState("");
 	const [allChannel, setAllChannel] = useState<channelInterface[]>([]);
@@ -40,6 +41,10 @@ function Channel (){
 		setType(s);
 	}}
 
+	const handleEdit = (e: ChangeEvent<HTMLInputElement>) => {{
+		let res : string =  e?.currentTarget?.value;
+		setEdit(res);
+	}}
 	const handleChanName = function (e: ChangeEvent<HTMLInputElement>)  {
 		setChanName(e?.currentTarget?.value);
 	}
@@ -157,12 +162,17 @@ function Channel (){
 		const removePass = (e: any, id :string) => {
 			e.preventDefault();
 			console.log("id " + id);
-			// dispatch(channelActions.removePassChan(id));
+			dispatch(channelActions.removePassChan(id));
 		}
 
+		const editPass = (e:any, id:string) =>{
+			e.preventDefault();
+			console.log("edit: " + edit);
+			dispatch(channelActions.editPassChan(id, edit));
+		}
 		return(
 			<>
-			{channel.data[0] && allChannel && allChannel.map((item: any, i: number) =>
+			{channel.data && channel.data[0] && allChannel && allChannel.map((item: any, i: number) =>
 			<div key={i} className='d-flex flex-row border-bottom m-3 justify-content-between'>
 				<div className='d-flex flex-row '>
 					<p> {item?.name} </p>
@@ -170,11 +180,14 @@ function Channel (){
 					<p className='text-muted mx-3'> owner</p>
 				}
 				</div>
-				<div>
+				<div className='d-flex flex-row'>
 				<button onClick={() => window.open(window.location.origin + '/chat_room/' + item?.name)}>Chat</button>
 				{item?.access === "protected" &&
 					<>
-					<button> Edit Pass</button>
+					<form onSubmit={(e) => editPass(e, item?.id)}>
+						<input onChange={handleEdit} type="password"  placeholder='Edit Password'/>
+						<button onClick={(e) => editPass(e, item?.id)}> Edit Pass</button>
+					</form>
 					<button onClick={(e) => removePass(e, item?.id)}> Remove Pass</button>
 					</>
 				}
