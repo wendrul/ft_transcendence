@@ -160,13 +160,11 @@ function Channel (){
 
 	const displayChannel = () =>{
 		const removePass = (e: any, id :string) => {
-			e.preventDefault();
 			console.log("id " + id);
 			dispatch(channelActions.removePassChan(id));
 		}
 
 		const editPass = (e:any, id:string) =>{
-			e.preventDefault();
 			console.log("edit: " + edit);
 			dispatch(channelActions.editPassChan(id, edit));
 		}
@@ -181,15 +179,21 @@ function Channel (){
 				}
 				</div>
 				<div className='d-flex flex-row'>
-				<button onClick={() => window.open(window.location.origin + '/chat_room/' + item?.name)}>Chat</button>
+				<button className="mx-4 bg-primary" onClick={() => window.open(window.location.origin + '/chat_room/' + item?.name)}>Chat</button>
 				{item?.access === "protected" &&
 					<>
 					<form onSubmit={(e) => editPass(e, item?.id)}>
-						<input onChange={handleEdit} type="password"  placeholder='Edit Password'/>
-						<button onClick={(e) => editPass(e, item?.id)}> Edit Pass</button>
+						<input  className="h-100" onChange={handleEdit} type="password"  placeholder='Edit Password'/>
+						<button className="h-100" onClick={(e) => editPass(e, item?.id)}> Edit Pass</button>
 					</form>
-					<button onClick={(e) => removePass(e, item?.id)}> Remove Pass</button>
+					<button className="h-100 bg-danger" onClick={(e) => removePass(e, item?.id)}> Remove Pass</button>
 					</>
+				}
+				{(item?.access === "public" || item?.access === "private") &&
+					<form onSubmit={(e) => editPass(e, item?.id)}>
+						<input className="h-100" onChange={handleEdit} type="password"  placeholder='Add Password'/>
+						<button className="h-100" onClick={(e) => editPass(e, item?.id)}> Add Pass</button>
+					</form>
 				}
 				</div>
 				</div>

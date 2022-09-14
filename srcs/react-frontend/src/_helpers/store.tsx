@@ -8,8 +8,8 @@ const loggerMiddleware = createLogger();
 export const store = createStore(
     rootReducer,
     applyMiddleware(
-        thunkMiddleware,
-        loggerMiddleware // sacar para quitar los logs.
+        thunkMiddleware
+        // loggerMiddleware // sacar para quitar los logs.
     )
 );
 
