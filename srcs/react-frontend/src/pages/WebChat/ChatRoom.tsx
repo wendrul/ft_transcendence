@@ -73,12 +73,14 @@ function Channel (props:IProps){
 		SetAdminsInChannel(channel?.adminLogins);
 	}, [channel])
 
-	const UserMute = () => {
+	const userMute = (event: any, user: string) => {
+		event.preventDefault();
 
 		console.log("mute")
 	}
 
 	const userBan = async (event: any, user: string) => {
+		event.preventDefault();
 		let flag = false;
 		await axios.post(`${config.apiUrl}/chat/banUser`,
 			{
@@ -111,6 +113,7 @@ function Channel (props:IProps){
 	}
 
 	const userAdmin = (event: any, user: string) => {
+		event.preventDefault();
 		console.log("admin")
 		axios.post(`${config.apiUrl}/chat/setAdmin`,
 			{
@@ -143,7 +146,7 @@ function Channel (props:IProps){
 								{item}
 							</MDBDropdownToggle>
 							<MDBDropdownMenu>
-							<MDBDropdownItem link onClick={UserMute}>
+								<MDBDropdownItem link onClick={event => userMute(event, item)}>
 								{/* <MDBDropdownLink href='/profile'>My Space</MDBDropdownLink> */}
 								<MDBIcon icon="microphone-alt-slash" /> Mute
 							</MDBDropdownItem>
@@ -170,7 +173,7 @@ function Channel (props:IProps){
 								<MDBDropdownItem link onClick={event => userAdmin(event, item)}>
 									<MDBIcon fab icon="superpowers" /> admin
 								</MDBDropdownItem>
-								<MDBDropdownItem link onClick={UserMute}>
+								<MDBDropdownItem link onClick={event => userMute(event, item)}>
 									<MDBIcon icon="microphone-alt-slash" /> Mute / Unmute
 								</MDBDropdownItem>
 								<MDBDropdownItem link onClick={event => userBan(event, item)}>
@@ -262,7 +265,7 @@ function ChannelChat(){
 
 	const send = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		const channelName = recv;
+		const channelName = (recv && recv?.slice(-1) === '#') ? recv.slice(0, -1) : recv;
 		const senderLogin = curr_user?.data?.login;
 
 		if (msg === "")
@@ -278,7 +281,7 @@ function ChannelChat(){
 				withCredentials: true
 			}
 		).then((res) => {
-			socket.emit('sendMessage', {sender: senderLogin, room: recv, message: res.data.content})
+			socket.emit('sendMessage', {sender: senderLogin, room: (recv && recv?.slice(-1) === '#') ? recv.slice(0, -1) : recv, message: res.data.content})
 		}).catch((err) => {
 			console.log(err.response.data.message);
 		});

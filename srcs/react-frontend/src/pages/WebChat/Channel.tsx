@@ -9,6 +9,7 @@ import {IJoinChan} from "../../interfaces/IJoinChan";
 import { users } from '../../_reducers/users.reducer';
 import {wait} from '@testing-library/user-event/dist/utils';
 import axios from 'axios';
+import config from '../../config';
 
 interface channelInterface {
 	id: number;
@@ -72,13 +73,19 @@ function Channel (){
 	const join = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		let join_pass = e.currentTarget.join_pass?.value;
+		let join_access = channel?.search?.access;
 		let join_data :IJoinChan = {
-			name: channel.search.name,
+			name: channel?.search?.name,
 		}
-		if (type == "protected")
-			join_data.password = join_pass;
-		else if (type === "private")
+		join_data.password = join_pass;
+		if (type === "private")
 			join_data.password = ""
+		if (join_access === "protected")
+			setType("protected");
+		else if (join_access === "private")
+			setType("private");
+		else if (join_access === "public")
+			setType("public");
 
 		
 		console.log("name entered: " + join_data.name);
@@ -164,21 +171,28 @@ function Channel (){
 		));
 	}
 
-	const test = ()  => {
-		axios.get('http://localhost:3002/chat/isUserBanned', {params: {user: "david", channel: "channel"}
-		}).then((res) => {console.log(res.data)}).catch((err) => {console.log(err)});		
+	const leave = (event: any, name: string) => {
+		event.preventDefault();
+		axios.get(`${config.apiUrl}/chat/leaveChannel/${name}`, 
+			{
+				withCredentials: true,
+			}).then(() => {
+				setAllChannel(allChannel.filter(item => item.name !== name));
+			}).catch((err) => {
+				console.log(err);
+			})
 	}
-
 
 	const displayChannel = () =>{
 		return(
 			<>
-			{allChannel && allChannel.map((item: any, i: number) =>
+			{((channel && channel?.data && channel?.data[0]) || (channel && channel?.joined)) && allChannel && allChannel.map((item: any, i: number) =>
 			<div key={i} className='d-flex flex-row border-bottom m-3 justify-content-between'>
 				<div className='d-flex flex-row '>
 					<p> {item?.name} </p>
 				</div>
 				<div>
+					<button onClick={event => leave(event, item?.name)}>Leave</button>
 				<button onClick={() => window.open(window.location.origin + '/chat_room/' + item?.name)}>Chat</button>
 				</div>
 				</div>
