@@ -160,9 +160,18 @@ function Channel (){
 			<div key={i} className='d-flex flex-row border-bottom m-3 justify-content-between'>
 				<div className='d-flex flex-row '>
 					<p> {item?.name} </p>
+				{user.data.id === item?.ownerId &&
+					<p className='text-muted mx-3'> owner</p>
+				}
 				</div>
 				<div>
 				<button onClick={() => window.open(window.location.origin + '/chat_room/' + item?.name)}>Chat</button>
+				{item?.access === "protected" &&
+					<>
+					<button> Edit Pass</button>
+					<button> Delete Pass</button>
+					</>
+				}
 				</div>
 				</div>
 			)}

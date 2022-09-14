@@ -1,5 +1,5 @@
-import React, { useState, ChangeEvent, useEffect} from 'react';
-import { channelActions, userActions } from '../../_actions';
+import React, { useState, useEffect} from 'react';
+import { channelActions } from '../../_actions';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 
 interface Friends {
@@ -23,7 +23,7 @@ interface Conv{
 
 function UserView (props : IProps){
 	const dispatch = useAppDispatch();
-	const users = useAppSelector<any>(state => state.users);
+	// const users = useAppSelector<any>(state => state.users);
 	const friends = useAppSelector<any>(state => state.friend);
 	const channel = useAppSelector<any>(state => state.channel);
 	const [history_conv, setHistoryConv] = useState([]);
@@ -114,10 +114,10 @@ function UserView (props : IProps){
 
 
 	let view = LoadingView();
-	if (props.type == 'conversation'){
+	if (props.type === 'conversation'){
 		view = openConvView();
 	}
-	else if (props.type == 'friends'){
+	else if (props.type === 'friends'){
 		view = oneUser();
 	}
 
