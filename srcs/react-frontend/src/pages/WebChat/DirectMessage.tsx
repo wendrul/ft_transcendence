@@ -11,6 +11,7 @@ import CreateRoom from "../CreateRoom/CreateRoom";
 interface IProps{
 	chanName : string;
 	socketid : any;
+	userId: number;
 	sender: string;
 	room: string
 }
@@ -23,7 +24,7 @@ function Channel (props:IProps){
 
 				<div className='chatRoomCo2'>
 					<div className="channelAdmins row">
-						<CreateRoom sender={props.sender} roomid={props.room} socket={props.socketid}/>
+						<CreateRoom sender={props.sender} roomid={props.room} userId={props.userId} socket={props.socketid}/>
 					</div>
 				</div>
 			</div>
@@ -207,7 +208,7 @@ function DirectMessage(){
 				{ authentication.loggedIn && users.items && 
 				<div className='chatRoomDiv1'>
 
-					<Channel chanName={'direct message'} socketid={socket} sender={curr_user?.data?.login} room={nani()}></Channel>
+					<Channel chanName={'direct message'} socketid={socket} sender={curr_user?.data?.login} userId={users?.item?.id} room={nani()}></Channel>
 					<div className='chatRoomDisplay'>
 						<div id='chat' className='chatRoomDisplayMsg'>
 							<div className='chatRoomDisplayMsgUser'>

@@ -6,8 +6,9 @@ import {
   MDBTabsPane
   } from 'mdb-react-ui-kit';
 import config from '../../../config';
+import axios from 'axios';
 
-function RoomCreate(props: { active: boolean, sender: string ,roomid: string, socketid: any}) {
+function RoomCreate(props: { active: boolean, sender: string , userId:number ,roomid: string, socketid: any}) {
 
   const [room, setRoom] = useState({
     name: '', //id de la sala
@@ -21,7 +22,18 @@ function RoomCreate(props: { active: boolean, sender: string ,roomid: string, so
     let r = (Math.random() + 1).toString(36).substring(3);
     let url = `${window.location.origin}/play-premade/` + r + `?name=${r}&winCondition=${room.winCondition}&type=${room.type}&spectator=${room.spectator}`
     console.log(room);
-    props.socketid.emit('sendMessage', {sender: props.sender, room: props.roomid, message: url});
+
+    axios.post(`${config.apiUrl}/chat/createMessageForUser/${props.userId}`, //id del usuario al que se le manda el mensaje.
+    {
+      content : url
+    },
+    {
+      withCredentials: true
+    }).then(message => { 
+      props.socketid.emit('sendMessage', {sender: props.sender, room: props.roomid, message: url});
+    }).catch(error => {console.log(error)});
+
+   // props.socketid.emit('sendMessage', {sender: props.sender, room: props.roomid, message: url});
     // generar el name aqui
     // mandar el link en los mensajes.
 	//	dispatch(userActions.signup(firstName, lastName, email, password));
