@@ -19,13 +19,13 @@ import FriendRequest from './pages/Friends/FriendRequest';
 import Leaderboard from './pages/Leaderboard/Leaderboard';
 
 
-import CreateRoom from './pages/CreateRoom/CreateRoom';
 import UsernameRedirect from './pages/Username/UsernameRedirect';
 import Room from './pages/Room/Room';
 import WebChat from './pages/WebChat/WebChat';
 import ChatRoom from './pages/WebChat/ChatRoom';
 import DirectMessage from './pages/WebChat/DirectMessage';
 import Authenticate2fa from './pages/Authenticate2fa/Authenticate2fa';
+import PlayPremade from './pages/PlayPremade/PlayPremade';
 import GameComponent, { GameSettingsTest } from './GameComponent';
 
 class RoutesHandler extends React.Component {
@@ -40,7 +40,6 @@ class RoutesHandler extends React.Component {
 
         <Route  path ='/Authenticate2fa' element={<Authenticate2fa/>} />
 
-        <Route  path ='/create_room' element={<CreateRoom/>} />
         <Route  path ='/room/:uuid' element={<Room/>} />
         <Route  path ='/signin' element={<UsernameRedirect component={<SignIn/>} />} />
         <Route  path ='/signup' element={<UsernameRedirect component={<SignUp/>} />} />
@@ -63,6 +62,7 @@ class RoutesHandler extends React.Component {
         <Route  path ='/direct_message/:id' element={<DirectMessage/>} />
         <Route  path ='/game-test' element={<GameSettingsTest />}/>
         <Route  path ='/game-test2' element={<GameSettingsTest />}/>
+        <Route  path ='/play-premade/:id' element={<PlayPremade />}/>
         <Route
           path="*"
           element={

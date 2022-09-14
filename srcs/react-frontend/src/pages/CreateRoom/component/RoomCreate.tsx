@@ -1,52 +1,31 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useEffect } from 'react';
 import {
 	MDBBtn,
   MDBRadio,
   MDBRange,
-	MDBInput,
-  MDBCheckbox,
   MDBTabsPane
   } from 'mdb-react-ui-kit';
+import config from '../../../config';
 
-//import { useAppDispatch, useAppSelector } from '../../../_helpers/hooks';
-//import { useNavigate } from 'react-router-dom';
-
-function RoomCreate(props: { active: boolean }) {
-/*	const dispatch = useAppDispatch();
-	const navigate = useNavigate();
-	const authentication = useAppSelector<any>(state => state.authentication);
-	const alert = useAppSelector<any>(state => state.alert); */
+function RoomCreate(props: { active: boolean, sender: string ,roomid: string, socketid: any}) {
 
   const [room, setRoom] = useState({
-    name: '',
-    password: '',
-    score: "5",
-    type: 'classic',
-    ranking: 'lower',
-    isprivate: false,
+    name: '', //id de la sala
+    winCondition: "5", //win condition
+    type: 'classic', // type
+    spectator: false,
   });
 
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-
+    let r = (Math.random() + 1).toString(36).substring(3);
+    let url = `${window.location.origin}/play-premade/` + r + `?name=${r}&winCondition=${room.winCondition}&type=${room.type}&spectator=${room.spectator}`
+    console.log(room);
+    props.socketid.emit('sendMessage', {sender: props.sender, room: props.roomid, message: url});
+    // generar el name aqui
+    // mandar el link en los mensajes.
 	//	dispatch(userActions.signup(firstName, lastName, email, password));
 	}
-
-  const handleChangeNameRoom = function(event: ChangeEvent<HTMLInputElement>) {
-    setRoom({...room,
-      name: event?.currentTarget?.value
-    });
-  }
-
-  const handleChangePasswordRoom = function(event: ChangeEvent<HTMLInputElement>) {
-    setRoom({...room,
-      password: event?.currentTarget?.value
-    });
-  }
-
-  const handlePrivate = function(event: ChangeEvent<HTMLInputElement>) {
-    setRoom({...room, isprivate: event?.currentTarget?.value === "true"? true: false })
-  }
 
   return (
     <>
@@ -67,8 +46,8 @@ function RoomCreate(props: { active: boolean }) {
                   Score
                 </p>
               <MDBRange
-                onChange={(event: ChangeEvent<HTMLInputElement>) => setRoom({...room, score: event?.currentTarget?.value})}
-                value={room.score}
+                onChange={(event: ChangeEvent<HTMLInputElement>) => setRoom({...room, winCondition: event?.currentTarget?.value})}
+                value={room.winCondition}
                 min='1'
                 max='9'
                 step='1'
@@ -77,12 +56,6 @@ function RoomCreate(props: { active: boolean }) {
                 labelClass='text-center w-100'
               />
             </div>
-            <MDBInput className='mb-4 text-center' onChange={handleChangeNameRoom} type='text' label='Create Room Name' labelClass='text-center w-100' required />
-            <MDBCheckbox name='flexCheck' value={ room.isprivate === false? "true":"false" } id='flexCheckDefault' onChange={handlePrivate} label='Private Room?' />
-            {
-              room.isprivate &&
-              <MDBInput className='text-center' onChange={handleChangePasswordRoom} type='text' label='Password'labelClass='text-center w-100'required />
-            }
             <MDBBtn type='submit' className='mt-4' block>
               create
             </MDBBtn>

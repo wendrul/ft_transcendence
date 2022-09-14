@@ -31,6 +31,15 @@
 	overflow: auto;
 }
 
+.chatRoomCo2{
+	display: flex;
+	flex-direction: column;
+	background-color: #ffffff;
+	height: 450px;
+	padding: 10px;
+	border-radius: 10px;
+}
+
 .chatRoomCo > p{
 	color: white;
 	text-align: start;

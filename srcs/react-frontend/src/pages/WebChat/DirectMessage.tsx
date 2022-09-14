@@ -6,9 +6,13 @@ import config from '../../config';
 import './ChatRoom.css'
 import { user } from "../../_reducers/user.reducer";
 import {io} from "socket.io-client";
+import CreateRoom from "../CreateRoom/CreateRoom";
 
 interface IProps{
 	chanName : string;
+	socketid : any;
+	sender: string;
+	room: string
 }
 
 function Channel (props:IProps){
@@ -16,6 +20,12 @@ function Channel (props:IProps){
 		<div className='chatRoomDiv1_1'>
 			<div>
 				<p> {props.chanName}</p>
+
+				<div className='chatRoomCo2'>
+					<div className="channelAdmins row">
+						<CreateRoom sender={props.sender} roomid={props.room} socket={props.socketid}/>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
@@ -183,13 +193,21 @@ function DirectMessage(){
 		}
 	}, [history_msg]);
 
+	const nani = () => {
+		if (curr_user?.data?.id > users?.item?.id) {
+			return room_name = curr_user?.data?.id + "." + users?.item?.id;
+		} else {
+			return room_name = users?.item?.id + "." + curr_user?.data?.id;
+		}
+	}
+
 	const defaultView = () => {
 		return(
 			<>
-				{ authentication.loggedIn && users.items &&
+				{ authentication.loggedIn && users.items && 
 				<div className='chatRoomDiv1'>
 
-					<Channel chanName={'direct message'}></Channel>
+					<Channel chanName={'direct message'} socketid={socket} sender={curr_user?.data?.login} room={nani()}></Channel>
 					<div className='chatRoomDisplay'>
 						<div id='chat' className='chatRoomDisplayMsg'>
 							<div className='chatRoomDisplayMsgUser'>
