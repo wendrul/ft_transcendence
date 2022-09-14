@@ -12,9 +12,9 @@ export class ChannelDto {
 	@Expose()
 	name: string;
 
-	@Transform(({ obj }) => obj.owner.id)
+	@Transform(({ obj }) => obj.owner.login)
 	@Expose()	
-	ownerId: number;
+	ownerId: string;
 
 	@Transform(({ obj }) => {
 		if (!obj.usersRelations) {

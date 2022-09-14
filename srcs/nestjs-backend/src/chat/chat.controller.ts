@@ -44,6 +44,12 @@ export class ChatController {
 		await this.chatService.removePasswordForChannel(user, parseInt(id));
 	}
 
+	@Post('/kick')
+	@UseGuards(AuthGuardApi)
+	async kickUser(@CurrentUser() user: User, @Body() body: UnmuteUserDto) {
+		await this.chatService.kickUser(user, body.user, body.channel);
+	}
+
 	@Post('/banUser')
 	@HttpCode(200)
 	@UseGuards(AuthGuardApi)
