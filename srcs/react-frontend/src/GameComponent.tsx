@@ -114,7 +114,7 @@ function GameComponent(props: any) {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!authentication.loggedIn)
+    if (!authentication.loggedIn && !authentication.loggingIn)
       navigate("/")
   }, [])
 
@@ -137,10 +137,8 @@ function GameComponent(props: any) {
       console.log(user.data);
       
       const query = {
+        ...props,
         name: user?.data?.login,
-        roomID: props.roomID,
-        premade: props.premade,
-        spectator: props.spectator,
       };
       let game;
       if (props.test === undefined) {

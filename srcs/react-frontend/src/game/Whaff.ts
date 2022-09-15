@@ -37,6 +37,8 @@ class Whaff {
       roomID: string;
       premade: boolean;
       spectator: boolean;
+      winCondition: string;
+      type: string;
     },
     test = false
   ) {
@@ -44,12 +46,14 @@ class Whaff {
       query: { ...queryParameters, test },
     });
 
+    console.log("Creating game");
     this.controlable = [];
 
     this.defineSocketEvents();
     this.app = instantiatedApp;
 
-    this.game = new Game();
+
+    this.game = new Game(queryParameters.winCondition, queryParameters.type);
 
     this.makeDrawables();
 
@@ -116,9 +120,11 @@ class Whaff {
       this.socket.emit("pingBack", { time: gameState.time });
       this.debugInfo.pings = gameState.pings;
     });
+    
     this.socket.on("assignController", (settings) => {
       this.controlable = settings.control;
     });
+    
     this.socket.on("matchEnded", (data) => {
       this.game.gameEnd = true;
       this.stateMachine.changeGameState(GameState.Ending, this.game.scoreboard);
@@ -128,9 +134,21 @@ class Whaff {
       this.createEndScreen(data);
       this.socket.disconnect();
     });
+    
     this.socket.on("startGame", () => {
+      console.log("Starting game");
       this.stateMachine.changeGameState(GameState.Passive, {});
     });
+    
+    this.socket.on('planned-dc', (data) => {
+      if (!this.game.gameEnd) {
+        this.game.gameEnd = true;
+        this.stateMachine.changeGameState(GameState.Ending, {});
+        this.createDCScreen({ reason: data.reason });
+      }
+      this.socket.disconnect()
+    });
+    
     this.socket.on("disconnect", () => {
       if (!this.game.gameEnd) {
         this.game.gameEnd = true;
@@ -139,6 +157,7 @@ class Whaff {
       }
       this.socket.disconnect();
     });
+
   }
 
   private createDCScreen(data: any) {

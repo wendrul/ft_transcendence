@@ -40,6 +40,10 @@ class GameRoom {
   constructor(
     socket: Socket,
     roomID: string,
+    settings: {
+      winCondition: string,
+      type: string
+    },
     private gameService: GameService,
     private shutoff: Function,
   ) {
@@ -49,7 +53,7 @@ class GameRoom {
     this.id = roomID;
 
     this.spectators = new Map<string, any>();
-    this.game = new Game();
+    this.game = new Game(settings.winCondition, settings.type);
     this.stateMachine = new ServerGameStateMachine(this.game, ServerGameState.Waiting);
 
     this.game.on(GameEvents.GameUpdate, (frame) => this.update(frame));
@@ -92,31 +96,15 @@ class GameRoom {
     });
   }
 
-  public TESTconnection(client: Socket, username: string) {
-    this.settings.test = true;
-    if (this.settings.p1 == null) {
-      this.settings.p1 = {
-        id: client.id,
-        username: username,
-      };
-      this.game.paddle1.name = username;
-      this.pingBuffers[client.id] = new Array<number>(
-        GameRoom.movingAveragePeriod,
-      );
-      client.emit('assignController', { control: ['player1'] });
-    } else if (this.settings.p2 == null) {
-      this.settings.p2 = {
-        id: client.id,
-        username: username,
-      };
-      this.game.paddle2.name = username;
-      this.pingBuffers[client.id] = new Array<number>(
-        GameRoom.movingAveragePeriod,
-      );
-      client.emit('assignController', { control: ['player2'] });
-    } else {
-      client.disconnect();
-    }
+  private connectAsSpectator(client: Socket, username: string) {
+    this.pingBuffers[client.id] = new Array<number>(
+      GameRoom.movingAveragePeriod,
+    );
+    this.spectators.set(client.id, {
+      id: client.id,
+      username: username,
+    });
+    client.emit('assignController', { control: [] });
   }
 
   public connection(
@@ -125,14 +113,7 @@ class GameRoom {
     spectator: boolean = false,
   ) {
     if (spectator) {
-      this.pingBuffers[client.id] = new Array<number>(
-        GameRoom.movingAveragePeriod,
-      );
-      this.spectators.set(client.id, {
-        id: client.id,
-        username: username,
-      });
-      client.emit('assignController', { control: [] });
+      this.connectAsSpectator(client, username);
     } else {
       if (this.settings.p1 == null) {
         this.settings.p1 = {
@@ -160,8 +141,7 @@ class GameRoom {
         this.stateMachine.changeGameState(ServerGameState.Running, {});
         this.socket.emit('startGame', {});
       } else {
-        this.logger.error('Player tried connecting to a full match');
-        client.disconnect();
+        this.connectAsSpectator(client, username);
       }
     }
   }
@@ -299,6 +279,10 @@ class GameRoom {
     });
 
     return ret;
+  }
+
+  public static get defaultWC() {
+    return Game.defaultWC;
   }
 }
 

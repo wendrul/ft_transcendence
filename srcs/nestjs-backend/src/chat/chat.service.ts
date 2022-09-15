@@ -487,7 +487,7 @@ export class ChatService {
 			throw new HttpException('You have been banned from this channel', HttpStatus.FORBIDDEN);
 		}
 		let messages = channel.messages;
-		// messages.reverse();
+		messages.reverse();
 
 		//check if you have blocked a user
 		for (let i = 0; i < messages.length; i++) {

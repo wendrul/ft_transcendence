@@ -32,6 +32,22 @@ function Channel (props:IProps){
 	);
 }
 
+function messageWithLink (item: any) {
+	return (
+		<>
+			{item.senderLogin}: <a href={item.content}>{item.content}</a>
+		</>
+	);
+
+}
+
+function messageWithoutLink (item: any) {
+		return (
+			<>
+				{item.senderLogin}: {item.content}
+			</>
+		);
+}
 
 
 function DirectMessage(){
@@ -216,8 +232,9 @@ function DirectMessage(){
 						<div id='chat' className='chatRoomDisplayMsg'>
 							<div className='chatRoomDisplayMsgUser'>
 								{	history_msg && history_msg.map((item:Messages, i: number) =>
-
-								<h3 key={i}> {item.senderLogin}: {item.content}  </h3> 
+									<h3 key={i}>
+										{(item.content.slice(0, 7) === "http://" || item.content.slice(0, 8) === "https://") ? messageWithLink(item) : messageWithoutLink(item)}
+									</h3> 
 
 								)}
 							</div>

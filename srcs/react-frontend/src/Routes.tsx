@@ -27,6 +27,7 @@ import DirectMessage from './pages/WebChat/DirectMessage';
 import Authenticate2fa from './pages/Authenticate2fa/Authenticate2fa';
 import PlayPremade from './pages/PlayPremade/PlayPremade';
 import GameComponent, { GameSettingsTest } from './GameComponent';
+import Game from './game/shared/util/Game';
 
 class RoutesHandler extends React.Component {
   
@@ -62,8 +63,8 @@ class RoutesHandler extends React.Component {
         <Route  path ='/direct_message/:id' element={<DirectMessage/>} />
         <Route  path ='/game-test' element={<GameComponent username={"pogTester"} roomID={""} test={true} />}/>
         <Route  path ='/game-test2' element={<GameSettingsTest />}/>
-        <Route  path ='/play' element={<UsernameRedirect component={<GameComponent roomID={""} spectator={false} premade={false} />} />}/>
-        <Route  path ='/play-premade/:id' element={<PlayPremade />}/>
+        <Route  path ='/play' element={<UsernameRedirect component={<GameComponent roomID={""} spectator={false} premade={false} type="classic" winCondition={Game.defaultWC.toString()} />} />}/>
+        <Route  path ='/play-premade/:id' element={<UsernameRedirect component={<PlayPremade/>} />} />
         <Route
           path="*"
           element={

@@ -20,7 +20,7 @@ function RoomCreate(props: { active: boolean, sender: string , userId:number ,ro
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
     let r = (Math.random() + 1).toString(36).substring(3);
-    let url = `${window.location.origin}/play-premade/` + r + `?name=${r}&winCondition=${room.winCondition}&type=${room.type}&spectator=${room.spectator}`
+    let url = `${window.location.origin}/play-premade/` + r + `?winCondition=${room.winCondition}&type=${room.type}&spectator=${room.spectator}`
     console.log(room);
 
     axios.post(`${config.apiUrl}/chat/createMessageForUser/${props.userId}`, //id del usuario al que se le manda el mensaje.
