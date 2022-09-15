@@ -48,7 +48,7 @@ function Profile(){
 	});
 
 	//Geting performance
-	let performance = 100;
+	let performance = 0;
 	if (user?.data?.wins !== 0 || user?.data?.loses !== 0)
 			performance = Math.floor((user?.data?.wins / (user?.data?.wins + user?.data?.loses)) * 100);
 

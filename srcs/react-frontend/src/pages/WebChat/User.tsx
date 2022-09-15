@@ -30,11 +30,12 @@ function User(){
 							<p> user: {users?.item?.login}</p>
 						</div>
 						<div>
-							<button> Play </button>
-							<button onClick={() => window.open(window.location.origin + '/direct_message/' + users?.item?.login)}> 
+							{/* <button onClick={() => window.open(window.location.origin + '/direct_message/' + users?.item?.login)}> */} 
+							<button onClick={() =>  window.location.href=window.location.origin + '/direct_message/' + users?.item?.login}>
 								Chat
 							</button>
-							<button onClick={() => window.open(window.location.origin + '/profile/' + users?.item?.login)}>
+							{/* <button onClick={() => window.open(window.location.origin + '/profile/' + users?.item?.login)}> */}
+							<button onClick={() => window.location.href=(window.location.origin + '/profile/' + users?.item?.login)}>
 								Profile 
 							</button>
 						</div>

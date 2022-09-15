@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import config from '../config';
 import {UpdateUser} from "../interfaces/iUser";
 import {IJoinChan} from "../interfaces/IJoinChan";
@@ -8,7 +8,9 @@ export const channelService = {
 		getOpenConversations,
 		getMyChannelsByType,
 		getChannel,
-		joinChannel
+		joinChannel,
+		removePassChan,
+		editPassChan
 	};
 
 function createChannel(userLogins: string[], access: string,
@@ -24,7 +26,6 @@ function createChannel(userLogins: string[], access: string,
 	{
 		withCredentials: true
 	}).then(handleResponse).then(channel => {
-			// localStorage.setItem('channel', JSON.stringify(channel));
 			return channel;
 		});
 }
@@ -70,6 +71,27 @@ function	joinChannel(channel: IJoinChan){
 	}).then(handleResponse).then(res => {
 		return res;
 	});
+}
+
+function removePassChan(id : string) {
+	return axios.get(`${config.apiUrl}/chat/removePasswordForChannel/${id}`,
+	{
+		withCredentials: true
+	}).then(handleResponse).then(res => {
+		return res;
+	})
+}
+
+function editPassChan(id: string, pwd: string){
+	return axios.patch(`${config.apiUrl}/chat/changePasswordForChannel/${id}`,
+	{
+		password: pwd
+	},
+	{
+		withCredentials: true
+	}).then(handleResponse).then(res => {
+		return res;
+	})
 }
 
 

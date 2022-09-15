@@ -17,7 +17,7 @@ function App() {
 
 	useEffect(() => {
 		if (authentication?.loggedIn) {
-			setSocket(io('http://localhost:3002'));	
+			setSocket(io(`${config.apiUrl}`));	
 		}
 	}, [authentication]);
 

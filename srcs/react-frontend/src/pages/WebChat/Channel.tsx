@@ -19,6 +19,7 @@ interface channelInterface {
 function Channel (){
 	const [type, setType] = useState("public");
 	const [chanName, setChanName] = useState("");
+	const [edit, setEdit] = useState("");
 	const [password, setPassword] = useState("");
 	const [usersLogin, setUsersLogin] = useState("");
 	const [allChannel, setAllChannel] = useState<channelInterface[]>([]);
@@ -43,6 +44,10 @@ function Channel (){
 		setType(s);
 	}}
 
+	const handleEdit = (e: ChangeEvent<HTMLInputElement>) => {{
+		let res : string =  e?.currentTarget?.value;
+		setEdit(res);
+	}}
 	const handleChanName = function (e: ChangeEvent<HTMLInputElement>)  {
 		setChanName(e?.currentTarget?.value);
 	}
@@ -126,7 +131,8 @@ function Channel (){
 				}
 				<button onClick={() => join}> Join </button>
 			</form>
-			<button onClick={() =>  window.open(window.location.origin + '/chat_room/' + name)}>Chat</button>
+			{/* <button onClick={() =>  window.open(window.location.origin + '/chat_room/' + name)}>Chat</button> */}
+			<button onClick={() =>  window.location.href=window.location.origin + '/chat_room/' + name}>Chat</button>
 			</>
 		);
 	}
@@ -143,6 +149,8 @@ function Channel (){
 
 	const createProtectChan = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
+		console.log("pass: " + password);
+		if (password !== ""){
 		 dispatch(channelActions.createChannel(
 			[],
 			'protected',
@@ -150,6 +158,9 @@ function Channel (){
 			chanName,
 			owner
 		));
+		}
+		else
+			alert("Enter a password please");
 	}
 
 	const parseUser = (users:string):string[] => {
@@ -179,23 +190,51 @@ function Channel (){
 			}).then(() => {
 				setAllChannel(allChannel.filter(item => item.name !== name));
 			}).catch((err) => {
+				alert(err.response.data.message);
 				console.log(err);
 			})
 	}
 
 	const displayChannel = () =>{
+		const removePass = (e: any, id :string) => {
+			console.log("id " + id);
+			dispatch(channelActions.removePassChan(id));
+		}
+
+		const editPass = (e:any, id:string) =>{
+			console.log("edit: " + edit);
+			dispatch(channelActions.editPassChan(id, edit));
+		}
 		return(
 			<>
 			{((channel && channel?.data && channel?.data[0]) || (channel && channel?.joined)) && allChannel && allChannel.map((item: any, i: number) =>
 			<div key={i} className='d-flex flex-row border-bottom m-3 justify-content-between'>
 				<div className='d-flex flex-row '>
 					<p> {item?.name} </p>
+					{user.data.login === item?.ownerId &&
+						<p className='text-muted mx-3'> owner</p>
+					}
 				</div>
-				<div>
-					<button onClick={event => leave(event, item?.name)}>Leave</button>
-				<button onClick={() => window.open(window.location.origin + '/chat_room/' + item?.name)}>Chat</button>
+			<div className='d-flex flex-row'>
+				<button className="mx-4 bg-primary" onClick={() =>  window.location.href=window.location.origin + '/chat_room/' + item?.name}>Chat</button>
+				<button onClick={event => leave(event, item?.name)}>Leave</button>
+				{item?.access === "protected" &&
+					<>
+					<form onSubmit={(e) => editPass(e, item?.id)}>
+						<input  className="h-100" onChange={handleEdit} type="password"  placeholder='Edit Password'/>
+						<button className="h-100" onClick={(e) => editPass(e, item?.id)}> Edit Pass</button>
+					</form>
+					<button className="h-100 bg-danger" onClick={(e) => removePass(e, item?.id)}> Remove Pass</button>
+					</>
+				}
+				{(item?.access === "public" || item?.access === "private") &&
+					<form onSubmit={(e) => editPass(e, item?.id)}>
+						<input className="h-100" onChange={handleEdit} type="password"  placeholder='Add Password'/>
+						<button className="h-100" onClick={(e) => editPass(e, item?.id)}> Add Pass</button>
+					</form>
+				}
 				</div>
-				</div>
+			</div>
 			)}
 			</>
 		);
