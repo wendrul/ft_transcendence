@@ -4,7 +4,8 @@ import React, {ChangeEvent, useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom';
 import {io} from 'socket.io-client';
 import config from '../../config';
-import {useAppSelector} from '../../_helpers/hooks';
+import { alertActions } from '../../_actions';
+import {useAppDispatch, useAppSelector} from '../../_helpers/hooks';
 import './ChatRoom.css'
 
 
@@ -277,6 +278,7 @@ function ChannelChat(){
 	const [socket, setSocket] = useState<any>(null);
 	const [msg, setMsg] = useState("");
 	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
 
 	interface Messages{
 		id: number;
@@ -292,6 +294,11 @@ function ChannelChat(){
 	useEffect(() => {
 		setSocket(io(`${config.apiUrl}`));
 	}, []);
+
+	useEffect(() => {
+		dispatch(alertActions.clear());
+	}, [dispatch])
+
 
 	//listening on join direct message room
 	useEffect(() => {

@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, useEffect} from 'react';
 import Popup from 'reactjs-popup';
 import "./Channel.css";
-import { userActions } from '../../_actions';
+import { alertActions, userActions } from '../../_actions';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import {channelActions} from '../../_actions/channel.actions'
 import {UpdateUser} from "../../interfaces/iUser";
@@ -38,6 +38,10 @@ function Channel (){
 	useEffect(()=> {
 		setAllChannel(channel.data);
 	},[channel.data]);
+
+	useEffect(() => {
+		dispatch(alertActions.clear());
+	}, [dispatch])
 
 
 	const handleChanType = (s: string) => {{

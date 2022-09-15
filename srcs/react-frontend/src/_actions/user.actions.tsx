@@ -223,16 +223,18 @@ function getById(id : any) {
 function getByLogin(login: string){
 	return (dispatch: any) => {
 			dispatch(request());
-			userService.getByLogin(login)
-			.then( user =>{
-				dispatch(success(user));
-			}, 
-				error => {
-					dispatch(failure(error));
-				}
+        userService.getByLogin(login)
+            .then( user =>{
+                    dispatch(success(user));
+                    dispatch(alertActions.success("User Founded"));
+                },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                }
 
-			);
-	};
+            );
+    };
 	function request() { return { type: userConstants.GETLOGIN_REQUEST } }
 	function success(users:any) { return { type: userConstants.GETLOGIN_SUCCESS, users } }
 	function failure(error:any) { return { type: userConstants.GETLOGIN_FAILURE, error } }
