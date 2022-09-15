@@ -240,7 +240,6 @@ function getByLogin(login: string){
 	function failure(error:any) { return { type: userConstants.GETLOGIN_FAILURE, error } }
 }
 
-
 function getAll() {
     return (dispatch:any) => {
         dispatch(request());
