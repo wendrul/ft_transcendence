@@ -7,6 +7,9 @@ import {channelActions} from '../../_actions/channel.actions'
 import {UpdateUser} from "../../interfaces/iUser";
 import {IJoinChan} from "../../interfaces/IJoinChan";
 import { users } from '../../_reducers/users.reducer';
+import {wait} from '@testing-library/user-event/dist/utils';
+import axios from 'axios';
+import config from '../../config';
 
 interface channelInterface {
 	id: number;
@@ -68,28 +71,42 @@ function Channel (){
 
 	useEffect(() => {
 		if(channel?.joined) {
-			setAllChannel(allChannel => [...allChannel, channel.search]);
+			setAllChannel(allChannel => [...allChannel, {id: channel?.search?.id, name: channel?.search?.name}]);
 		}
 	},[channel.joined])
 
 	const join = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		let join_pass = e.currentTarget.join_pass?.value;
+		let join_access = channel?.search?.access;
 		let join_data :IJoinChan = {
-			name: channel.search.name,
+			name: channel?.search?.name,
 		}
-		if (type == "protected")
-			join_data.password = join_pass;
-		else if (type === "private")
+		join_data.password = join_pass;
+		if (type === "private")
 			join_data.password = ""
+		if (join_access === "protected")
+			setType("protected");
+		else if (join_access === "private")
+			setType("private");
+		else if (join_access === "public")
+			setType("public");
 
 		
 		console.log("name entered: " + join_data.name);
 		console.log("password entered: " + join_data.password);
 		dispatch(channelActions.joinChannel(join_data));
 	}
+	
+	useEffect(() => {
+		if (channel?.created) {
+			window.location.reload();
+		}
+	}, [channel.created]);
+
 
 	const createPublicChan = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		 dispatch(channelActions.createChannel(
 			[],
 			'public',
@@ -130,6 +147,7 @@ function Channel (){
 
 
 	const createProtectChan = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		 dispatch(channelActions.createChannel(
 			[],
 			'protected',
@@ -146,6 +164,7 @@ function Channel (){
 	}
 
 	const createPrivateChan = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		const users :string[] = parseUser(usersLogin);
 		console.log(users);
 		 dispatch(channelActions.createChannel(
@@ -157,6 +176,17 @@ function Channel (){
 		));
 	}
 
+	const leave = (event: any, name: string) => {
+		event.preventDefault();
+		axios.get(`${config.apiUrl}/chat/leaveChannel/${name}`, 
+			{
+				withCredentials: true,
+			}).then(() => {
+				setAllChannel(allChannel.filter(item => item.name !== name));
+			}).catch((err) => {
+				console.log(err);
+			})
+	}
 
 	const displayChannel = () =>{
 		const removePass = (e: any, id :string) => {
@@ -170,16 +200,17 @@ function Channel (){
 		}
 		return(
 			<>
-			{channel.data && channel.data[0] && allChannel && allChannel.map((item: any, i: number) =>
+			{((channel && channel?.data && channel?.data[0]) || (channel && channel?.joined)) && allChannel && allChannel.map((item: any, i: number) =>
 			<div key={i} className='d-flex flex-row border-bottom m-3 justify-content-between'>
 				<div className='d-flex flex-row '>
 					<p> {item?.name} </p>
-				{user.data.id === item?.ownerId &&
-					<p className='text-muted mx-3'> owner</p>
-				}
+					{user.data.id === item?.ownerId &&
+						<p className='text-muted mx-3'> owner</p>
+					}
 				</div>
-				<div className='d-flex flex-row'>
+			<div className='d-flex flex-row'>
 				<button className="mx-4 bg-primary" onClick={() => window.open(window.location.origin + '/chat_room/' + item?.name)}>Chat</button>
+				<button onClick={event => leave(event, item?.name)}>Leave</button>
 				{item?.access === "protected" &&
 					<>
 					<form onSubmit={(e) => editPass(e, item?.id)}>
@@ -196,7 +227,7 @@ function Channel (){
 					</form>
 				}
 				</div>
-				</div>
+			</div>
 			)}
 			</>
 		);

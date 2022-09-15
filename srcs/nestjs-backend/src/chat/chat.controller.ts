@@ -6,6 +6,7 @@ import {
 	Param,
 	Patch,
 	Post,
+	Query,
 	UseGuards,
 } from "@nestjs/common";
 import {AuthGuardApi} from "src/guards/auth.guard";
@@ -41,6 +42,12 @@ export class ChatController {
 	@UseGuards(AuthGuardApi)		
 	async removePasswordForChannel(@CurrentUser() user: User, @Param('id') id: string) {
 		await this.chatService.removePasswordForChannel(user, parseInt(id));
+	}
+
+	@Post('/kick')
+	@UseGuards(AuthGuardApi)
+	async kickUser(@CurrentUser() user: User, @Body() body: UnmuteUserDto) {
+		await this.chatService.kickUser(user, body.user, body.channel);
 	}
 
 	@Post('/banUser')
@@ -121,6 +128,12 @@ export class ChatController {
 		return admin;
 	}
 
+	@Get('/isUserBanned')
+	@UseGuards(AuthGuardApi)
+	async isUserBanned(@Query() query: UnmuteUserDto) {
+		return this.chatService.isUserBanned(query.user, query.channel);
+	}
+
 	@Serialize(ChannelDto)
 	@Get('/getChannelByType/:type')
 	@UseGuards(AuthGuardApi)
@@ -170,6 +183,12 @@ export class ChatController {
 		const messages = await this.chatService.getMessagesWith(user, parseInt(id));
 
 		return messages;
+	}
+
+	@UseGuards(AuthGuardApi)
+	@Get('/leaveChannel/:name')
+	async leaveChannel(@CurrentUser() user: User, @Param('name') name: string) {
+		return this.chatService.leaveChannel(user, name);	
 	}
 
 }

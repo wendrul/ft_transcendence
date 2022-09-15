@@ -41,6 +41,82 @@ export class ChatService {
 		private userService: UsersService,
 	) {}
 
+	async isUserBanned(login: string, name: string) {
+		const channel = await this.channelRepo.findOne({
+			relations: ['usersRelations', 'usersRelations.user'],
+			where: {
+				name: name,
+			}
+		});
+		if (!channel) {
+			throw new NotFoundException('Channel not found');
+		}
+
+		const user = await this.userService.findOneLogin(login);
+		if (!user) {
+			throw new NotFoundException('User not found');
+		}
+
+		const relation = await this.usersInChannelsRepo.findOne({
+			relations: ['user', 'channel'],
+			where: {
+				user: user,
+				channel: channel
+			}
+		});
+		if (!relation) {
+			throw new NotFoundException('User not in channel');
+		}
+
+		return relation.ban;
+	}
+
+	async leaveChannel(user: User, name: string) {
+		const channel = await this.channelRepo.findOne({
+			relations: ['owner', 'adminRelations', 'adminRelations.user', 'usersRelations', 'usersRelations.user'],
+			where: {
+				name: name,					
+			}
+		});	
+		if (!channel) {
+			throw new NotFoundException('Channel not found');
+		}		
+		if (channel.owner.id === user.id) {
+			throw new BadRequestException('The owner cant leave the channel');
+		}
+
+		const usersRelations = channel.usersRelations;
+		let	n: number;
+		let flag: boolean = false;
+		for (let i = 0; i < usersRelations.length; i++) {
+			if (user.id === usersRelations[i].user.id) {
+				flag = true;
+				n = i;
+			} 
+		}
+		if (!flag) {
+			throw new HttpException('User not in channel', HttpStatus.FORBIDDEN);
+		}
+		if (usersRelations[n].ban) {
+			throw new HttpException("You can't leave the channel if you are banned", HttpStatus.FORBIDDEN);
+		}
+
+		const adminRelations = channel.adminRelations;
+		let	m: number;
+		let adminFlag: boolean = false;
+		for (let i = 0; i < adminRelations.length; i++) {
+			if (user.id === adminRelations[i].user.id) {
+				adminFlag = true;
+				m = i;
+			} 
+		}
+		if (adminFlag) {
+			await this.adminsInChannelsRepo.remove(adminRelations[m]);
+		}
+
+		return this.usersInChannelsRepo.remove(usersRelations[n]);	
+	}
+
 	async changePasswordForChannel(user: User, id: number, password: string) {
 		const channel = await this.channelRepo.findOne({
 			relations: ['owner'],
@@ -281,6 +357,16 @@ export class ChatService {
 			throw new NotFoundException('user not found');	
 		}
 
+		flag = true;
+		for (let i = 0; i < adminRelations.length; i++) {
+			if (login === adminRelations[i].user.login) {
+				flag = false;	
+			}
+		}
+		if (!flag) {
+			throw new HttpException('Already an admin', HttpStatus.FORBIDDEN);
+		}
+
 		//add new admin
 			const adminInChannel = this.adminsInChannelsRepo.create({ user: newAdmin, channel });
 			return this.adminsInChannelsRepo.save(adminInChannel);
@@ -401,7 +487,7 @@ export class ChatService {
 			throw new HttpException('You have been banned from this channel', HttpStatus.FORBIDDEN);
 		}
 		let messages = channel.messages;
-		messages.reverse();
+		// messages.reverse();
 
 		//check if you have blocked a user
 		for (let i = 0; i < messages.length; i++) {
@@ -487,9 +573,15 @@ export class ChatService {
 			} 
 		}
 		if (!flag) {
-			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+			throw new HttpException('you need to be admin', HttpStatus.FORBIDDEN);
 		}
 
+		//check if it's you
+		if (bannedUser.id === user.id) {
+			throw new HttpException("Can't unban yourself", HttpStatus.FORBIDDEN);
+		}
+
+		//check if user is in channel
 		const userRelation = await this.usersInChannelsRepo.findOne({
 			relations: ['user', 'channel'],
 			where: {
@@ -501,12 +593,93 @@ export class ChatService {
 			throw new BadRequestException('user is not in channel');
 		}
 		
+		//check if you try to unban an admin
+		const adminRelation = await this.adminsInChannelsRepo.findOne({
+			where: {
+				user: bannedUser,
+			}
+		});
+		if (adminRelation && (channel.owner.id !== user.id)) {
+			throw new BadRequestException('you mast be the owner to unban an admin');
+		}
+
 		return this.usersInChannelsRepo.update(userRelation.id, {
 			ban: false
 		});
 	
 	}
 
+	async kickUser(user: User, kickedName: string, channelName: string) {
+		const channel =	await this.channelRepo.findOne({
+			relations: ['usersRelations', 'usersRelations.user', 'adminRelations', 'adminRelations.user', 'owner'],
+			where: {
+				name: channelName,
+			}
+		});
+		if (!channel) {
+			throw new NotFoundException('channel not found');
+		}		
+
+		const kickedUser = await this.userService.findOneLogin(kickedName);
+		if (!kickedUser) {
+			throw new NotFoundException('user not found');
+		}	
+
+		//check if user is admin
+		const adminRelations = channel.adminRelations;
+		let flag: boolean = false;
+		for (let i = 0; i < adminRelations.length; i++) {
+			if (user.id === adminRelations[i].user.id) {
+				flag = true;
+			} 
+		}
+		if (!flag) {
+			throw new HttpException('You need to be admin', HttpStatus.FORBIDDEN);
+		}
+
+		//check if it's you
+		if (user.id === kickedUser.id) {
+			throw new HttpException("Can't kick yourself", HttpStatus.FORBIDDEN);
+		}
+
+		//check if you try to kick the channel owner
+		if (kickedUser.id === channel.owner.id) {
+			throw new HttpException('You can not kick the channel owner', HttpStatus.FORBIDDEN);
+		}
+
+		//check if user is in channel
+		const userRelation = await this.usersInChannelsRepo.findOne({
+			relations: ['user', 'channel'],
+			where: {
+				user: kickedUser,
+				channel: channel
+			}
+		});
+		if (!userRelation) {
+			throw new BadRequestException('user is not in channel');
+		}
+
+		//check if you try to kick an admin
+		let adminFlag = false;
+		const adminRelation = await this.adminsInChannelsRepo.findOne({
+			where: {
+				user: kickedUser,
+			}
+		});
+		if (adminRelation && (channel.owner.id !== user.id)) {
+			throw new BadRequestException('you mast be the owner to kick an admin');
+		} else {
+			adminFlag = true;
+		}
+
+		if (adminFlag) {
+			console.log("admin deleted");
+			await this.adminsInChannelsRepo.remove(adminRelation);
+		}
+
+		return this.usersInChannelsRepo.remove(userRelation);	
+
+	}
 
 	async banUser(user: User, bannedName: string, channelName: string) {
 			const channel =	await this.channelRepo.findOne({
@@ -533,7 +706,12 @@ export class ChatService {
 			} 
 		}
 		if (!flag) {
-			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+			throw new HttpException('You need to be admin', HttpStatus.FORBIDDEN);
+		}
+
+		//check if it's you
+		if (user.id === bannedUser.id) {
+			throw new HttpException("Can't ban yourself", HttpStatus.FORBIDDEN);
 		}
 
 		//check if you try to ban the channel owner
@@ -541,6 +719,7 @@ export class ChatService {
 			throw new HttpException('You can not ban the channel owner', HttpStatus.FORBIDDEN);
 		}
 
+		//check if user is in channel
 		const userRelation = await this.usersInChannelsRepo.findOne({
 			relations: ['user', 'channel'],
 			where: {
@@ -550,6 +729,20 @@ export class ChatService {
 		});
 		if (!userRelation) {
 			throw new BadRequestException('user is not in channel');
+		}
+		
+		//check if you try to ban an admin
+		const adminRelation = await this.adminsInChannelsRepo.findOne({
+			where: {
+				user: bannedUser,
+			}
+		});
+		if (adminRelation && (channel.owner.id !== user.id)) {
+			throw new BadRequestException('you mast be the owner to ban an admin');
+		}
+		
+		if (userRelation.ban) {
+			throw new BadRequestException('already banned');
 		}
 		
 		return this.usersInChannelsRepo.update(userRelation.id, {
@@ -574,7 +767,7 @@ export class ChatService {
 			throw new NotFoundException('user not found');
 		}	
 
-		//check if user is admin
+		//check if you are admin
 		const adminRelations = channel.adminRelations;
 		let flag: boolean = false;
 		for (let i = 0; i < adminRelations.length; i++) {
@@ -586,6 +779,7 @@ export class ChatService {
 			throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 		}
 
+		//check if user is in channel
 		const userRelation = await this.usersInChannelsRepo.findOne({
 			relations: ['user', 'channel'],
 			where: {
@@ -596,7 +790,17 @@ export class ChatService {
 		if (!userRelation) {
 			throw new BadRequestException('user is not in channel');
 		}
-		
+
+		//check if you try to mute an admin
+		const adminRelation = await this.adminsInChannelsRepo.findOne({
+			where: {
+				user: mutedUser,
+			}
+		});
+		if (adminRelation && (channel.owner.id !== user.id)) {
+			throw new BadRequestException('you mast be the owner to mute an admin');
+		}
+
 		return this.usersInChannelsRepo.update(userRelation.id, {	
 			mutedUntil: '1996-10-28'
 		});
@@ -645,6 +849,18 @@ export class ChatService {
 		if (!userRelation) {
 			throw new BadRequestException('user is not in channel');
 		}
+
+		//check if you try to unmute an admin
+		const adminRelation = await this.adminsInChannelsRepo.findOne({
+			where: {
+				user: mutedUser,
+			}
+		});
+		if (adminRelation && (channel.owner.id !== user.id)) {
+			throw new BadRequestException('you mast be the owner to unmute an admin');
+		}
+
+
 		
 		let currentTime = new Date();
 		let timeUntilMute = new Date();
