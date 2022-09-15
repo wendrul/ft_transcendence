@@ -16,13 +16,14 @@ export enum GameEvents {
 
 export default class Game {
   /* Game constants */
-  public static width: number = 1000;
-  public static height: number = 600;
-  public static respawnCooldown = 1500;
-  public static deathCooldown = 3000;
+  public static readonly width: number = 1000;
+  public static readonly height: number = 600;
+  public static readonly respawnCooldown = 1500;
+  public static readonly deathCooldown = 3000;
+  public static readonly defaultWC = 7;
 
-  private static ballStartSpeed = 200;
-  static readonly dt = 1000.0 / 120.0;
+  private static readonly ballStartSpeed = 200;
+  public static readonly dt = 1000.0 / 120.0;
 
   /* Logic */
   leftGoal: Wall;
@@ -32,6 +33,7 @@ export default class Game {
 
   /* class variables */
   public gameEnd = false;
+  private powerupsON = false;
   private gameObjects: Array<IGameObject> = [];
   private gameTime: number;
   private _currentFrame: number;
@@ -41,9 +43,9 @@ export default class Game {
   private _walls: Wall[];
   private _powerups = Powerup.GetImplementations();
 
-  fieldHeight: number;
-  fieldWidth: number;
-  winCondition: number;
+  private fieldHeight: number;
+  private fieldWidth: number;
+  private winCondition: number;
   public get currentFrame(): number {
     return this._currentFrame;
   }
@@ -86,23 +88,24 @@ export default class Game {
 
   public updateEvents: Function[] = [];
 
-  constructor(winCondition: number = 2) {
+  constructor(winCondition: string, usePowerups: string) {
     this.gameTime = performance.now();
     this._currentFrame = 0;
+    this.powerupsON = usePowerups === "power-up";
 
-    this.winCondition = Utils.clamp(winCondition, 1, 99);
+    this.winCondition = Utils.clamp(parseInt(winCondition), 1, 99);
     this.eventHandler = new EventHandler(GameEvents);
 
     this.fieldWidth = Game.width;
     this.fieldHeight = Game.height;
     this._paddle1 = new Paddle(
-      "garbage",
+      "whaffer1",
       1,
       this.fieldWidth / 2,
       this.fieldHeight / 2
     );
     this._paddle2 = new Paddle(
-      "trash",
+      "whaffer2",
       2,
       this.fieldWidth / 2,
       this.fieldHeight / 2

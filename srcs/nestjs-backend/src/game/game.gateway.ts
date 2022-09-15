@@ -15,6 +15,7 @@ import { GameService } from './game.service';
 type GameClient = {
   name: string;
   roomID: string;
+  settings: any;
   premade: boolean;
   socket: Socket;
   spectator: boolean;
@@ -40,6 +41,8 @@ export class GameGateway
 
   private logger = new Logger('GameGateway');
 
+  private usedRoomIds = [];
+
   constructor(private gameService: GameService) {
     this.matchQueue = [];
     this.gameRooms = new Map<string, GameRoom>();
@@ -48,14 +51,20 @@ export class GameGateway
 
   handleConnection(client: Socket, ...args: any[]) {
     const query = client.handshake.query;
+    this.logger.debug(query);
+
     if (
-      query.name === undefined ||
-      query.roomID === undefined ||
-      query.premade === undefined ||
-      query.spectator === undefined
+      query.name == undefined ||
+      query.roomID == undefined ||
+      query.premade == undefined ||
+      query.spectator == undefined ||
+      query.winCondition == undefined ||
+      query.type == undefined
     ) {
-      this.logger.error("didn't receive sufficeint fields on query");
+      this.logger.error("didn't receive sufficient fields on query");
+      client.emit('planned-dc', { reason: 'Invalid query on connection' });
       client.disconnect();
+      return;
     }
     const newClient: GameClient = {
       name: query.name as string,
@@ -63,42 +72,22 @@ export class GameGateway
       premade: query.premade === 'true',
       socket: client,
       spectator: query.spectator === 'true',
+      settings: {
+        winCondition: query.winCondition as string,
+        type: query.type as string,
+      },
     };
 
     if (!this.validateClient(newClient)) {
+      client.emit('planned-dc', { reason: 'Client unauthorized' });
       client.disconnect();
       return;
     }
 
     this.gameClients.set(client.id, newClient);
-    if (newClient.name.length == 0) {
-      this.logger.error(
-        `Nameless client tried connecting. Refusing connection`,
-      );
-      client.disconnect();
-      return;
-    }
     this.logger.log(
       `New client "${newClient.name}" with ID ${newClient.socket.id} connected`,
     );
-
-    /* For test and debug */
-    if (query.test === 'true') {
-      if (!this.gameRooms.has('test')) {
-        this.logger.debug('Hola');
-        this.gameRooms.set(
-          'test',
-          new GameRoom(this.server.to('test'), 'test', this.gameService, () =>
-            this.shutoff('test'),
-          ),
-        );
-      }
-      newClient.roomID = 'test';
-      client.join('test');
-      this.gameRooms.get('test').TESTconnection(client, 'pogTester');
-      return;
-    }
-    /* End test and debug*/
 
     if (newClient.spectator) {
       // Spectate match
@@ -114,6 +103,12 @@ export class GameGateway
 
   private validateClient(newClient: GameClient): boolean {
     //Add authentication here if needed
+    if (newClient.name.length == 0) {
+      this.logger.error(
+        `Nameless client tried connecting. Refusing connection`,
+      );
+      return false;
+    }
     for (const client of this.gameClients.values()) {
       if (client.name === newClient.name) {
         this.logger.warn(
@@ -130,6 +125,9 @@ export class GameGateway
     const room = this.gameRooms[newClient.roomID];
     if (!room) {
       this.logger.error('Failed to find room that spectator was looking for');
+      newClient.socket.emit('planned-dc', {
+        reason: "this match doesn't exist",
+      });
       newClient.socket.disconnect();
     } else {
       newClient.socket.join(newClient.roomID);
@@ -142,15 +140,18 @@ export class GameGateway
 
   private connectToPremadeMatch(newClient: GameClient) {
     if (!this.gameRooms.has(newClient.roomID)) {
+      if (this.isMatchFinished(newClient.roomID, newClient.socket)) return;
       this.gameRooms.set(
         newClient.roomID,
         new GameRoom(
           this.server.to(newClient.roomID),
           newClient.roomID,
+          newClient.settings,
           this.gameService,
           () => this.shutoff(newClient.roomID),
         ),
       );
+      this.usedRoomIds.push(newClient.roomID);
 
       newClient.socket.join(newClient.roomID);
       this.gameRooms
@@ -161,6 +162,7 @@ export class GameGateway
         `${newClient.name} [${newClient.socket.id}] created new room with ID: ${newClient.roomID}`,
       );
     } else {
+      newClient.socket.join(newClient.roomID);
       this.gameRooms
         .get(newClient.roomID)
         .connection(newClient.socket, newClient.name);
@@ -179,12 +181,20 @@ export class GameGateway
       const roomID = `${player1.socket.id}|${player2.socket.id}`;
       player1.roomID = roomID;
       player2.roomID = roomID;
+
+      if (
+        this.isMatchFinished(roomID, player1.socket) ||
+        this.isMatchFinished(roomID, player2.socket)
+      )
+        return;
+
       this.gameRooms.set(
         roomID,
-        new GameRoom(this.server.to(roomID), roomID, this.gameService, () =>
+        new GameRoom(this.server.to(roomID), roomID, {winCondition: GameRoom.defaultWC.toString(), type: "classic"}, this.gameService, () =>
           this.shutoff(roomID),
         ),
       );
+      this.usedRoomIds.push(roomID);
       player1.socket.join(player1.roomID);
       player2.socket.join(player2.roomID);
       this.gameRooms.get(roomID).connection(player1.socket, player1.name);
@@ -196,6 +206,14 @@ export class GameGateway
         `${player2.name} [${player2.socket.id}] connected to room with ID: ${player2.roomID}`,
       );
     }
+  }
+  isMatchFinished(roomID: string, client: Socket): boolean {
+    if (this.usedRoomIds.includes(roomID)) {
+      client.emit('planned-dc', { reason: 'This match has already ended' });
+      client.disconnect();
+      return true;
+    }
+    return false;
   }
 
   handleDisconnect(client: Socket) {
@@ -222,7 +240,10 @@ export class GameGateway
       this.logger.error(
         `Cannot find client or room, gameClient = ${gameClient}`,
       );
-      client.disconnect();
+      if (gameClient)
+        this.logger.log(
+          `${gameClient.name} [${client.id}] disconnected (no room or queue)`,
+        );
     }
     this.gameClients.delete(client.id);
   }
@@ -242,6 +263,7 @@ export class GameGateway
       this.logger.error(
         `Cannot find client or room, gameClient = ${gameClient}`,
       );
+      client.emit('planned-dc', { reason: 'Invalid client or room' });
       client.disconnect();
     }
   }
@@ -255,13 +277,15 @@ export class GameGateway
       this.logger.error(
         `Cannot find client or room, gameClient = ${gameClient}`,
       );
+      client.emit('planned-dc', { reason: 'Invalid client or room' });
       client.disconnect();
     }
   }
 
   shutoff(roomID: string) {
     const room = this.gameRooms.get(roomID);
-    if (room.id != roomID) throw new Error("room id didn't match on shutoff");
+    if (room === undefined || room.id != roomID)
+      throw new Error("room id didn't match on shutoff");
     const connectedIDs = room.getAllConnectedIDs();
     for (const id of connectedIDs) {
       if (!this.gameClients.has(id)) continue;
@@ -272,6 +296,15 @@ export class GameGateway
     }
     this.server.socketsLeave(roomID);
     this.server.to(roomID).disconnectSockets();
-    this.gameRooms.delete(roomID);
+    delete room.connection; // remove if necessary
+    this.gameRooms.set(roomID, null);
+    const deleted = this.gameRooms.delete(roomID);
+
+    this.logger.log(
+      `Erased match with id ${roomID} has it? ${this.gameRooms.has(
+        roomID,
+      )} deleted it ${deleted}`,
+    );
+    this.logger.debug(this.gameRooms);
   }
 }
