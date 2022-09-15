@@ -23,9 +23,16 @@ function displayMsg(msg: any) {
 			<h3 style={{color: 'red'}}> {msg.senderLogin}: BlockedUser</h3>
 		</>
 	} else {
+		if (msg.content.slice(0, 7) === "http://" || msg.content.slice(0, 8) === "https://") {
 		return <>
-			<h3 style={{color: 'black'}}> {msg.senderLogin}: {msg.content}</h3>
+			<h3 style={{color: 'black'}}> {msg.senderLogin}: <a href={msg.content}>{msg.content}</a></h3>
 		</>
+		} else {
+			return <>
+			<h3 style={{color: 'black'}}> {msg.senderLogin}: {msg.content}</h3>
+				</>
+
+		}
 	}
 
 }

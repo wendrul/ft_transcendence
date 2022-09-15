@@ -72,7 +72,6 @@ function UserView (props : IProps){
 						</div>
 						
 						<div>
-							<button> Play</button>
 							<button onClick={() => window.location.href=(window.location.origin + '/direct_message/' + item.login)}>
 								Chat
 							</button>
@@ -98,7 +97,6 @@ function UserView (props : IProps){
 								{renderElement(item?.online, item?.inGame )}
 							</div>
 							<div>
-								<button> Play</button>
 								<button onClick={() => window.location.href=(window.location.origin + '/direct_message/' + item.login)}>
 									Chat
 								</button>
