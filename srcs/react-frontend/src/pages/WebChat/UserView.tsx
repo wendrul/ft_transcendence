@@ -73,10 +73,10 @@ function UserView (props : IProps){
 						
 						<div>
 							<button> Play</button>
-							<button onClick={() => window.open(window.location.origin + '/direct_message/' + item.login)}>
+							<button onClick={() => window.location.href=(window.location.origin + '/direct_message/' + item.login)}>
 								Chat
 							</button>
-							<button onClick={() => window.open(window.location.origin + '/profile/' + item.login)}>							
+							<button onClick={() => window.location.href=(window.location.origin + '/profile/' + item.login)}>							
 								Profile 
 							</button>
 						</div>
@@ -99,10 +99,10 @@ function UserView (props : IProps){
 							</div>
 							<div>
 								<button> Play</button>
-								<button onClick={() => window.open(window.location.origin + '/direct_message/' + item.login)}>
+								<button onClick={() => window.location.href=(window.location.origin + '/direct_message/' + item.login)}>
 									Chat
 								</button>
-								<button onClick={() => window.open(window.location.origin + '/profile/' + item.login)}>							
+								<button onClick={() => window.location.href=(window.location.origin + '/profile/' + item.login)}>							
 									Profile 
 								</button>
 							</div>

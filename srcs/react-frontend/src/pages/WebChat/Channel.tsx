@@ -126,7 +126,8 @@ function Channel (){
 				}
 				<button onClick={() => join}> Join </button>
 			</form>
-			<button onClick={() =>  window.open(window.location.origin + '/chat_room/' + name)}>Chat</button>
+			{/* <button onClick={() =>  window.open(window.location.origin + '/chat_room/' + name)}>Chat</button> */}
+			<button onClick={() =>  window.location.href=window.location.origin + '/chat_room/' + name}>Chat</button>
 			</>
 		);
 	}
@@ -193,7 +194,8 @@ function Channel (){
 				</div>
 				<div>
 					<button onClick={event => leave(event, item?.name)}>Leave</button>
-				<button onClick={() => window.open(window.location.origin + '/chat_room/' + item?.name)}>Chat</button>
+				{/* <button onClick={() => window.open(window.location.origin + '/chat_room/' + item?.name)}>Chat</button> */}
+				<button onClick={() =>  window.location.href=window.location.origin + '/chat_room/' + item?.name}>Chat</button>
 				</div>
 				</div>
 			)}
