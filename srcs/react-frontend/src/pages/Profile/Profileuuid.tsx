@@ -82,7 +82,7 @@ function Profile(){
 	}, [users]);
 
 	//Set performnace
-	let perform: number = 100;
+	let perform: number = 0;
 	if (users?.item?.wins !== 0 || users?.item?.loses !== 0)
 		perform = Math.floor((users?.item?.wins / (users?.item?.wins + users?.item?.loses)) * 100);
 
