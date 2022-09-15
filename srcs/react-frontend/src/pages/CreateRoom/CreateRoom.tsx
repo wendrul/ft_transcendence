@@ -1,32 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import "./CreateRoom.css";
-//import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
-//import { useNavigate } from 'react-router-dom';
 import RoomCreate from './component/RoomCreate';
 
-function CreateRoom() {
+
+function CreateRoom(props: { sender:string, roomid:string, userId:number, socket: any }) {
 
 	useEffect(() => {
 		document.title = "CreateRoom";
 	
 	}, [])
-
   const [basicActive, setBasicActive] = useState('tab1');
 
-/*  const handleBasicClick = (value: string) => {
-    if (value === basicActive) {
-      return;
-    }
-    setBasicActive(value);
-  };
-*/
   return (
     <>
       { 1 &&
         <div className="p-5 bd-highlight justify-content-center d-flex">
           <div className="p-2 d-flex flex-column bd-highlight col-example col-md-6 align-items-center justify-content-center h-100 w-100">
            <p className="register_btn mb-3">Create a Room </p>
-            <RoomCreate active={basicActive === 'tab1'} />
+            <RoomCreate active={basicActive === 'tab1'} sender={props.sender} roomid={props.roomid} userId={props.userId} socketid={props.socket} />
           </div>
         </div>
       }

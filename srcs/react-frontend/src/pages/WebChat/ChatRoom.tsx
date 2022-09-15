@@ -36,14 +36,14 @@ function Channel (props:IProps){
 
 	const curr_user = useAppSelector<any>(state => state.user);
 	const authentication = useAppSelector<any>(state => state.authentication);
-	const recv = window.location.href.split("/").pop();
 	const [usersInChannel, SetUsersInChannel] = useState<any>([]);
 	const [adminsInChannel, SetAdminsInChannel] = useState<any>([]);
+	let recv = window.location.href.split("/").pop();
 
 	interface ChannelData {
 		id: number;
 		name: string;
-		ownerId: number;
+		ownerId: string;
 		userIds: number[];
 		userLogins: string[];
 		adminIds: number[];
@@ -54,6 +54,10 @@ function Channel (props:IProps){
 	const [channel, setChannel] = useState<ChannelData>();
 
 	useEffect(() => {
+		if (recv && recv?.slice(-1) === '#') {
+			recv = recv.slice(0, -1);
+		}
+		console.log(recv);
 		axios.get(`${config.apiUrl}/chat/channelData/${recv}`, {
 			withCredentials: true,
 		}).then((res) => {
@@ -69,79 +73,182 @@ function Channel (props:IProps){
 		SetAdminsInChannel(channel?.adminLogins);
 	}, [channel])
 
-	const UserMute = () => {
-		console.log("mute")
+	const userUnmute = (event: any, user: string) => {
+		event.preventDefault();
+		axios.post(`${config.apiUrl}/chat/unmuteUser`,
+			{
+				user: user,
+				channel: channel?.name
+			},
+			{
+				withCredentials: true,
+			}).then(() => {}).catch((err) => {
+				console.log(err);
+			}); 
 	}
 
-	const UserBan = () => {
-		console.log("ban")
+	const userMute = (event: any, user: string, time: number) => {
+		event.preventDefault();
+		axios.post(`${config.apiUrl}/chat/muteUser`, 
+			{
+				user: user,
+				channel: channel?.name,
+				time: time
+			},
+			{
+				withCredentials: true, 
+			}).then(() => {}).catch((err) => {
+				console.log(err);
+			})
+
+		console.log("mute for: ", time)
 	}
 
-	const UserAdmin = () => {
-		console.log("ban")
+	const userKick = (event: any, user: string) => {
+		event.preventDefault();
+		axios.post(`${config.apiUrl}/chat/kick`,
+			{
+				user: user,
+				channel: channel?.name,
+			},
+			{
+				withCredentials: true, 
+			}).then(() => {
+				SetAdminsInChannel(adminsInChannel.filter((item: string) => item !== user));	
+				SetUsersInChannel(usersInChannel.filter((item: string) => item !== user));	
+			}).catch((err) => {
+				console.log(err);
+			});
+	}
+
+	const userBan = async (event: any, user: string) => {
+		event.preventDefault();
+		let flag = false;
+		await axios.post(`${config.apiUrl}/chat/banUser`,
+			{
+				user: user,
+				channel: channel?.name,
+			},
+			{
+				withCredentials: true,
+			}).then(() => {}).catch((err) => {
+				if (err.response.data.message === "already banned") {
+					flag = true;	
+				}
+				console.log(err)
+			});
+		if (flag) {
+			await axios.post(`${config.apiUrl}/chat/unbanUser`,
+				{
+					user: user,
+					channel: channel?.name,
+				},
+				{
+					withCredentials: true,
+				}).then(() => {}).catch((err) => {
+					console.log(err);
+				});
+			return ;	
+		}
+
+		return ;
+	}
+
+	const userAdmin = (event: any, user: string) => {
+		event.preventDefault();
+		console.log("admin")
+		axios.post(`${config.apiUrl}/chat/setAdmin`,
+			{
+				name: channel?.name,
+				login: user
+			},
+			{
+				withCredentials: true,
+			}).then(() => {
+				SetAdminsInChannel((adminsInChannel: any)  => [...adminsInChannel, user]);
+			}).catch((err) => {console.log(err)});
 	}
 
 	return(
 		<>
-		<div className='chatRoomDiv1_1'>
+			<div className='chatRoomDiv1_1'>
 
-			<div>
-				<p> Public </p>
-				<p> {channel?.name}</p>
-			</div>
-
-			<p className='mb-0 text-start'>Admins</p>
-			<div className='chatRoomCo'>
-				<div className="channelAdmins row">
-					<div className="row">
-					{ adminsInChannel && adminsInChannel.map((item: string, i: number) => 	
-						<MDBDropdown key={i} group>
-							<MDBDropdownToggle tag='a'>
-								{item}
-							</MDBDropdownToggle>
-							<MDBDropdownMenu>
-							<MDBDropdownItem link onClick={UserMute}>
-								{/* <MDBDropdownLink href='/profile'>My Space</MDBDropdownLink> */}
-								<MDBIcon icon="microphone-alt-slash" /> Mute
-							</MDBDropdownItem>
-							<MDBDropdownItem link onClick={UserBan}>
-								{/* <MDBDropdownLink onClick={logout} >Logout</MDBDropdownLink> */}
-								<MDBIcon icon="ban" /> Ban
-							</MDBDropdownItem>
-							</MDBDropdownMenu>
-						</MDBDropdown>
-					)}
+				<div>
+					<p> {channel?.access} </p>
+					<p> {channel?.name}</p>
+				</div>
+				<p className='mb-0 text-start' > Owner</p>
+				<div className='chatRoomOwner'>
+					<h6 style={{color: 'white'}}>{channel?.ownerId}</h6>
+				</div>
+				<p className='mb-0 text-start'>Admins</p>
+				<div className='chatRoomCo'>
+					<div className="channelAdmins row">
+						<div className="row">
+							{ adminsInChannel && adminsInChannel.map((item: string, i: number) => 	
+							<MDBDropdown key={i}>
+								<MDBDropdownToggle tag='a'>
+									{item}
+								</MDBDropdownToggle>
+								<MDBDropdownMenu>
+									<MDBDropdownItem link onClick={event => userUnmute(event, item)}>
+										<MDBIcon icon="microphone-alt" /> Unmute
+									</MDBDropdownItem>
+									<MDBDropdownItem link onClick={event => userMute(event, item, 1)}>
+										<MDBIcon icon="microphone-alt-slash" /> Mute 1min
+									</MDBDropdownItem>
+									<MDBDropdownItem link onClick={event => userMute(event, item, 15)}>
+										<MDBIcon icon="microphone-alt-slash" /> Mute 15min
+									</MDBDropdownItem>
+									<MDBDropdownItem link onClick={event => userBan(event, item)}>
+										<MDBIcon icon="ban" /> Ban / Unban
+									</MDBDropdownItem>
+									<MDBDropdownItem link onClick={event => userKick(event, item)}>
+										<MDBIcon fas icon="running" /> Kick
+									</MDBDropdownItem>
+								</MDBDropdownMenu>
+							</MDBDropdown>
+							)}
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<p className='mt-3 mb-0 text-start'>Users</p>
-			<div className='chatRoomDeco'>
-				<div className="channelUsers">
-					{ usersInChannel && usersInChannel.map((item: string, i: number) => 
-						<MDBDropdown key={i} group>
+				<p className='mt-3 mb-0 text-start'>Users</p>
+				<div className='chatRoomDeco'>
+					<div className="channelUsers">
+						{ usersInChannel && usersInChannel.map((item: string, i: number) => 
+						<MDBDropdown key={i}>
 							<MDBDropdownToggle tag='a'>
 								{item}
 							</MDBDropdownToggle>
 							<MDBDropdownMenu>
-								<MDBDropdownItem link onClick={UserAdmin}>
+								<MDBDropdownItem link onClick={event => userAdmin(event, item)}>
 									<MDBIcon fab icon="superpowers" /> admin
 								</MDBDropdownItem>
-								<MDBDropdownItem link onClick={UserMute}>
-									<MDBIcon icon="microphone-alt-slash" /> Mute
+								<MDBDropdownItem link onClick={event => userUnmute(event, item)}>
+									<MDBIcon icon="microphone-alt" /> Unmute
 								</MDBDropdownItem>
-								<MDBDropdownItem link onClick={UserBan}>
-									<MDBIcon icon="ban" /> Ban
+								<MDBDropdownItem link onClick={event => userMute(event, item, 1)}>
+									<MDBIcon icon="microphone-alt-slash" /> Mute 1min
+								</MDBDropdownItem>
+								<MDBDropdownItem link onClick={event => userMute(event, item, 15)}>
+									<MDBIcon icon="microphone-alt-slash" /> Mute 15min
+								</MDBDropdownItem>
+								<MDBDropdownItem link onClick={event => userBan(event, item)}>
+									<MDBIcon icon="ban" /> Ban / Unban
+								</MDBDropdownItem>
+								<MDBDropdownItem link onClick={event => userKick(event, item)}>
+									<MDBIcon fas icon="running" /> Kick
 								</MDBDropdownItem>
 							</MDBDropdownMenu>
 						</MDBDropdown>
-					)}
+						)}
+					</div>
+
 				</div>
 
 			</div>
-
-		</div>
-	</>
+		</>
 	);
 }
 
@@ -156,7 +263,7 @@ function ChannelChat(){
 
 	const curr_user = useAppSelector<any>(state => state.user);
 	const authentication = useAppSelector<any>(state => state.authentication);
-	const recv = window.location.href.split("/").pop();
+	let recv = window.location.href.split("/").pop();
 	const [socket, setSocket] = useState<any>(null);
 	const [msg, setMsg] = useState("");
 	const navigate = useNavigate();
@@ -186,21 +293,21 @@ function ChannelChat(){
 	useEffect(() => {
 		if (recv !== undefined)	{
 			axios.get(`${config.apiUrl}/chat/getChannelMessages/${recv}`,
-			{
-				withCredentials: true		
-			}).then((res) => {
-				isInChannel = true;
-				setHistoryMsg(res.data);
-			}).catch((err) => {
-				let error = err.response.data.message;
-				console.log(error)
-				if (error === "You have been banned from this channel") {
+				{
+					withCredentials: true		
+				}).then((res) => {
 					isInChannel = true;
-					setHistoryMsg(history_msg => [...history_msg, {id:0, senderLogin: "TU", content: "TE MAMASTE", reciverChannelName: "", reciverType: ""}]);
-				} else {
-				navigate('/404');
-				}
-			});
+					setHistoryMsg(res.data);
+				}).catch((err) => {
+					let error = err.response.data.message;
+					console.log(error)
+					if (error === "You have been banned from this channel") {
+						isInChannel = true;
+						setHistoryMsg(history_msg => [...history_msg, {id:0, senderLogin: "TU", content: "TE MAMASTE", reciverChannelName: "", reciverType: ""}]);
+					} else {
+						navigate('/404');
+					}
+				});
 		}
 	}, [recv]);
 
@@ -211,6 +318,8 @@ function ChannelChat(){
 
 	//join room
 	useEffect(() => {
+		if (recv && recv?.slice(-1) === '#')
+			recv = recv.slice(0, -1);
 		if (recv)
 			socket?.emit('joinRoom', recv);
 	}, [recv && socket]);
@@ -233,7 +342,7 @@ function ChannelChat(){
 				withCredentials: true
 			}
 		).then((res) => {
-			socket.emit('sendMessage', {sender: senderLogin, room: recv, message: res.data.content})
+			socket.emit('sendMessage', {sender: senderLogin, room: (recv && recv?.slice(-1) === '#') ? recv.slice(0, -1) : recv, message: res.data.content})
 		}).catch((err) => {
 			console.log(err.response.data.message);
 		});
@@ -278,7 +387,7 @@ function ChannelChat(){
 	return(
 		<>
 			{ authentication.loggedIn &&
-	
+
 			<div className='chatRoomDiv1'>
 
 				<Channel chanName={'ChannelName'}></Channel>
