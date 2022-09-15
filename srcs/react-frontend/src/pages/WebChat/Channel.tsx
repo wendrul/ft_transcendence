@@ -148,6 +148,8 @@ function Channel (){
 
 	const createProtectChan = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
+		console.log("pass: " + password);
+		if (password !== ""){
 		 dispatch(channelActions.createChannel(
 			[],
 			'protected',
@@ -155,6 +157,9 @@ function Channel (){
 			chanName,
 			owner
 		));
+		}
+		else
+			alert("Enter a password please");
 	}
 
 	const parseUser = (users:string):string[] => {
