@@ -38,7 +38,7 @@ export class ChatController {
 		await this.chatService.changePasswordForChannel(user, parseInt(id), body.password);
 	}
 
-	@Patch('/removePasswordForChannel/:id')
+	@Get('/removePasswordForChannel/:id')
 	@UseGuards(AuthGuardApi)		
 	async removePasswordForChannel(@CurrentUser() user: User, @Param('id') id: string) {
 		await this.chatService.removePasswordForChannel(user, parseInt(id));

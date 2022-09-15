@@ -18,6 +18,9 @@ export function channel(state = {
 		return{...state,
 			searching: true,
 		}
+	case channelConstants.EDIT_PWD_CHAN_REQUEST:
+	case channelConstants.RM_CHAN_REQUEST:
+  case channelConstants.GET_MY_CHAN_REQUEST:
   case channelConstants.CREATE_CHANNEL_REQUEST:
 		return{
 			updating: true,
@@ -42,6 +45,9 @@ export function channel(state = {
 		search: action.response,
 		searching: false
 	}
+	case channelConstants.EDIT_PWD_CHAN_SUCCESS:
+	case channelConstants.RM_CHAN_SUCCESS:
+	// case channelConstants.GET_MY_CHAN_SUCCESS:
   case channelConstants.CREATE_CHANNEL_SUCCESS:
 		return {
 			created: true,
@@ -69,6 +75,8 @@ export function channel(state = {
 			search: null,
 			searching: false
 		}
+	case channelConstants.EDIT_PWD_CHAN_FAILURE:
+	case channelConstants.RM_CHAN_FAILURE:
 	case channelConstants.GET_MY_CHAN_FAILURE:
 	case channelConstants.CREATE_CHANNEL_FAILURE:
 	case channelConstants.OPEN_CONV_FAILURE:

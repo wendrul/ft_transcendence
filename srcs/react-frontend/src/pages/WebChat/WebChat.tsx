@@ -42,7 +42,7 @@ function WebChat (){
 			</div>
 
 		</div>
-		{page == 'user' ? <User></User> : <Channel></Channel>}
+		{page === 'user' ? <User></User> : <Channel></Channel>}
 
 	</div>
 }
