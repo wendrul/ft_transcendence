@@ -166,8 +166,8 @@ export default class Game {
 
   public resetGamePosition() {
     this.ball.reset();
-    this.paddle1.reset();
-    this.paddle2.reset();
+    // this.paddle1.reset();
+    // this.paddle2.reset();
   }
 
   public start() {

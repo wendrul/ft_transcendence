@@ -23,8 +23,6 @@ export default class BallDrawable extends Drawable {
     //   uvs: false,
     //   tint: true,
     // });
-    console.log(PIXI.Texture.from("image.png"));
-
     this.particleContainer = new PIXI.ParticleContainer();
 
     const texture = this.createTexture(0, 8, app.renderer.resolution);

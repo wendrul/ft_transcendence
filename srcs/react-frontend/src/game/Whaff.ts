@@ -10,23 +10,24 @@ import { GraphicalDebugger } from "./graphics/Debug";
 import Game, { GameEvents } from "./shared/util/Game";
 import WhaffHUD from "./graphics/WhaffHUD";
 import { GameState, GameStateMachine } from "./state/GameStateMachine";
+import config from "../config";
 
 class Whaff {
   static debugMode: boolean;
   static debugTool: GraphicalDebugger;
-  
+
   app: PIXI.Application;
-  
+
   game: Game;
   stateMachine: GameStateMachine;
   hud: WhaffHUD;
-  
-  controlable: string[] = [];
+
+  controlable: string[];
   winner: any;
   debugInfo = {
     pings: {},
   };
-  
+
   socket: Socket;
 
   constructor(
@@ -39,9 +40,11 @@ class Whaff {
     },
     test = false
   ) {
-    this.socket = io(`localhost:3002/game`, {
+    this.socket = io(`${config.apiUrl}/game`, {
       query: { ...queryParameters, test },
     });
+
+    this.controlable = [];
 
     this.defineSocketEvents();
     this.app = instantiatedApp;
@@ -50,16 +53,18 @@ class Whaff {
 
     this.makeDrawables();
 
-    const players = {
-      player1: this.game.paddle1,
-      player2: this.game.paddle2,
-    };
     this.app.stage.interactive = true;
     this.app.stage.on("pointermove", (e) => {
+      const players = {
+        player1: this.game.paddle1,
+        player2: this.game.paddle2,
+      };
+
       const pos = e.data.global;
       for (const pKey of this.controlable) {
         const p = players[pKey as keyof typeof players];
-        p.target = pos;
+        p.target.x = pos.x;
+        p.target.y = pos.y;
       }
     });
 
@@ -69,12 +74,11 @@ class Whaff {
     };
     Whaff.debugMode = false;
     Whaff.debugTool = new GraphicalDebugger(this.app);
-    
+
     this.hud = new WhaffHUD(this.app, this.game, this.debugInfo);
 
     console.log("Finished Game setup");
 
-    
     this.stateMachine = new GameStateMachine(this.game, this);
     this.game.on(GameEvents.GameUpdate, (frame: number) => {
       this.stateMachine.currentState.onUpdate(frame);
@@ -84,11 +88,8 @@ class Whaff {
   private makeDrawables() {
     const p1 = new PaddleDrawable(this.game.paddle1, this.app);
     const p2 = new PaddleDrawable(this.game.paddle2, this.app);
-    const players = {
-      player1: this.game.paddle1,
-      player2: this.game.paddle2,
-    };
     const ball = new BallDrawable(this.game.ball, this.app);
+
     this.game.walls.forEach((w) => new WallDrawable(w, this.app));
     new WallDrawable(this.game.leftGoal, this.app, 0x00ffff);
     new WallDrawable(this.game.rightGoal, this.app, 0x00ffff);
@@ -116,19 +117,61 @@ class Whaff {
       this.debugInfo.pings = gameState.pings;
     });
     this.socket.on("assignController", (settings) => {
-      console.log(settings);
       this.controlable = settings.control;
     });
     this.socket.on("matchEnded", (data) => {
+      this.game.gameEnd = true;
       this.stateMachine.changeGameState(GameState.Ending, this.game.scoreboard);
       this.game.scoreboard.left = data.score.left;
       this.game.scoreboard.right = data.score.right;
       this.winner = data.winner;
       this.createEndScreen(data);
+      this.socket.disconnect();
     });
     this.socket.on("startGame", () => {
       this.stateMachine.changeGameState(GameState.Passive, {});
     });
+    this.socket.on("disconnect", () => {
+      if (!this.game.gameEnd) {
+        this.game.gameEnd = true;
+        this.stateMachine.changeGameState(GameState.Ending, {});
+        this.createDCScreen({ reason: "disconnected" });
+      }
+      this.socket.disconnect();
+    });
+  }
+
+  private createDCScreen(data: any) {
+    const backdrop = new PIXI.Graphics();
+    this.app.stage.addChild(backdrop);
+    backdrop
+      .beginFill(0x444444, 0.85)
+      .drawRect(0, 0, Game.width, Game.height)
+      .endFill();
+
+    const text1 = new PIXI.Text(`Server disconnected the session`, {
+      fontFamily: '"Courier New", Courier, monospace',
+      fontSize: 40,
+      fill: 0xeeeeee,
+    });
+    text1.anchor.x = 0.5;
+    text1.anchor.y = 0.5;
+    text1.x = Game.width / 2;
+    text1.y = Game.height / 2;
+    this.app.stage.addChild(text1);
+
+    if (data.reason != undefined) {
+      const text2 = new PIXI.Text(`${data.reason}`, {
+        fontFamily: '"Courier New", Courier, monospace',
+        fontSize: 25,
+        fill: 0xeeeeee,
+      });
+      text2.anchor.x = 0.5;
+      text2.anchor.y = 0.5;
+      text2.x = Game.width / 2;
+      text2.y = Game.height / 2 + 40;
+      this.app.stage.addChild(text2);
+    }
   }
 
   private createEndScreen(data: any) {

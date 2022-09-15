@@ -59,6 +59,7 @@ class GameRoom {
     this.game.on(GameEvents.GameEnd, (score) => {
       // this.stateMachine.changeGameState(GameState.Ending, score);
 
+      if (this.gameEnded) return;
       this.gameEnded = true;
       
       if (score.left > score.right) {
@@ -169,6 +170,7 @@ class GameRoom {
     if (this.spectators.has(client.id)) this.spectators.delete(client.id);
 
     if (this.gameEnded) return;
+    this.gameEnded = true;
 
     if (this.settings.test){
       this.socket.emit('matchEnded', {
@@ -188,12 +190,13 @@ class GameRoom {
       return;
     }
 
-    this.gameEnded = true;
-    this.socket.emit('matchEnded', {
-      reason: 'Won by rage quit (of the other guy)',
-      score: this.game.scoreboard,
-    });
+
     if (client.id == this.settings.p1.id) {
+      this.socket.emit('matchEnded', {
+        winner: this.settings.p2.username,
+        reason: 'Won by rage quit (of the other guy)',
+        score: this.game.scoreboard,
+      });
       this.endMatch(
         this.settings.p2.username,
         this.settings.p1.username,
@@ -202,6 +205,11 @@ class GameRoom {
       );
     }
     if (client.id == this.settings.p2.id) {
+      this.socket.emit('matchEnded', {
+        winner: this.settings.p1.username,
+        reason: 'Won by rage quit (of the other guy)',
+        score: this.game.scoreboard,
+      });
       this.endMatch(
         this.settings.p1.username,
         this.settings.p2.username,

@@ -126,7 +126,7 @@ function GameComponent(props: any) {
         width: Game.width,
         height: Game.height,
         backgroundColor: 0x5bba6f,
-        // resolution: 2,
+        // resolution: 1,
         antialias: true,
       });
 

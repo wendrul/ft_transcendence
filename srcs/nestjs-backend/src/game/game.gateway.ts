@@ -33,7 +33,6 @@ export class GameGateway
   @WebSocketServer()
   private server: any;
 
-
   private matchQueue: GameClient[];
 
   private gameClients: Map<string, GameClient>;
@@ -48,8 +47,6 @@ export class GameGateway
   }
 
   handleConnection(client: Socket, ...args: any[]) {
-    // Authentication maybe
-
     const query = client.handshake.query;
     if (
       query.name === undefined ||
@@ -68,6 +65,11 @@ export class GameGateway
       spectator: query.spectator === 'true',
     };
 
+    if (!this.validateClient(newClient)) {
+      client.disconnect();
+      return;
+    }
+
     this.gameClients.set(client.id, newClient);
     if (newClient.name.length == 0) {
       this.logger.error(
@@ -83,10 +85,12 @@ export class GameGateway
     /* For test and debug */
     if (query.test === 'true') {
       if (!this.gameRooms.has('test')) {
-        this.logger.debug("Hola");
+        this.logger.debug('Hola');
         this.gameRooms.set(
           'test',
-          new GameRoom(this.server.to('test'), 'test', this.gameService, () => this.shutoff('test')),
+          new GameRoom(this.server.to('test'), 'test', this.gameService, () =>
+            this.shutoff('test'),
+          ),
         );
       }
       newClient.roomID = 'test';
@@ -108,6 +112,20 @@ export class GameGateway
     }
   }
 
+  private validateClient(newClient: GameClient): boolean {
+    //Add authentication here if needed
+    for (const client of this.gameClients.values()) {
+      if (client.name === newClient.name) {
+        this.logger.warn(
+          `Closing connection to active socket from user '${newClient.name}' as the client opened a new connection`,
+        );
+        client.socket.disconnect();
+      }
+    }
+
+    return true;
+  }
+
   private connectSpectator(newClient: GameClient) {
     const room = this.gameRooms[newClient.roomID];
     if (!room) {
@@ -126,23 +144,26 @@ export class GameGateway
     if (!this.gameRooms.has(newClient.roomID)) {
       this.gameRooms.set(
         newClient.roomID,
-        new GameRoom(this.server.to(newClient.roomID), newClient.roomID, this.gameService, () => this.shutoff(newClient.roomID)),
+        new GameRoom(
+          this.server.to(newClient.roomID),
+          newClient.roomID,
+          this.gameService,
+          () => this.shutoff(newClient.roomID),
+        ),
       );
 
       newClient.socket.join(newClient.roomID);
-      this.gameRooms.get(newClient.roomID).connection(
-        newClient.socket,
-        newClient.name,
-      );
+      this.gameRooms
+        .get(newClient.roomID)
+        .connection(newClient.socket, newClient.name);
 
       this.logger.log(
         `${newClient.name} [${newClient.socket.id}] created new room with ID: ${newClient.roomID}`,
       );
     } else {
-      this.gameRooms.get(newClient.roomID).connection(
-        newClient.socket,
-        newClient.name,
-      );
+      this.gameRooms
+        .get(newClient.roomID)
+        .connection(newClient.socket, newClient.name);
 
       this.logger.log(
         `${newClient.name} [${newClient.socket.id}] connected to room with ID: ${newClient.roomID}`,
@@ -158,7 +179,12 @@ export class GameGateway
       const roomID = `${player1.socket.id}|${player2.socket.id}`;
       player1.roomID = roomID;
       player2.roomID = roomID;
-      this.gameRooms.set(roomID, new GameRoom(this.server.to(roomID), roomID, this.gameService, () => this.shutoff(roomID)));
+      this.gameRooms.set(
+        roomID,
+        new GameRoom(this.server.to(roomID), roomID, this.gameService, () =>
+          this.shutoff(roomID),
+        ),
+      );
       player1.socket.join(player1.roomID);
       player2.socket.join(player2.roomID);
       this.gameRooms.get(roomID).connection(player1.socket, player1.name);
@@ -177,17 +203,21 @@ export class GameGateway
     for (let i = 0; i < this.matchQueue.length; i++) {
       const gameClient = this.matchQueue[i];
       if (gameClient.socket.id == client.id) {
+        this.logger.log(
+          `${gameClient.name} [${client.id}] abandoned matchmaking queue (disconnected)`,
+        );
         this.matchQueue.splice(i, 1);
+        this.gameClients.delete(client.id);
         return;
       }
     }
 
     const gameClient = this.gameClients.get(client.id);
     if (gameClient && this.gameRooms.has(gameClient.roomID)) {
-      this.gameRooms.get(gameClient.roomID).disconnect(client);
       this.logger.log(
         `${gameClient.name} [${client.id}] disconnected (was in room ${gameClient.roomID})`,
       );
+      this.gameRooms.get(gameClient.roomID).disconnect(client);
     } else {
       this.logger.error(
         `Cannot find client or room, gameClient = ${gameClient}`,
@@ -196,7 +226,12 @@ export class GameGateway
     }
     this.gameClients.delete(client.id);
   }
-  afterInit(server: Server) {}
+
+  afterInit(server: Server) {
+    this.logger.log(
+      'Game server up and running, waiting for connections to create a game room or add players to queue',
+    );
+  }
 
   @SubscribeMessage('inputUpdate')
   handleInputUpdate(client: Socket, data: any) {
@@ -226,12 +261,11 @@ export class GameGateway
 
   shutoff(roomID: string) {
     const room = this.gameRooms.get(roomID);
-    if (room.id != roomID)
-      throw new Error("room id didn't match on shutoff");
+    if (room.id != roomID) throw new Error("room id didn't match on shutoff");
     const connectedIDs = room.getAllConnectedIDs();
     for (const id of connectedIDs) {
       if (!this.gameClients.has(id)) continue;
-      
+
       const client = this.gameClients.get(id);
       client.socket.disconnect();
       this.gameClients.delete(id);
