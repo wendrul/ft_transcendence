@@ -190,6 +190,7 @@ function Channel (){
 			}).then(() => {
 				setAllChannel(allChannel.filter(item => item.name !== name));
 			}).catch((err) => {
+				alert(err.response.data.message);
 				console.log(err);
 			})
 	}
