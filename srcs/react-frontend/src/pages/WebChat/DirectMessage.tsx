@@ -150,7 +150,10 @@ function DirectMessage(){
 					room = id_user + "." + my_id;
 				socket.emit('sendMessage', {sender: message.senderLogin, room: room, message: message.content});
 				console.log(room_name);
-			}).catch((err) => {console.log(err.response.data.message)});
+			}).catch((err) => {
+				alert(err.response.data.message);
+				console.log(err.response.data.message)
+			});
 	}
 
 

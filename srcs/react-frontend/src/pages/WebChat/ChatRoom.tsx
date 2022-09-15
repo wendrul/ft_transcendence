@@ -83,6 +83,7 @@ function Channel (props:IProps){
 			{
 				withCredentials: true,
 			}).then(() => {}).catch((err) => {
+				alert(err.response.data.message);
 				console.log(err);
 			}); 
 	}
@@ -98,6 +99,7 @@ function Channel (props:IProps){
 			{
 				withCredentials: true, 
 			}).then(() => {}).catch((err) => {
+				alert(err.response.data.message);
 				console.log(err);
 			})
 
@@ -117,6 +119,7 @@ function Channel (props:IProps){
 				SetAdminsInChannel(adminsInChannel.filter((item: string) => item !== user));	
 				SetUsersInChannel(usersInChannel.filter((item: string) => item !== user));	
 			}).catch((err) => {
+				alert(err.response.data.message);
 				console.log(err);
 			});
 	}
@@ -135,6 +138,9 @@ function Channel (props:IProps){
 				if (err.response.data.message === "already banned") {
 					flag = true;	
 				}
+				else {
+					alert(err.response.data.message);
+				}
 				console.log(err)
 			});
 		if (flag) {
@@ -146,6 +152,7 @@ function Channel (props:IProps){
 				{
 					withCredentials: true,
 				}).then(() => {}).catch((err) => {
+					alert(err.response.data.message);
 					console.log(err);
 				});
 			return ;	
@@ -166,7 +173,10 @@ function Channel (props:IProps){
 				withCredentials: true,
 			}).then(() => {
 				SetAdminsInChannel((adminsInChannel: any)  => [...adminsInChannel, user]);
-			}).catch((err) => {console.log(err)});
+			}).catch((err) => {
+				alert(err.response.data.message);
+				console.log(err)
+			});
 	}
 
 	return(
@@ -344,6 +354,7 @@ function ChannelChat(){
 		).then((res) => {
 			socket.emit('sendMessage', {sender: senderLogin, room: (recv && recv?.slice(-1) === '#') ? recv.slice(0, -1) : recv, message: res.data.content})
 		}).catch((err) => {
+			alert(err.response.data.message);
 			console.log(err.response.data.message);
 		});
 	}
