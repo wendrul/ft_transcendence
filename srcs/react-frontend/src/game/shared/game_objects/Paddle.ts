@@ -26,8 +26,7 @@ export default class Paddle implements ICollider, IGameObject {
     return this._target;
   }
   public set target(v: Vector2) {
-    this._target.x = v.x;
-    this._target.y = v.y;
+    this._target = v;
   }
   private last_positions: number[];
 
@@ -60,7 +59,7 @@ export default class Paddle implements ICollider, IGameObject {
         Math.sin(phi) * Paddle.racketRadius
       )
     );
-    this.target = this.pos;
+    this.target = this.pos.clone();
     this.last_positions = new Array<number>(2).fill(0);
     this.velocities = new Array<number>(3).fill(0);
   }
