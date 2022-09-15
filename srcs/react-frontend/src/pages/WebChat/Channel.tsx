@@ -204,7 +204,7 @@ function Channel (){
 			<div key={i} className='d-flex flex-row border-bottom m-3 justify-content-between'>
 				<div className='d-flex flex-row '>
 					<p> {item?.name} </p>
-					{user.data.id === item?.ownerId &&
+					{user.data.login === item?.ownerId &&
 						<p className='text-muted mx-3'> owner</p>
 					}
 				</div>
