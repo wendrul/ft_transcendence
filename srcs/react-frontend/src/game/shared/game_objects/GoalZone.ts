@@ -1,6 +1,5 @@
 import EventHandler from "../util/EventHandler";
 import { GameEvents } from "../util/Game";
-import { GameState, GameStateMachine } from "../util/state/GameStateMachine";
 import Vector2 from "../util/Vector2";
 import Wall from "./Wall";
 

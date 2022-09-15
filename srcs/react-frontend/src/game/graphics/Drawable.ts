@@ -25,5 +25,9 @@ export default abstract class Drawable implements IDrawable {
     }
 
     abstract redraw(): void;
+
+    public remove(): void {
+        this.app.stage.removeChild(this.gfx);
+    }
     // abstract exposeInternalWrappedObj(): any;
 }

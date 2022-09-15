@@ -26,14 +26,15 @@ export default class Paddle implements ICollider, IGameObject {
     return this._target;
   }
   public set target(v: Vector2) {
-    this._target = v;
+    this._target.x = v.x;
+    this._target.y = v.y;
   }
   private last_positions: number[];
 
   private FTBO_K = 0.0001;
 
   static readonly racketSize = 100;
-  static readonly racketWidth = 10;
+  static readonly racketWidth = 5;
   static readonly fieldSize = 700;
   static readonly racketRadius = 600;
 
@@ -60,7 +61,7 @@ export default class Paddle implements ICollider, IGameObject {
       )
     );
     this.target = this.pos;
-    this.last_positions = new Array<number>(2).fill(0); 
+    this.last_positions = new Array<number>(2).fill(0);
     this.velocities = new Array<number>(3).fill(0);
   }
 
@@ -75,14 +76,11 @@ export default class Paddle implements ICollider, IGameObject {
     this.updatePos(dt);
     this.last_positions.push(this.phi);
     this.last_positions.shift();
-    this.velocities.push((this.last_positions[1] - this.last_positions[0]) / dt);
+    this.velocities.push(
+      (this.last_positions[1] - this.last_positions[0]) / dt
+    );
     this.velocities.shift();
     this.velocity = Utils.mean(this.velocities);
-    // console.log(this.velocities);
-    // console.log(this.last_positions);
-    // console.log(this.velocity);
-    
-    
   }
 
   private updatePos(dt: number) {

@@ -2,6 +2,7 @@ import Drawable from "./Drawable";
 import * as PIXI from "pixi.js";
 import ScoreBoardDrawable from "./ScoreBoardDrawable";
 import Game from "../shared/util/Game";
+import Whaff from "../Whaff";
 
 class WhaffHUD {
   scoreBoard: ScoreBoardDrawable;
@@ -38,7 +39,7 @@ class DebugHUD extends Drawable {
 
   redraw(): void {
     this.updateText();
-    if (globalThis.debugMode) {
+    if (Whaff.debugMode) {
       this.textGfx.text = this.text;
     } else {
       this.textGfx.text = "";

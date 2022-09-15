@@ -3,6 +3,7 @@ import "@pixi/graphics-extras";
 
 import Paddle from "../shared/game_objects/Paddle";
 import Drawable from "./Drawable";
+import Whaff from "../Whaff";
 
 export default class PaddleDrawable extends Drawable {
   private paddle: Paddle;
@@ -44,7 +45,7 @@ export default class PaddleDrawable extends Drawable {
       )
       .endFill();
 
-    if (globalThis.debugMode) {
+    if (Whaff.debugMode) {
       this.gfx!.lineStyle(2, 0xffffff, 0.1); //Player.racketWidth, this.color);
       this.gfx!.arc(cx, cy, Paddle.racketRadius, phi + 20, phi - 20);
     }

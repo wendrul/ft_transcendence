@@ -93,6 +93,8 @@ export default function NavbarComponent() {
               <MDBNavbarLink href='/web_chat'>Webchat</MDBNavbarLink>
             </MDBNavbarItem>
 
+         
+
             <MDBNavbarItem>
               <MDBDropdown>
                 <MDBDropdownToggle tag='a' className='nav-link'>
@@ -113,10 +115,18 @@ export default function NavbarComponent() {
                   </MDBDropdownItem>
                   <MDBDropdownItem>
                     {/* <MDBDropdownLink>Quick game</MDBDropdownLink> */}
-                    <a>Quick game</a>
+                    Quick game
                   </MDBDropdownItem>
                 </MDBDropdownMenu>
               </MDBDropdown>
+            </MDBNavbarItem>
+
+               <MDBNavbarItem>
+              <MDBNavbarLink href='/game-test'>Test</MDBNavbarLink>
+            </MDBNavbarItem>
+
+            <MDBNavbarItem>
+              <MDBNavbarLink href='/game-test2'>RoomTest</MDBNavbarLink>
             </MDBNavbarItem>
 
           {/*

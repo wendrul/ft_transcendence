@@ -12,9 +12,11 @@ export class GameService {
 		private userService: UsersService,
 	) {}
 
-	async createMatch(winerLogin: string, losserLogin: string, winerScore: number, losserScore: number) {
+	async addMatchResults(winerLogin: string, losserLogin: string, winerScore: number, losserScore: number) {
 
 		//find wienr and losser
+		await this.userLost(losserLogin);
+		await this.userWon(winerLogin);
 		const winer = await this.userService.findOneLogin(winerLogin);
 		if (!winer) {
 			throw new NotFoundException('User Not Found');
@@ -51,7 +53,15 @@ export class GameService {
 		return this.userService.update(user, {wins: wins, score: newScore, inGame: false});
 	}
 
-	async userLossed(login: string) {
+	async userDisconnectOnAbort(login: string) {
+		const user = await this.userService.findOneLogin(login);
+		if (!user) {
+			throw new NotFoundException('User Not Found');
+		}
+		return this.userService.update(user, {inGame: false});
+	}
+
+	async userLost(login: string) {
 		const user = await this.userService.findOneLogin(login);
 		if (!user) {
 			throw new NotFoundException('User Not Found');
