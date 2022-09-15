@@ -51,9 +51,9 @@ function Profile(){
 	
 
 	useEffect(() => {
-		if(!users.initial && !users.loaded && !users.loading)
-			navigate("/404");
-	}, [users])
+		if(users.item == null)
+			navigate("/");
+	}, [users.item])
 
 
 	useEffect(() => {
@@ -61,7 +61,7 @@ function Profile(){
 			navigate("/profile")
 		else
 			dispatch(userActions.getById(uuid));
-	}, [])
+	}, [navigate, dispatch])
 
 	let avatarPath = undefined;
 	if(users?.item?.id) { avatarPath = `${config.apiUrl}/localFiles/${users?.item?.id}`; }
@@ -69,7 +69,7 @@ function Profile(){
 	//Geting rank position
     const [rank, setrank] = useState("");
 	useEffect(() => {
-		if (user && user?.data && user?.data?.login) {
+		if (users && users?.item && users?.item?.login) {
 			axios.get(`${config.apiUrl}/users/rankPositionByLogin/${users?.item?.login}`,
 				{
 					withCredentials: true,
