@@ -24,6 +24,7 @@ function Channel (){
 	const [usersLogin, setUsersLogin] = useState("");
 	const [allChannel, setAllChannel] = useState<channelInterface[]>([]);
 	const [inputSearch, setInputSearch] = useState("");
+	const [actualJoinAccess, setActualJoinAccess] = useState("");
 	const dispatch = useAppDispatch();
 	const user = useAppSelector<any>(state => state.user);
 	const channel = useAppSelector<any>(state => state.channel);
@@ -70,8 +71,16 @@ function Channel (){
 	}
 
 	useEffect(() => {
-		if(channel?.joined) {
-			setAllChannel(allChannel => [...allChannel, {id: channel?.search?.id, name: channel?.search?.name}]);
+		if(channel?.joined && actualJoinAccess !== "") {
+			setAllChannel(allChannel => [...allChannel, {id: channel?.search?.id, name: channel?.search?.name, access: actualJoinAccess}]);
+
+		if (actualJoinAccess === "protected")
+			setType("protected");
+		else if (actualJoinAccess === "private")
+			setType("private");
+		else if (actualJoinAccess === "public")
+			setType("public");
+
 		}
 	},[channel.joined])
 
@@ -85,14 +94,8 @@ function Channel (){
 		join_data.password = join_pass;
 		if (type === "private")
 			join_data.password = ""
-		if (join_access === "protected")
-			setType("protected");
-		else if (join_access === "private")
-			setType("private");
-		else if (join_access === "public")
-			setType("public");
 
-		
+		setActualJoinAccess(join_access);
 		console.log("name entered: " + join_data.name);
 		console.log("password entered: " + join_data.password);
 		dispatch(channelActions.joinChannel(join_data));
