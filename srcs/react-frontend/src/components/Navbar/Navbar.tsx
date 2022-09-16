@@ -1,9 +1,3 @@
-/* ******** */
-/* 
-  carga primero una pagina que no deberia, mirar esto en el redux, tal vez hay problema
-*/
-/* ******** */
-
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import {
   MDBContainer,
@@ -19,7 +13,6 @@ import {
   MDBDropdownToggle,
   MDBDropdownMenu,
   MDBDropdownItem,
-  // MDBDropdownLink,
   MDBCollapse,
   MDBSpinner
 } from 'mdb-react-ui-kit';
