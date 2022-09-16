@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import { channelActions } from '../../_actions';
+import { alertActions, channelActions } from '../../_actions';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 
 interface Friends {
@@ -33,7 +33,12 @@ function UserView (props : IProps){
 	useEffect(() => {
 		dispatch(channelActions.getOpenConversations());
 	},[]);
-	
+
+	useEffect(() => {
+		dispatch(alertActions.clear());
+	}, [dispatch])
+
+
 	useEffect(() => {
 		setHistoryConv(channel.data);
 	}, [channel.data]);

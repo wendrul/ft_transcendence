@@ -6,7 +6,8 @@ export const userService = {
     login,
     getAll,
     getById,
-		getByLogin,
+	getByLogin,
+    getByLoginNavbar,
     whoami,
     turnOn2fa,
     turnOff2fa,
@@ -175,6 +176,18 @@ function getById(id: any) {
 }
 
 function getByLogin(login: string){
+	return axios.get(`${config.apiUrl}/users/userByLogin/${login}`,)
+		.then((response : any) => {
+			if(response == 403 || response == 404)
+			{
+					const error = response.message || response.statusText;
+					return Promise.reject(error);
+			}
+			return response.data;
+		})
+}
+
+function getByLoginNavbar(login: string){
 	return axios.get(`${config.apiUrl}/users/userByLogin/${login}`,)
 		.then((response : any) => {
 			if(response == 403 || response == 404)

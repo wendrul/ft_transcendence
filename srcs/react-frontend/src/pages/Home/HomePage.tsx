@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import img_user from '../../icon/utilisateur.png'
 import axios from 'axios';
 import config from '../../config';
+import AlertPage from '../../components/Alerts/Alert';
 
 function guestView(){
 	return (
@@ -56,6 +57,7 @@ function UserView(user:any){
 function HomePage(){
 	const authentication = useAppSelector<any>(state => state.authentication);
 	const user = useAppSelector<any>(state => state.user);
+	const alert = useAppSelector<any>(state => state.alert);
 	const navigate = useNavigate();
 	const [params, setSearchParams] = useSearchParams();
 	params.get("__firebase_request_key")
@@ -104,27 +106,29 @@ function HomePage(){
 	}, []);
 
 	return(
-		<div className='d-flex flex-row'>
+		<>
+			{ alert && <AlertPage type={alert.type} text={alert.message} /> }
+			<div className='d-flex flex-row'>
+				<div className='bc-gr2 d-flex flex-column align-items-center justify-content-center w-25'>
+					{authentication.loggedIn ? UserView(user) : guestView()}
+				</div>
 
-			<div className='bc-gr2 d-flex flex-column align-items-center justify-content-center w-25'>
-				{authentication.loggedIn ? UserView(user) : guestView()}
-			</div>
+				<div className='bc-blue d-flex flex-row align-items-center justify-content-center border-start border-2 border-dark w-75'>
 
-			<div className='bc-blue d-flex flex-row align-items-center justify-content-center border-start border-2 border-dark w-75'>
-
-				<div className='d-flex flex-row'>
-					<div className='dboard-div-scroll justify-content-center border bg-white border rounded mb-5'>
-						<div className='dboard-tab'>
-							{ ladder && ladder.map((item: Data) =>  
-							<div key={item.login} className='div-score bc-green'>
-								<h3> Login: {item.login}  Wins: {item.wins} Losses: {item.loses} Score: {item.score}</h3>
-							</div>						
-							)}
+					<div className='d-flex flex-row'>
+						<div className='dboard-div-scroll justify-content-center border bg-white border rounded mb-5'>
+							<div className='dboard-tab'>
+								{ ladder && ladder.map((item: Data) =>  
+								<div key={item.login} className='div-score bc-green'>
+									<h3> Login: {item.login}  Wins: {item.wins} Losses: {item.loses} Score: {item.score}</h3>
+								</div>						
+								)}
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 
