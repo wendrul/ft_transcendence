@@ -1,11 +1,5 @@
-import React, { useEffect, useState } from 'react';
-
-import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { userActions } from '../../_actions';
-import axios from 'axios';
-import config from '../../config';
-import {MDBIcon} from 'mdb-react-ui-kit';
+import React, { useState } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import GameComponent from '../../GameComponent';
 
 

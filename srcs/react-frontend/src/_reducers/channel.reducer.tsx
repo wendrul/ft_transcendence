@@ -19,6 +19,10 @@ export function channel(state = {
 			searching: true,
 		}
 	case channelConstants.EDIT_PWD_CHAN_REQUEST:
+		return {
+			editing: true,
+			edited: false,
+	}
 	case channelConstants.RM_CHAN_REQUEST:
   case channelConstants.GET_MY_CHAN_REQUEST:
   case channelConstants.CREATE_CHANNEL_REQUEST:
@@ -46,6 +50,11 @@ export function channel(state = {
 		searching: false
 	}
 	case channelConstants.EDIT_PWD_CHAN_SUCCESS:
+		return {...state,
+			edit_data: action.response,
+			editing:false,
+			edited: true
+	}
 	case channelConstants.RM_CHAN_SUCCESS:
 	// case channelConstants.GET_MY_CHAN_SUCCESS:
   case channelConstants.CREATE_CHANNEL_SUCCESS:
@@ -76,6 +85,11 @@ export function channel(state = {
 			searching: false
 		}
 	case channelConstants.EDIT_PWD_CHAN_FAILURE:
+		return {...state,
+			edit_data: null,
+			editing:false,
+			edited: false
+		};
 	case channelConstants.RM_CHAN_FAILURE:
 	case channelConstants.GET_MY_CHAN_FAILURE:
 	case channelConstants.CREATE_CHANNEL_FAILURE:

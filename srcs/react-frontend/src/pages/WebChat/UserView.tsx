@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import { channelActions } from '../../_actions';
+import { alertActions, channelActions } from '../../_actions';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 
 interface Friends {
@@ -33,7 +33,12 @@ function UserView (props : IProps){
 	useEffect(() => {
 		dispatch(channelActions.getOpenConversations());
 	},[]);
-	
+
+	useEffect(() => {
+		dispatch(alertActions.clear());
+	}, [dispatch])
+
+
 	useEffect(() => {
 		setHistoryConv(channel.data);
 	}, [channel.data]);
@@ -62,10 +67,11 @@ function UserView (props : IProps){
 		return <p>Offline</p>
 	  }
 
-	const openConvView = () => {{
+	const openConvView = () => {
 	return(
 			<div className='d-flex flex-column'>
-					{channel.data[0] != null && history_conv && history_conv.map((item:Conv, i:number) => 
+					{channel && channel?.data && channel.data && channel.data[0] != null 
+						&& history_conv && history_conv.map((item:Conv, i:number) => 
 					<div key={i} className='d-flex flex-row border-bottom m-3 justify-content-between'>
 						<div  className='d-flex flex-row '>
 							<p> {item?.login}</p>
@@ -83,9 +89,9 @@ function UserView (props : IProps){
 				)}
 		</div>
 		);
-	}}
+	}
 
-	const oneUser = () => {{
+	const oneUser = () => {
 		return(
 				<div className='d-flex flex-column'>
 						{ allfriends && allfriends.map((item:Friends, i:number) =>
@@ -108,7 +114,7 @@ function UserView (props : IProps){
 					)}
 			</div>
 			);
-		}}
+		}
 
 
 	let view = LoadingView();

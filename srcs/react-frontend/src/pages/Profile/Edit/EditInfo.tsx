@@ -3,9 +3,7 @@ import {
 	MDBBtn,
 	MDBRow,
 	MDBCol,
-	MDBInput,
-  MDBSwitch,
-  MDBFile
+	MDBInput
   } from 'mdb-react-ui-kit';
 import { useAppDispatch, useAppSelector } from '../../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
@@ -37,17 +35,12 @@ function EditInfo() {
      navigate("/")
 	}, [userData])
 
-  const testfonc = () => {
-    console.log(userData.updated)
-  }
 
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
     dispatch(alertActions.clear());
     dispatch(userActions.updateProfile(user));
 
-   /* if (userData.updated == true)
-      navigate("/"); */
 	}
 
   const handleChangeFirstName = function(event: ChangeEvent<HTMLInputElement>) {

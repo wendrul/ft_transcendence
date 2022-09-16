@@ -24,7 +24,7 @@ function SignIn() {
 			else
 				navigate("/");
 		}
-	}, [authentication])
+	}, [authentication, navigate])
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");

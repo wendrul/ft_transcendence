@@ -75,8 +75,12 @@ function getChannel(name:string){
 				.then(
 						response => {
 								dispatch(success(response));
+								dispatch(alertActions.success("Channel Founded"));
 						},
-						error => dispatch(failure(error))
+						error => {
+							dispatch(failure(error))
+							dispatch(alertActions.error(error));
+						}
 					);
 };
 function request() { return { type: channelConstants.GET_CHAN_REQUEST } }

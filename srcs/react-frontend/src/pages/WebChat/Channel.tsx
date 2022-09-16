@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, useEffect} from 'react';
 import Popup from 'reactjs-popup';
 import "./Channel.css";
-import { userActions } from '../../_actions';
+import { alertActions, userActions } from '../../_actions';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import {channelActions} from '../../_actions/channel.actions'
 import {UpdateUser} from "../../interfaces/iUser";
@@ -24,6 +24,7 @@ function Channel (){
 	const [usersLogin, setUsersLogin] = useState("");
 	const [allChannel, setAllChannel] = useState<channelInterface[]>([]);
 	const [inputSearch, setInputSearch] = useState("");
+	const [actualJoinAccess, setActualJoinAccess] = useState("");
 	const dispatch = useAppDispatch();
 	const user = useAppSelector<any>(state => state.user);
 	const channel = useAppSelector<any>(state => state.channel);
@@ -38,6 +39,10 @@ function Channel (){
 	useEffect(()=> {
 		setAllChannel(channel.data);
 	},[channel.data]);
+
+	useEffect(() => {
+		dispatch(alertActions.clear());
+	}, [dispatch])
 
 
 	const handleChanType = (s: string) => {{
@@ -70,8 +75,16 @@ function Channel (){
 	}
 
 	useEffect(() => {
-		if(channel?.joined) {
-			setAllChannel(allChannel => [...allChannel, {id: channel?.search?.id, name: channel?.search?.name}]);
+		if(channel?.joined && actualJoinAccess !== "") {
+			setAllChannel(allChannel => [...allChannel, {id: channel?.search?.id, name: channel?.search?.name, access: actualJoinAccess}]);
+
+		if (actualJoinAccess === "protected")
+			setType("protected");
+		else if (actualJoinAccess === "private")
+			setType("private");
+		else if (actualJoinAccess === "public")
+			setType("public");
+
 		}
 	},[channel.joined])
 
@@ -85,35 +98,49 @@ function Channel (){
 		join_data.password = join_pass;
 		if (type === "private")
 			join_data.password = ""
-		if (join_access === "protected")
-			setType("protected");
-		else if (join_access === "private")
-			setType("private");
-		else if (join_access === "public")
-			setType("public");
 
-		
+		setActualJoinAccess(join_access);
 		console.log("name entered: " + join_data.name);
 		console.log("password entered: " + join_data.password);
 		dispatch(channelActions.joinChannel(join_data));
 	}
 	
-	useEffect(() => {
-		if (channel?.created) {
-			window.location.reload();
-		}
-	}, [channel.created]);
+	// useEffect(() => {
+	// 	if (channel?.created) {
+	// 		window.location.reload();
+	// 	}
+	// }, [channel.created]);
 
 
-	const createPublicChan = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		 dispatch(channelActions.createChannel(
-			[],
-			'public',
-			'',
-			chanName,
-			owner
-		));
+	// const createPublicChan = (event: React.FormEvent<HTMLFormElement>) => {
+	// 	event.preventDefault();
+	// 	 dispatch(channelActions.createChannel(
+	// 		[],
+	// 		'public',
+	// 		'',
+	// 		chanName,
+	// 		owner
+	// 	));
+	// }
+
+	const createChannel = (e: React.FormEvent<HTMLFormElement>, access: string) => {
+		e.preventDefault();
+		axios.post(`${config.apiUrl}/chat/createChannel`,
+			{
+				name: chanName,		
+				userLogins: (access === "private") ? parseUser(usersLogin) : [],
+				access: access,
+				password: password,
+			},
+			{
+				withCredentials: true,
+			}).then((res) => {
+				// setAllChannel(allChannel => [...allChannel, res.data]);
+				window.location.reload();	
+			}).catch((e) => {
+				alert(e.response.data.message);
+			});
+
 	}
 
 	const channelFinded = () => {
@@ -147,21 +174,21 @@ function Channel (){
 	}
 
 
-	const createProtectChan = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		console.log("pass: " + password);
-		if (password !== ""){
-		 dispatch(channelActions.createChannel(
-			[],
-			'protected',
-			password,
-			chanName,
-			owner
-		));
-		}
-		else
-			alert("Enter a password please");
-	}
+	// const createProtectChan = (event: React.FormEvent<HTMLFormElement>) => {
+	// 	event.preventDefault();
+	// 	console.log("pass: " + password);
+	// 	if (password !== ""){
+	// 	 dispatch(channelActions.createChannel(
+	// 		[],
+	// 		'protected',
+	// 		password,
+	// 		chanName,
+	// 		owner
+	// 	));
+	// 	}
+	// 	else
+	// 		alert("Enter a password please");
+	// }
 
 	const parseUser = (users:string):string[] => {
 		let res :string[];
@@ -169,18 +196,18 @@ function Channel (){
 		return (res);
 	}
 
-	const createPrivateChan = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		const users :string[] = parseUser(usersLogin);
-		console.log(users);
-		 dispatch(channelActions.createChannel(
-			users,
-			'private',
-			'',
-			chanName,
-			owner
-		));
-	}
+	// const createPrivateChan = (event: React.FormEvent<HTMLFormElement>) => {
+	// 	event.preventDefault();
+	// 	const users :string[] = parseUser(usersLogin);
+	// 	console.log(users);
+	// 	 dispatch(channelActions.createChannel(
+	// 		users,
+	// 		'private',
+	// 		'',
+	// 		chanName,
+	// 		owner
+	// 	));
+	// }
 
 	const leave = (event: any, name: string) => {
 		event.preventDefault();
@@ -196,14 +223,39 @@ function Channel (){
 	}
 
 	const displayChannel = () =>{
+
+
 		const removePass = (e: any, id :string) => {
-			console.log("id " + id);
-			dispatch(channelActions.removePassChan(id));
+			e.preventDefault();
+			// dispatch(channelActions.removePassChan(id));
+			// window.location.reload();
+			axios.get(`${config.apiUrl}/chat/removePasswordForChannel/${id}`,
+				{
+					withCredentials: true,
+				}).then(() => {
+					setAllChannel(allChannel.filter(item => item.id !== parseInt(id)));
+				}).catch((e) => {
+					alert(e.response.data.message);
+				})
 		}
 
 		const editPass = (e:any, id:string) =>{
-			console.log("edit: " + edit);
-			dispatch(channelActions.editPassChan(id, edit));
+			e.preventDefault();
+			// dispatch(channelActions.editPassChan(id, edit));
+			// window.location.reload();
+			axios.patch(`${config.apiUrl}/chat/changePasswordForChannel/${id}`,
+				{
+					password: edit,
+				},
+				{
+					withCredentials: true,
+				}).then(() => {
+					if (type === "public" || type === "private") {
+						setAllChannel(allChannel.filter(item => item.id !== parseInt(id)));
+					}		
+				}).catch((e) => {
+					alert(e.response.data.message);
+				});
 		}
 		return(
 			<>
@@ -251,7 +303,7 @@ function Channel (){
 	
 			<Popup trigger={<button className="button"> + </button>} modal>
 				<div className='channelPopup'>
-					<form onSubmit={createProtectChan} className='d-flex flex-column align-items-center justify-content-center'>
+					<form onSubmit={event => createChannel(event, "protected")} className='d-flex flex-column align-items-center justify-content-center'>
 	
 						<div>
 							<input onChange={handleChanName} type="text" name="type" placeholder='Channel name'/>
@@ -287,7 +339,7 @@ function Channel (){
 	
 					<Popup trigger={<button className="button"> + </button>} modal>
 						<div className='channelPopup'>
-							<form onSubmit={createPublicChan} className='d-flex flex-column align-items-center justify-content-center'>
+							<form onSubmit={event => createChannel(event, "public")} className='d-flex flex-column align-items-center justify-content-center'>
 	
 								<div>
 									<input  onChange={handleChanName} type="text" name="type" placeholder='Channel name'/>
@@ -318,7 +370,7 @@ function Channel (){
 	
 					<Popup trigger={<button className="button"> + </button>} modal>
 						<div className='channelPopup'>
-							<form onSubmit={createPrivateChan} className='d-flex flex-column align-items-center justify-content-center'>
+							<form onSubmit={event => createChannel(event, "private")} className='d-flex flex-column align-items-center justify-content-center'>
 	
 								<div>
 									<input  onChange={handleChanName} type="text" name="type" placeholder='Channel name'/>

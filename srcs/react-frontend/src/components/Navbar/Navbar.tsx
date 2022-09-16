@@ -1,9 +1,3 @@
-/* ******** */
-/* 
-  carga primero una pagina que no deberia, mirar esto en el redux, tal vez hay problema
-*/
-/* ******** */
-
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import {
   MDBContainer,
@@ -19,8 +13,8 @@ import {
   MDBDropdownToggle,
   MDBDropdownMenu,
   MDBDropdownItem,
-  // MDBDropdownLink,
-  MDBCollapse
+  MDBCollapse,
+  MDBSpinner
 } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
@@ -31,7 +25,7 @@ export default function NavbarComponent() {
   const dispatch = useAppDispatch();
   const authentication = useAppSelector<any>(state => state.authentication);
   const friend_req = useAppSelector<any>(state => state.friend);
-
+  const users = useAppSelector<any>(state => state.users);
   const [showBasic, setShowBasic] = useState(false);
   let navigate = useNavigate();
 
@@ -55,18 +49,22 @@ export default function NavbarComponent() {
     dispatch(userActions.signout());
 	}
 
+  useEffect(()=> {
+    if (users.encontrado)
+    {
+      if (users.itemNavbar != null)
+        navigate("/profile/" +users.itemNavbar.login)
+    }
+  },[users.itemNavbar]) 
+
   const onSerch = (event: React.FormEvent<HTMLFormElement>) => {
-    dispatch(userActions.getAll());
-    const url = "/profile/" + userLogin;
-    console.log(userLogin)
-    navigate(url)
+    event.preventDefault();
+    dispatch(userActions.getByLoginNavbar(userLogin));
 	}
 
   const handleChangeUserLogin = function(event: ChangeEvent<HTMLInputElement>) {
     setUserLogin(event?.currentTarget?.value);
   }
-
-
 
   return (
     <MDBNavbar expand='lg' light bgColor='light'>
@@ -83,93 +81,68 @@ export default function NavbarComponent() {
         </MDBNavbarToggler>
 
         <MDBCollapse navbar show={showBasic}>
-          <MDBNavbarNav className='mr-auto mb-2 mb-lg-0'>
-            {/*<MDBNavbarItem>
-              <MDBNavbarLink active aria-current='page' href='#'>
-                Home
-              </MDBNavbarLink>
-            </MDBNavbarItem>*/}
-            <MDBNavbarItem>
-              <MDBNavbarLink href='/web_chat'>Webchat</MDBNavbarLink>
-            </MDBNavbarItem>
+        { !authentication.loggedIn && !authentication.loggingIn && !authentication.initial &&
+          <>
+            <MDBNavbarNav className='mr-auto mb-2 mb-lg-0'>
+            </MDBNavbarNav>
+            <MDBBtn disabled className='me-2'>
+              <MDBSpinner size='sm' role='status' tag='span' />
+              <span className='visually-hidden'>Loading...</span>
+            </MDBBtn>
+            <MDBBtn disabled>Connect..us</MDBBtn>
+          </>
+        }
+        {  authentication.loggedIn &&
+          <>
+            <MDBNavbarNav className='mr-auto mb-2 mb-lg-0'>
+              <MDBNavbarItem>
+                <MDBNavbarLink href='/web_chat'>Webchat</MDBNavbarLink>
+              </MDBNavbarItem>
 
-         
+              <MDBNavbarItem>
+                <MDBNavbarLink href='/Leaderboard'>Leaderboard</MDBNavbarLink>
+              </MDBNavbarItem>
 
-            <MDBNavbarItem>
-              <MDBDropdown>
-                <MDBDropdownToggle tag='a' className='nav-link'>
-                  Game
-                </MDBDropdownToggle>
-                <MDBDropdownMenu>
-                  <MDBDropdownItem link href='/Leaderboard'>
-                    {/* <MDBDropdownLink href='/Leaderboard'>Leaderboard</MDBDropdownLink> */}
-                    Leaderboard
-                  </MDBDropdownItem>
-                  <MDBDropdownItem link>
-                    {/* <MDBDropdownLink>Users connected</MDBDropdownLink> */}
-                    Users connected
-                  </MDBDropdownItem>
-                  <MDBDropdownItem link href='/create_room'>
-                    {/* <MDBDropdownLink href='/create_room'>Create Room</MDBDropdownLink> */}
-                    Create Room
-                  </MDBDropdownItem>
-                  <MDBDropdownItem>
-                    {/* <MDBDropdownLink>Quick game</MDBDropdownLink> */}
-                    Quick game
-                  </MDBDropdownItem>
-                </MDBDropdownMenu>
-              </MDBDropdown>
-            </MDBNavbarItem>
+              <MDBNavbarItem>
+                <MDBNavbarLink href='/game-test'>Test</MDBNavbarLink>
+              </MDBNavbarItem>
 
-               <MDBNavbarItem>
-              <MDBNavbarLink href='/game-test'>Test</MDBNavbarLink>
-            </MDBNavbarItem>
-
-            <MDBNavbarItem>
-              <MDBNavbarLink href='/game-test2'>RoomTest</MDBNavbarLink>
-            </MDBNavbarItem>
-
-          {/*
-            <MDBNavbarItem>
-              <MDBNavbarLink disabled href='#' tabIndex={-1} aria-disabled='true'>
-                Disabled
-              </MDBNavbarLink>
-            </MDBNavbarItem>
-           */
-          }
-          </MDBNavbarNav>
-          {  authentication.loggedIn &&
-            <>
-              <form className='d-flex input-group w-auto' onSubmit={onSerch}>
-                <input type='search' className='form-control' onChange={handleChangeUserLogin} placeholder='User ID' aria-label='Search' />
-                <MDBBtn color='primary'>Search</MDBBtn>
-              </form>
-              <MDBNavbarNav className='d-flex input-group w-auto'>
-                <MDBNavbarItem>
-                  <MDBNavbarLink href='/friends'><MDBIcon color={ friend_req?.request.length > 0 ? "danger": "muted" } icon="bell" animate={ friend_req?.request.length > 0 ? "spin": "beat" }/></MDBNavbarLink>
-                </MDBNavbarItem>
-              </MDBNavbarNav>
-              <MDBNavbarNav className='d-flex input-group w-auto'>
-                <MDBNavbarItem>
-                  <MDBDropdown>
-                    <MDBDropdownToggle tag='a' className='nav-link'>
-                    <MDBIcon icon="user" />
-                    </MDBDropdownToggle>
-                    <MDBDropdownMenu>
-                      <MDBDropdownItem link href='/profile'>
-                        {/* <MDBDropdownLink href='/profile'>My Space</MDBDropdownLink> */}
-                        My Space
-                      </MDBDropdownItem>
-                      <MDBDropdownItem link onClick={logout}>
-                        {/* <MDBDropdownLink onClick={logout} >Logout</MDBDropdownLink> */}
-                        Logout
-                      </MDBDropdownItem>
-                    </MDBDropdownMenu>
-                  </MDBDropdown>
-                </MDBNavbarItem>
-              </MDBNavbarNav>
-            </>
-          }
+              <MDBNavbarItem>
+                <MDBNavbarLink href='/game-test2'>RoomTest</MDBNavbarLink>
+              </MDBNavbarItem>
+            </MDBNavbarNav>
+          
+            
+            <form className='d-flex input-group w-auto' onSubmit={onSerch}>
+              <input type='search' className='form-control' onChange={handleChangeUserLogin} placeholder='User ID' aria-label='Search' />
+              <MDBBtn color='primary'>Search</MDBBtn>
+            </form>
+            <MDBNavbarNav className='d-flex input-group w-auto'>
+              <MDBNavbarItem>
+                <MDBNavbarLink href='/friends'><MDBIcon color={ friend_req?.request.length > 0 ? "danger": "muted" } icon="bell" animate={ friend_req?.request.length > 0 ? "spin": "beat" }/></MDBNavbarLink>
+              </MDBNavbarItem>
+            </MDBNavbarNav>
+            <MDBNavbarNav className='d-flex input-group w-auto'>
+              <MDBNavbarItem>
+                <MDBDropdown>
+                  <MDBDropdownToggle tag='a' className='nav-link'>
+                  <MDBIcon icon="user" />
+                  </MDBDropdownToggle>
+                  <MDBDropdownMenu>
+                    <MDBDropdownItem link href='/profile'>
+                      {/* <MDBDropdownLink href='/profile'>My Space</MDBDropdownLink> */}
+                      My Space
+                    </MDBDropdownItem>
+                    <MDBDropdownItem link onClick={logout}>
+                      {/* <MDBDropdownLink onClick={logout} >Logout</MDBDropdownLink> */}
+                      Logout
+                    </MDBDropdownItem>
+                  </MDBDropdownMenu>
+                </MDBDropdown>
+              </MDBNavbarItem>
+            </MDBNavbarNav>
+          </>
+        }
         </MDBCollapse>
       </MDBContainer>
     </MDBNavbar>

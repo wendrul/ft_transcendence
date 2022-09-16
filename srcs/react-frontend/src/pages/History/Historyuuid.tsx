@@ -29,7 +29,6 @@ function History (){
 	const user = useAppSelector<any>(state => state.user);
 	const navigate = useNavigate();
 	const users = useAppSelector<any>(state => state.users);
-	const alert = useAppSelector<any>(state => state.alert);
 
 	const { uuid } = useParams();
 

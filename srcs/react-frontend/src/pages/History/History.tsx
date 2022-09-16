@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom';
 import config from '../../config';
-import {useAppDispatch, useAppSelector} from '../../_helpers/hooks';
+import {useAppSelector} from '../../_helpers/hooks';
 import './History.css';
 
 function winInterface(item: any) {
@@ -23,12 +23,9 @@ function defeatInterface(item: any) {
 
 
 function History (){
-	const dispatch = useAppDispatch();
 	const authentication = useAppSelector<any>(state => state.authentication);
 	const user = useAppSelector<any>(state => state.user);
 	const navigate = useNavigate();
-	const users = useAppSelector<any>(state => state.users);
-	const alert = useAppSelector<any>(state => state.alert);
 
 	useEffect(() => {
 		if(!authentication.loggedIn && !authentication.loggingIn && !authentication.initial)
@@ -63,11 +60,6 @@ function History (){
 		rival: string;
 		bc: string;
 	}
-
-	// const [history, setHistory] = useState<Data[]>([
-	// 	{ id:1, winerScore: 10, losserScore: 3, winer: 'tontin', losser: 'test'},
-	// 	{ id:2, winerScore: 10, losserScore: 3, winer: 'test', losser: 'tontin'},
-	// ]);
 
 	const [history, setHistory] = useState<Data[]>([]);
 
