@@ -4,7 +4,8 @@ import React, {ChangeEvent, useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom';
 import {io} from 'socket.io-client';
 import config from '../../config';
-import {useAppSelector} from '../../_helpers/hooks';
+import { alertActions } from '../../_actions';
+import {useAppDispatch, useAppSelector} from '../../_helpers/hooks';
 import './ChatRoom.css'
 
 
@@ -13,9 +14,9 @@ interface IProps{
 	chanName : string;
 }
 
-interface IState{
-	// chanName : string;
-}
+// interface IState{
+// 	// chanName : string;
+// }
 
 function displayMsg(msg: any) {
 	if (msg.content === ""){
@@ -41,8 +42,8 @@ let isInChannel: boolean = false;
 
 function Channel (props:IProps){
 
-	const curr_user = useAppSelector<any>(state => state.user);
-	const authentication = useAppSelector<any>(state => state.authentication);
+	// const curr_user = useAppSelector<any>(state => state.user);
+	// const authentication = useAppSelector<any>(state => state.authentication);
 	const [usersInChannel, SetUsersInChannel] = useState<any>([]);
 	const [adminsInChannel, SetAdminsInChannel] = useState<any>([]);
 	let recv = window.location.href.split("/").pop();
@@ -64,15 +65,11 @@ function Channel (props:IProps){
 		if (recv && recv?.slice(-1) === '#') {
 			recv = recv.slice(0, -1);
 		}
-		console.log(recv);
 		axios.get(`${config.apiUrl}/chat/channelData/${recv}`, {
 			withCredentials: true,
 		}).then((res) => {
-			// console.log(res.data);
 			setChannel(res.data);
-		}).catch((err) => {
-			console.log(err.response.data.message)
-		});	
+		}).catch();	
 	}, [recv]);
 
 	useEffect(() => {
@@ -91,7 +88,6 @@ function Channel (props:IProps){
 				withCredentials: true,
 			}).then(() => {}).catch((err) => {
 				alert(err.response.data.message);
-				console.log(err);
 			}); 
 	}
 
@@ -107,10 +103,7 @@ function Channel (props:IProps){
 				withCredentials: true, 
 			}).then(() => {}).catch((err) => {
 				alert(err.response.data.message);
-				console.log(err);
 			})
-
-		console.log("mute for: ", time)
 	}
 
 	const userKick = (event: any, user: string) => {
@@ -127,7 +120,6 @@ function Channel (props:IProps){
 				SetUsersInChannel(usersInChannel.filter((item: string) => item !== user));	
 			}).catch((err) => {
 				alert(err.response.data.message);
-				console.log(err);
 			});
 	}
 
@@ -148,7 +140,6 @@ function Channel (props:IProps){
 				else {
 					alert(err.response.data.message);
 				}
-				console.log(err)
 			});
 		if (flag) {
 			await axios.post(`${config.apiUrl}/chat/unbanUser`,
@@ -160,7 +151,6 @@ function Channel (props:IProps){
 					withCredentials: true,
 				}).then(() => {}).catch((err) => {
 					alert(err.response.data.message);
-					console.log(err);
 				});
 			return ;	
 		}
@@ -170,7 +160,6 @@ function Channel (props:IProps){
 
 	const userAdmin = (event: any, user: string) => {
 		event.preventDefault();
-		console.log("admin")
 		axios.post(`${config.apiUrl}/chat/setAdmin`,
 			{
 				name: channel?.name,
@@ -182,7 +171,6 @@ function Channel (props:IProps){
 				SetAdminsInChannel((adminsInChannel: any)  => [...adminsInChannel, user]);
 			}).catch((err) => {
 				alert(err.response.data.message);
-				console.log(err)
 			});
 	}
 
@@ -284,6 +272,7 @@ function ChannelChat(){
 	const [socket, setSocket] = useState<any>(null);
 	const [msg, setMsg] = useState("");
 	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
 
 	interface Messages{
 		id: number;
@@ -300,10 +289,14 @@ function ChannelChat(){
 		setSocket(io(`${config.apiUrl}`));
 	}, []);
 
+	useEffect(() => {
+		dispatch(alertActions.clear());
+	}, [dispatch])
+
+
 	//listening on join direct message room
 	useEffect(() => {
 		socket?.on('joinedRoom', (msg: string) => {
-			console.log("joined to room", msg);
 		});	
 	}, [socket]);
 
@@ -317,7 +310,6 @@ function ChannelChat(){
 					setHistoryMsg(res.data);
 				}).catch((err) => {
 					let error = err.response.data.message;
-					console.log(error)
 					if (error === "You have been banned from this channel") {
 						isInChannel = true;
 						setHistoryMsg(history_msg => [...history_msg, {id:0, senderLogin: "TU", content: "TE MAMASTE", reciverChannelName: "", reciverType: ""}]);
@@ -362,7 +354,6 @@ function ChannelChat(){
 			socket.emit('sendMessage', {sender: senderLogin, room: (recv && recv?.slice(-1) === '#') ? recv.slice(0, -1) : recv, message: res.data.content})
 		}).catch((err) => {
 			alert(err.response.data.message);
-			console.log(err.response.data.message);
 		});
 	}
 
@@ -389,7 +380,7 @@ function ChannelChat(){
 						reciverChannelName: "asdf"
 					}
 				]);
-			}).catch((err) => {console.log(err.response.data.message)});
+			}).catch();
 		});	
 	}, [socket]);
 

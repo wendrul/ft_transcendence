@@ -17,6 +17,25 @@ export function users(state : any = {
 			return{...state,
 		};
 
+  //SEARCH BY LOGIN NAVBAR
+		case userConstants.NAV_GETLOGIN_REQUEST:
+			return{...state,
+        buscando: true,
+        encontrado: false,
+		};
+		case userConstants.NAV_GETLOGIN_SUCCESS:
+				return{...state,
+				itemNavbar: action.users,
+        buscando: false,
+				encontrado: true
+			};
+      case userConstants.NAV_GETLOGIN_FAILURE:
+        return{...state,
+        item: null,
+        buscando: false,
+        encontrado: false
+      };
+
 
 		// SUCCESS
     case userConstants.GETALL_SUCCESS:

@@ -11,10 +11,11 @@ import img_medal_color from '../../icon/medal_color.png'
 import img_medal_black from '../../icon/medal_black.png'
 import { useAppDispatch, useAppSelector } from '../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
-import { userActions } from '../../_actions';
+import { alertActions, userActions } from '../../_actions';
 import { MDBIcon } from 'mdb-react-ui-kit';
 import axios from 'axios';
 import config from '../../config';
+import AlertPage from '../../components/Alerts/Alert';
 
 function Profile(){ 
 	const dispatch = useAppDispatch();
@@ -30,6 +31,10 @@ function Profile(){
 	if(!authentication.loggedIn && !authentication.loggingIn && !authentication.initial)
 		navigate("/");
 	}, [authentication])
+
+	useEffect(() => {
+			dispatch(alertActions.clear())
+		}, [dispatch])
 
 	//Geting avatar
 	let avatarPath = undefined;
@@ -56,6 +61,7 @@ function Profile(){
 	<>
 	{ authentication.loggedIn &&
 		<>
+		{ alert && <AlertPage type={alert.type} text={alert.message} /> }
 		<div className="bd d-flex flex-column align-items-center justify-content-center pb-5 mt-5">
 			<p className="register_btn mb-1 display-2">
 				Ranking {rank}

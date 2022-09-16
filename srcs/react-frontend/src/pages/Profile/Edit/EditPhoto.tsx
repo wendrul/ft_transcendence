@@ -1,22 +1,14 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	MDBBtn,
-	MDBRow,
-	MDBCol,
-	MDBInput,
-  MDBSwitch,
   MDBFile
   } from 'mdb-react-ui-kit';
-import { useAppDispatch, useAppSelector } from '../../../_helpers/hooks';
+import { useAppSelector } from '../../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
-import { alertActions, userActions } from '../../../_actions';
 import AlertPage from '../../../components/Alerts/Alert';
-import axios from 'axios';
-import { blob } from 'stream/consumers';
 import config from '../../../config';
 
 function EditPhoto() {
-	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const authentication = useAppSelector<any>(state => state.authentication);
   const userData = useAppSelector<any>(state => state.user);
@@ -43,16 +35,10 @@ function EditPhoto() {
 
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-    console.log(selectedFile);
-    //dispatch(alertActions.clear());
-    //dispatch(userActions.updateProfile(user));
-    //navigate("/profile");
 
     const formData = new FormData();
     formData.append("file", selectedFile);
 
-
-      console.log(formData)
       fetch( `${config.apiUrl}/users/avatar`,
         {
           method: 'POST',
@@ -60,7 +46,6 @@ function EditPhoto() {
           credentials: 'include'
         }
       ).then((response:any) => {
-        console.log(response)
         if (response?.statusText === "Created")
          navigate("/profile");
       })

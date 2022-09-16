@@ -3,6 +3,8 @@ import { BroadcastOperator, Socket } from 'socket.io';
 import Game from './shared/util/Game';
 import { GameEvents } from './shared/util/Game';
 import { Utils } from './shared/util/Utils';
+import Vector2 from "./shared/util/Vector2";
+import Powerup from "./shared/game_objects/powerups/Powerup";
 import {
   ServerGameState,
   ServerGameStateMachine,
@@ -98,6 +100,22 @@ class GameRoom {
         );
       }
     });
+
+    this.game.on(GameEvents.PaddleBallCollide, () => {
+      if (this.game.currentPowerup === null
+          && Math.random() <= 1) { //change to 0.1
+          const x = Utils.randomIntFromInterval(Game.powerupBoundsTopLeft.x, Game.powerupBoundsBottomRight.x);
+          const y = Utils.randomIntFromInterval(Game.powerupBoundsTopLeft.y, Game.powerupBoundsBottomRight.y);
+          const powerupPos = new Vector2(x, y);
+          this.game.currentPowerup = new Powerup(this.game.eventHandler, this.game, powerupPos);
+        }
+    });
+
+    this.game.on(GameEvents.PowerupBallCollide, () => {
+      const pos = this.game.ball.pos;
+      this.game.currentPowerup.startEffect(pos);
+      this.socket.emit('powerupTrigger', {ballpos: {x: pos.x, y: pos.y}});
+    });
   }
 
   private connectAsSpectator(client: Socket, username: string) {
@@ -132,7 +150,7 @@ class GameRoom {
           GameRoom.movingAveragePeriod,
         );
         client.emit('assignController', { control: ['player1'] });
-        this.gameService.userInGame(username);
+        this.gameService.userInGame(username, this.id);
       } else if (this.settings.p2 == null) {
         this.settings.p2 = {
           id: client.id,
@@ -143,8 +161,7 @@ class GameRoom {
           GameRoom.movingAveragePeriod,
         );
         client.emit('assignController', { control: ['player2'] });
-        this.gameService.userInGame(username);
-
+        this.gameService.userInGame(username, this.id);
         //Start Game
         this.stateMachine.changeGameState(ServerGameState.Running, {});
         this.socket.emit('startGame', {});
@@ -247,9 +264,20 @@ class GameRoom {
   private update(frame: number) {
     if (this.gameStarted && frame % 3 == 0) {
       const game = this.game;
+      let powerup: any = {
+        on: false
+      };
+      if (this.game.currentPowerup != null) {
+        powerup = {
+          on: true,
+          pos: this.game.currentPowerup.pos,
+          effect: this.game.currentPowerup.effectIndex
+        }
+      }
       this.socket.volatile.emit('gameUpdate', {
         frame: frame,
         pings: this.clientPings,
+        powerup: powerup,
         p1: { target: { x: game.paddle1.target.x, y: game.paddle1.target.y } },
         p2: { target: { x: game.paddle2.target.x, y: game.paddle2.target.y } },
         ballpos: { x: game.ball.pos.x, y: game.ball.pos.y },

@@ -252,6 +252,10 @@ export class ChatService {
 		}
 		users.push(owner);
 
+		if (access === 'protected' && password === "") {
+			throw new BadRequestException('Please enter a password');	
+		}
+
 		//hash password
 		if (access === 'protected') {
 			const salt = randomBytes(8).toString('hex');	
@@ -673,7 +677,6 @@ export class ChatService {
 		}
 
 		if (adminFlag) {
-			console.log("admin deleted");
 			await this.adminsInChannelsRepo.remove(adminRelation);
 		}
 
@@ -865,7 +868,6 @@ export class ChatService {
 		let currentTime = new Date();
 		let timeUntilMute = new Date();
 		timeUntilMute.setTime(currentTime.getTime() + (time * 60 * 1000));
-		console.log(currentTime);
 
 		return this.usersInChannelsRepo.update(userRelation.id, {	
 			mutedUntil: timeUntilMute

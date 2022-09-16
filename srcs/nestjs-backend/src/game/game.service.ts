@@ -32,14 +32,16 @@ export class GameService {
 		return match;
 	}
 
-	async userInGame(login: string) {
+	//==========Uncoment to add game room===========
+	async userInGame(login: string, gameRoom: string) {
 		const user = await this.userService.findOneLogin(login);
 		if (!user) {
 			throw new NotFoundException('User Not Found');
 		}
 
-		return this.userService.update(user, {inGame: true});
+		return this.userService.update(user, {inGame: true, gameRoom: gameRoom});
 	}
+
 
 	async userWon(login: string) {
 		const user = await this.userService.findOneLogin(login);

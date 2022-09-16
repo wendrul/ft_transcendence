@@ -13,7 +13,8 @@ export const userActions = {
     authenticate2fa,
     getAll,
     getById,
-		getByLogin,
+	getByLogin,
+    getByLoginNavbar,
     whoami,
     updateProfile
 };
@@ -39,7 +40,6 @@ function whoami() {
 }
 
 function turnOn2fa(code:string) {
-    console.log(11, code, 22)
     return (dispatch:any) => {
         dispatch(request());
 
@@ -61,7 +61,6 @@ function turnOn2fa(code:string) {
 }
 
 function turnOff2fa() {
-    console.log("aqui estoy")
     return (dispatch:any) => {
         dispatch(request());
 
@@ -223,21 +222,42 @@ function getById(id : any) {
 function getByLogin(login: string){
 	return (dispatch: any) => {
 			dispatch(request());
-			userService.getByLogin(login)
-			.then( user =>{
-				dispatch(success(user));
-			}, 
-				error => {
-					dispatch(failure(error));
-				}
+        userService.getByLogin(login)
+            .then( user =>{
+                    dispatch(success(user));
+                    dispatch(alertActions.success("User Founded"));
+                },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                }
 
-			);
-	};
+            );
+    };
 	function request() { return { type: userConstants.GETLOGIN_REQUEST } }
 	function success(users:any) { return { type: userConstants.GETLOGIN_SUCCESS, users } }
 	function failure(error:any) { return { type: userConstants.GETLOGIN_FAILURE, error } }
 }
 
+function getByLoginNavbar(login: string){
+	return (dispatch: any) => {
+			dispatch(request());
+        userService.getByLogin(login)
+            .then( user =>{
+                    dispatch(success(user));
+                    dispatch(alertActions.clear());
+                },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                }
+
+            );
+    };
+	function request() { return { type: userConstants.NAV_GETLOGIN_REQUEST } }
+	function success(users:any) { return { type: userConstants.NAV_GETLOGIN_SUCCESS, users } }
+	function failure(error:any) { return { type: userConstants.NAV_GETLOGIN_FAILURE, error } }
+}
 
 function getAll() {
     return (dispatch:any) => {

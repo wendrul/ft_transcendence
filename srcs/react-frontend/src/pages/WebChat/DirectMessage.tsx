@@ -80,7 +80,6 @@ function DirectMessage(){
 	//listening on join direct message room
 	useEffect(() => {
 		socket?.on('joinedRoom', (msg: string) => {
-			console.log("joined to room", msg);
 		});	
 	}, [socket]);
 
@@ -130,8 +129,6 @@ function DirectMessage(){
 		} else {
 			room_name = users?.item?.id + "." + curr_user?.data?.id;
 		}
-		console.log(room_name);
-
 		if (curr_user.data && users.item)
 			socket?.emit('joinRoom', room_name);
 
@@ -165,10 +162,8 @@ function DirectMessage(){
 				else
 					room = id_user + "." + my_id;
 				socket.emit('sendMessage', {sender: message.senderLogin, room: room, message: message.content});
-				console.log(room_name);
 			}).catch((err) => {
 				alert(err.response.data.message);
-				console.log(err.response.data.message)
 			});
 	}
 

@@ -5,7 +5,7 @@ import "@pixi/graphics-extras";
 export default abstract class Drawable implements IDrawable {
     public isVisible: boolean;
 
-    protected gfx: PIXI.Graphics;
+    public gfx: PIXI.Graphics;
     protected app: PIXI.Application;
 
     constructor(app: PIXI.Application, isVisible: boolean) {

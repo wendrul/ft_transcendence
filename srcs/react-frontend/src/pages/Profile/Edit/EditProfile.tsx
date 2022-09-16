@@ -1,33 +1,13 @@
-/************************************/
-/*
-  -Problema, al estar actualizando,
-  si hay error (login in use) u otro,
-  te dirige directamente a la paguna
-  username (MIRAR ESTO)
-
-
-  -Avatar aun no conectado
-*/
-/************************************/
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-	MDBBtn,
-	MDBRow,
-	MDBCol,
-	MDBInput,
-  MDBSwitch,
-  MDBFile,
   MDBListGroup,
-  MDBListGroupItem,
-  MDBDropdownItem
+  MDBListGroupItem
   } from 'mdb-react-ui-kit';
-import { useAppDispatch, useAppSelector } from '../../../_helpers/hooks';
+import { useAppSelector } from '../../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
-import { alertActions, userActions } from '../../../_actions';
-import AlertPage from '../../../components/Alerts/Alert';
 
 function EditProfile() {
-	const dispatch = useAppDispatch();
+
 	const navigate = useNavigate();
 	const authentication = useAppSelector<any>(state => state.authentication);
   const userData = useAppSelector<any>(state => state.user);

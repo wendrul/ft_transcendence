@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { MDBRange } from 'mdb-react-ui-kit';
 
 export default function RangeComponent() {

@@ -2,16 +2,24 @@ import Ball from "../game_objects/Ball";
 import GoalZone from "../game_objects/GoalZone";
 import IGameObject from "../game_objects/IGameObject";
 import Paddle from "../game_objects/Paddle";
+import Effect from "../game_objects/powerups/Effect";
+import { CageEffect, LoadEffectsModule } from "../game_objects/powerups/Effects";
 import Powerup from "../game_objects/powerups/Powerup";
 import Wall from "../game_objects/Wall";
 import EventHandler from "./EventHandler";
 import { Utils } from "./Utils";
+import Vector2 from "./Vector2";
+
 
 export enum GameEvents {
-  BallScore = "ballScore",
-  GameUpdate = "gameUpdate",
-  PointStart = "pointStart",
-  GameEnd = "gameEnd",
+    BallScore = "ballScore",
+    GameUpdate = "gameUpdate",
+    PointStart = "pointStart",
+    GameEnd = "gameEnd",
+    PaddleBallCollide = "paddleBallCollide",
+    PowerupBallCollide = "powerupBallCollide",
+    EffectDisable = "effectDisable",
+    PowerupAbort = "powerupAbort"
 }
 
 export default class Game {
@@ -25,6 +33,9 @@ export default class Game {
   private static readonly ballStartSpeed = 200;
   public static readonly dt = 1000.0 / 120.0;
 
+  static readonly powerupBoundsTopLeft = new Vector2(200, 200);
+  static readonly powerupBoundsBottomRight = new Vector2(Game.width - 200, Game.height - 200);
+
   /* Logic */
   leftGoal: Wall;
   rightGoal: Wall;
@@ -32,6 +43,7 @@ export default class Game {
   scoreboard = { left: 0, right: 0 };
 
   /* class variables */
+  public currentPowerup : Powerup | null = null;
   public gameEnd = false;
   private powerupsON = false;
   private gameObjects: Array<IGameObject> = [];
@@ -41,7 +53,6 @@ export default class Game {
   private _paddle2: Paddle;
   private _ball: Ball;
   private _walls: Wall[];
-  private _powerups = Powerup.GetImplementations();
 
   private fieldHeight: number;
   private fieldWidth: number;
@@ -80,16 +91,13 @@ export default class Game {
     this._walls = v;
   }
 
-  public get powerups() {
-    return this._powerups;
-  }
-
-  private eventHandler: EventHandler;
+  public eventHandler: EventHandler;
 
   public updateEvents: Function[] = [];
 
   constructor(winCondition: string, usePowerups: string) {
     this.gameTime = performance.now();
+    LoadEffectsModule();
     this._currentFrame = 0;
     this.powerupsON = usePowerups === "power-up";
 
@@ -102,13 +110,15 @@ export default class Game {
       "whaffer1",
       1,
       this.fieldWidth / 2,
-      this.fieldHeight / 2
+      this.fieldHeight / 2,
+      this.eventHandler
     );
     this._paddle2 = new Paddle(
       "whaffer2",
       2,
       this.fieldWidth / 2,
-      this.fieldHeight / 2
+      this.fieldHeight / 2,
+      this.eventHandler
     );
     this.lastLoser = Math.random() > 0.5 ? "left" : "right";
 
@@ -129,6 +139,11 @@ export default class Game {
     this.ball.colliders.push(this.paddle1, this.paddle2);
 
     this.gameObjects.push(this.paddle1, this.paddle2, this.ball, ...this.walls);
+
+    const powerupPos = new Vector2(Game.width / 2, Game.height / 2);
+
+    //setTimeout(()=>this.currentPowerup = new Powerup(this, powerupPos), 3000);
+
     this.gameLoop();
   }
 
@@ -195,16 +210,10 @@ export default class Game {
     if (!this.gameEnd) {
       setTimeout(() => this.gameLoop(), 5);
     }
-    
+
   }
 
   public on(eventName: GameEvents, callback: Function) {
     this.eventHandler.on(eventName, callback);
   }
-
-  public getRandomPowerup() {
-    let i = Math.floor(Math.random() * this.powerups.length + 1);
-    return this.powerups[i];
-  }
-
 }

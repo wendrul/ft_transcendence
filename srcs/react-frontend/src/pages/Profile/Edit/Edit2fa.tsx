@@ -1,11 +1,8 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import {
 	MDBBtn,
-	MDBRow,
-	MDBCol,
 	MDBInput,
-	MDBSwitch,
-	MDBFile
+	MDBSwitch
 } from 'mdb-react-ui-kit';
 import { useAppDispatch, useAppSelector } from '../../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
@@ -51,12 +48,10 @@ function Edit2fa() {
 
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		console.log("Codigo:[", code ,"]")
 		dispatch(userActions.turnOn2fa(code));
 	}
 
 	const handletest = function(event: ChangeEvent<HTMLInputElement>) {
-		console.log(boolTwo)
 		toggleSwitch()
 		setUser({...user, twoFactorAuthenticationFlag: !boolTwo});
 		dispatch(userActions.turnOff2fa());

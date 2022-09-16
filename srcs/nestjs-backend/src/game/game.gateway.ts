@@ -51,7 +51,6 @@ export class GameGateway
 
   handleConnection(client: Socket, ...args: any[]) {
     const query = client.handshake.query;
-    this.logger.debug(query);
 
     if (
       query.name == undefined ||
@@ -190,7 +189,7 @@ export class GameGateway
 
       this.gameRooms.set(
         roomID,
-        new GameRoom(this.server.to(roomID), roomID, {winCondition: GameRoom.defaultWC.toString(), type: "classic"}, this.gameService, () =>
+        new GameRoom(this.server.to(roomID), roomID, {winCondition: GameRoom.defaultWC.toString(), type: "power-up"}, this.gameService, () =>
           this.shutoff(roomID),
         ),
       );

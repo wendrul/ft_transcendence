@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useEffect } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import {
 	MDBBtn,
   MDBRadio,
@@ -21,7 +21,6 @@ function RoomCreate(props: { active: boolean, sender: string , userId:number ,ro
 		event.preventDefault();
     let r = (Math.random() + 1).toString(36).substring(3);
     let url = `${window.location.origin}/play-premade/` + r + `?winCondition=${room.winCondition}&type=${room.type}&spectator=${room.spectator}`
-    console.log(room);
 
     axios.post(`${config.apiUrl}/chat/createMessageForUser/${props.userId}`, //id del usuario al que se le manda el mensaje.
     {
@@ -31,7 +30,7 @@ function RoomCreate(props: { active: boolean, sender: string , userId:number ,ro
       withCredentials: true
     }).then(message => { 
       props.socketid.emit('sendMessage', {sender: props.sender, room: props.roomid, message: url});
-    }).catch(error => {console.log(error)});
+    }).catch();
 
    // props.socketid.emit('sendMessage', {sender: props.sender, room: props.roomid, message: url});
     // generar el name aqui
