@@ -121,14 +121,15 @@ export class GameGateway
   }
 
   private connectSpectator(newClient: GameClient) {
-    const room = this.gameRooms[newClient.roomID];
-    if (!room) {
+    
+    if (!this.gameRooms.has(newClient.roomID)) {
       this.logger.error('Failed to find room that spectator was looking for');
       newClient.socket.emit('planned-dc', {
         reason: "this match doesn't exist",
       });
       newClient.socket.disconnect();
     } else {
+      const room = this.gameRooms.get(newClient.roomID);
       newClient.socket.join(newClient.roomID);
       room.connection(newClient.socket, newClient.name, true);
       this.logger.log(
