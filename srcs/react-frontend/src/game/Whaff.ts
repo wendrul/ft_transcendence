@@ -11,6 +11,7 @@ import Game, { GameEvents } from "./shared/util/Game";
 import WhaffHUD from "./graphics/WhaffHUD";
 import { GameState, GameStateMachine } from "./state/GameStateMachine";
 import config from "../config";
+import PowerupDrawable from "./graphics/powerups/PowerupDrawable";
 
 class Whaff {
   static debugMode: boolean;
@@ -84,9 +85,13 @@ class Whaff {
     console.log("Finished Game setup");
 
     this.stateMachine = new GameStateMachine(this.game, this);
+    
     this.game.on(GameEvents.GameUpdate, (frame: number) => {
       this.stateMachine.currentState.onUpdate(frame);
     });
+
+    new PowerupDrawable(this.game.currentPowerup!, this.app);
+    // this.game.on()
   }
 
   private makeDrawables() {
@@ -119,6 +124,10 @@ class Whaff {
       this.game.scoreboard.right = gameState.score.right;
       this.socket.emit("pingBack", { time: gameState.time });
       this.debugInfo.pings = gameState.pings;
+
+      if (gameState.powerup) {
+        
+      }
     });
     
     this.socket.on("assignController", (settings) => {

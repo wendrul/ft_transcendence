@@ -156,7 +156,7 @@ export default class Paddle implements ICollider, IGameObject {
       )
     );
 
-    //Decrease velocity by 20% on bounce
+    //Increase ball velocity by 5% when colliding with paddle
     collidingObject.velocity = collidingObject.velocity.scale(1.05);
     return normal;
   }

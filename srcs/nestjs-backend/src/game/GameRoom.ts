@@ -94,6 +94,11 @@ class GameRoom {
         );
       }
     });
+
+    // this.game.on(GameEvents.Powerup, (ownerIsLeft) => {
+
+    //   // this.game.currentEffect = new CageEffect();
+    // } )
   }
 
   private connectAsSpectator(client: Socket, username: string) {

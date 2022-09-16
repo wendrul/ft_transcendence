@@ -63,7 +63,7 @@ class RoutesHandler extends React.Component {
         <Route  path ='/direct_message/:id' element={<DirectMessage/>} />
         <Route  path ='/game-test' element={<GameComponent username={"pogTester"} roomID={""} test={true} />}/>
         <Route  path ='/game-test2' element={<GameSettingsTest />}/>
-        <Route  path ='/play' element={<UsernameRedirect component={<GameComponent roomID={""} spectator={false} premade={false} type="classic" winCondition={Game.defaultWC.toString()} />} />}/>
+        <Route  path ='/play' element={<UsernameRedirect component={<GameComponent roomID={""} spectator={false} premade={false} type="power-up" winCondition={Game.defaultWC.toString()} />} />}/>
         <Route  path ='/play-premade/:id' element={<UsernameRedirect component={<PlayPremade/>} />} />
         <Route
           path="*"

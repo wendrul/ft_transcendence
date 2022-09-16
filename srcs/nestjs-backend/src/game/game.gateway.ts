@@ -190,7 +190,7 @@ export class GameGateway
 
       this.gameRooms.set(
         roomID,
-        new GameRoom(this.server.to(roomID), roomID, {winCondition: GameRoom.defaultWC.toString(), type: "classic"}, this.gameService, () =>
+        new GameRoom(this.server.to(roomID), roomID, {winCondition: GameRoom.defaultWC.toString(), type: "power-up"}, this.gameService, () =>
           this.shutoff(roomID),
         ),
       );
