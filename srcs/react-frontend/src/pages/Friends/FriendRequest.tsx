@@ -123,6 +123,11 @@ function FriendRequest() {
     setJustifyActive(value);
   };
 
+  async  function sala(event:any ) {
+   console.log("sala")
+  }
+
+
   return (
     <>
       {  authentication.loggedIn && 
@@ -214,6 +219,15 @@ function FriendRequest() {
                             {renderElement(item?.online, item?.inGame )}
                           </div>
                         </div>
+                        { item?.inGame && 
+                          <div className='ms-3'>
+                            <MDBBtn onClick={(e) => {
+                              sala(e);
+                              }}size='sm'  rounded color='success'>
+                            Spectate
+                           </MDBBtn>
+                          </div>
+                        }
                       </MDBListGroupItem>
                     )}
                   </MDBListGroup>
