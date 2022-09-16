@@ -94,11 +94,6 @@ function UserView (props : IProps){
 
 	const oneUser = () => {
 
-		const spectate = (event:any, gameRoom:string) => {
-			event.preventDefault();
-		   console.log(gameRoom)
-		  }
-
 		return(
 				<div className='d-flex flex-column'>
 						{ allfriends && allfriends.map((item:Friends, i:number) =>
@@ -117,7 +112,7 @@ function UserView (props : IProps){
 									Profile 
 								</button>
 								{ item && item?.inGame &&
-									<button onClick={event => spectate(event, item?.gameRoom)}>							
+									<button onClick={() =>  window.location.href=window.location.origin + '/play-premade/' + item?.gameRoom }>							
 										Spectate 
 									</button>
 								}

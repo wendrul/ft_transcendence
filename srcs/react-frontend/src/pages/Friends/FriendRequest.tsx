@@ -124,12 +124,6 @@ function FriendRequest() {
     setJustifyActive(value);
   };
 
-  const spectate = (event:any, gameRoom:string) => {
-    event.preventDefault();
-   console.log(gameRoom)
-  }
-
-
   return (
     <>
       {  authentication.loggedIn && 
@@ -223,9 +217,7 @@ function FriendRequest() {
                         </div>
                         { item && item?.inGame && 
                           <div className='ms-3'>
-                            <MDBBtn onClick={(e) => {
-                              spectate(e, item?.gameRoom);
-                              }}size='sm'  rounded color='success'>
+                            <MDBBtn onClick={() =>  window.location.href=window.location.origin + '/play-premade/' + item?.gameRoom }size='sm'  rounded color='success'>
                             Spectate
                            </MDBBtn>
                           </div>
