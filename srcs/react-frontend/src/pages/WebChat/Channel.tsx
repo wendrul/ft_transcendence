@@ -39,7 +39,6 @@ function Channel (){
 		setAllChannel(channel.data);
 	},[channel.data]);
 
-
 	const handleChanType = (s: string) => {{
 		setType(s);
 	}}
@@ -196,13 +195,16 @@ function Channel (){
 	}
 
 	const displayChannel = () =>{
+
+
 		const removePass = (e: any, id :string) => {
-			console.log("id " + id);
 			dispatch(channelActions.removePassChan(id));
+			window.location.reload();
 		}
 
 		const editPass = (e:any, id:string) =>{
 			dispatch(channelActions.editPassChan(id, edit));
+			window.location.reload();
 		}
 		return(
 			<>
