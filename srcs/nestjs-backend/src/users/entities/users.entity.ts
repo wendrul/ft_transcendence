@@ -110,6 +110,9 @@ export class User {
 	@Column({default: false})
 	inGame: boolean;
 
+	@Column({default: ""})
+	gameRoom: string;
+
 	@OneToMany(() => Match, (match) => match.winer)
 	wonMatches: Match[];
 
