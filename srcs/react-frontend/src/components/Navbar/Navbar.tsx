@@ -63,16 +63,16 @@ export default function NavbarComponent() {
   },[alert.message]) 
 */
   useEffect(()=> {
-    if (users.loged)
+    if (users.encontrado)
     {
-      if (users.item != null)
-        navigate("/profile/" +users.item.login)
+      if (users.itemNavbar != null)
+        navigate("/profile/" +users.itemNavbar.login)
     }
-  },[users.item]) 
+  },[users.itemNavbar]) 
 
   const onSerch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch(userActions.getByLogin(userLogin));
+    dispatch(userActions.getByLoginNavbar(userLogin));
     /*const url = "/profile/" + userLogin;
     console.log(userLogin)*/
     //navigate(url)

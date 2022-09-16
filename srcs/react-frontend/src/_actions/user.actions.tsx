@@ -13,7 +13,8 @@ export const userActions = {
     authenticate2fa,
     getAll,
     getById,
-		getByLogin,
+	getByLogin,
+    getByLoginNavbar,
     whoami,
     updateProfile
 };
@@ -238,6 +239,26 @@ function getByLogin(login: string){
 	function request() { return { type: userConstants.GETLOGIN_REQUEST } }
 	function success(users:any) { return { type: userConstants.GETLOGIN_SUCCESS, users } }
 	function failure(error:any) { return { type: userConstants.GETLOGIN_FAILURE, error } }
+}
+
+function getByLoginNavbar(login: string){
+	return (dispatch: any) => {
+			dispatch(request());
+        userService.getByLogin(login)
+            .then( user =>{
+                    dispatch(success(user));
+                    dispatch(alertActions.success("User Founded"));
+                },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                }
+
+            );
+    };
+	function request() { return { type: userConstants.NAV_GETLOGIN_REQUEST } }
+	function success(users:any) { return { type: userConstants.NAV_GETLOGIN_SUCCESS, users } }
+	function failure(error:any) { return { type: userConstants.NAV_GETLOGIN_FAILURE, error } }
 }
 
 function getAll() {

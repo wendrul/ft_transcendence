@@ -51,9 +51,9 @@ function Profile(){
 	
 
 	useEffect(() => {
-		if(users.item == null)
-			navigate("/");
-	}, [users.item])
+		if(!users.encontrado && !user.buscando)
+			navigate("/404");
+	}, [users])
 
 
 	useEffect(() => {
