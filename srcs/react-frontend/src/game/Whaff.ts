@@ -16,8 +16,8 @@ import Powerup from "./shared/game_objects/powerups/Powerup";
 import Vector2 from "./shared/util/Vector2";
 import { Utils } from "./shared/util/Utils";
 import { CageEffect } from "./shared/game_objects/powerups/Effects";
-import { EffectDrawable } from "./graphics/powerups/EffectDrawable";
 import Effect from "./shared/game_objects/powerups/Effect";
+import { EffectDrawable } from "./graphics/powerups/EffectDrawable";
 import { LoadEffectDrawablesModule } from "./graphics/powerups/EffectDrawables";
 
 class Whaff {
@@ -53,8 +53,6 @@ class Whaff {
     test = false
   ) {
     LoadEffectDrawablesModule();
-    // CageEffect.newDrawable = (effect: CageEffect, app: PIXI.Application) => new CageEffectDrawable(effect, app)
-
 
     this.socket = io(`${config.apiUrl}/game`, {
       query: { ...queryParameters, test },

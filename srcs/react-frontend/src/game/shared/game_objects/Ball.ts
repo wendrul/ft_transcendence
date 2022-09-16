@@ -6,6 +6,7 @@ import IGameObject from "./IGameObject";
 import Game from "../util/Game";
 import EventHandler from "../util/EventHandler";
 import { Utils } from "../util/Utils";
+import { BlackHoleEffect } from "./powerups/Effects";
 
 enum BallStates {
   MOVING,
@@ -29,13 +30,16 @@ class Ball implements IGameObject {
   static readonly radius = 15;
   static readonly bounceStallDelay = 0.02;
 
+  blackHoleGravitySource?: Vector2 | null;
+
   constructor(eventHandler: EventHandler) {
     this.eventHandler = eventHandler;
     this.reset();
     this.colliders = new Array<ICollider>();
+    this.blackHoleGravitySource = null;
   }
 
-  public update(delta: number) {
+  public update(dt: number) {
     switch (this.state) {
       case BallStates.BOUNCE_STALL:
         if (this.enteringState) {
@@ -43,7 +47,7 @@ class Ball implements IGameObject {
           this.elapsedTime = 0;
         }
         const t = this.elapsedTime / Ball.bounceStallDelay;
-        this.elapsedTime += delta / 60;
+        this.elapsedTime += dt / 60;
         if (this.elapsedTime > Ball.bounceStallDelay) {
           this.state = BallStates.MOVING;
           this.enteringState = true;
@@ -52,10 +56,14 @@ class Ball implements IGameObject {
 
       case BallStates.MOVING:
         this.enteringState = false;
-        const newPos = this.pos.add(this.velocity.scale(delta / 60));
+        const newPos = this.pos.add(this.velocity.scale(dt / 60));
 
+        if (this.blackHoleGravitySource !== null) {
+          const grav = this.blackHoleGravitySource?.subtract(this.pos).normalized().scale(BlackHoleEffect.gravStrength * dt);
+          this.velocity = this.velocity.add(grav!);
+        }
         this.velocity = this.velocity.rotate(this.omega * this.velocity.x);
-        this.omega += (delta / 1000) * Utils.clamp(this.magnusForce.y, -0.001, 0.001);
+        this.omega += (dt / 1000) * Utils.clamp(this.magnusForce.y, -0.001, 0.001);
 
         const collidedObject = this.findPossibleCollision(
           this.pos,
@@ -119,8 +127,8 @@ class Ball implements IGameObject {
   public reset() {
     this.omega = 0;
     this.pos = new Vector2(Game.width / 2, Game.height / 2);
-    this.velocity = new Vector2(0,0);
-    this.magnusForce = new Vector2(0,0);
+    this.velocity = new Vector2(0, 0);
+    this.magnusForce = new Vector2(0, 0);
   }
 }
 

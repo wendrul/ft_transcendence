@@ -107,8 +107,7 @@ class Powerup implements IGameObject, ICollider {
     public getRandomEffectIndex() {
         const effects = Effect.GetImplementations();
         let i = Utils.randomIntFromInterval(0, effects.length - 1);
-        return 1;
-        return i;
+        return 1; //make this return i;
     }
 }
 

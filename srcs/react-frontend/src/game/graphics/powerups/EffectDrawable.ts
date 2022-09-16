@@ -25,7 +25,7 @@ export namespace EffectDrawable {
         return drawables;
     }
 
-    export function registerDrawable<T extends DrawableConstructor<EffectDrawable>>(ctor: T) {
+    export function register<T extends DrawableConstructor<EffectDrawable>>(ctor: T) {
         drawables.push(ctor);
         return ctor;
     }

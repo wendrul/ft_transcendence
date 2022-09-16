@@ -1,6 +1,7 @@
 import { ICollider, Ray, rayIntersection as lineIntersecton } from "../../util/Collider";
 import Game from "../../util/Game";
 import Vector2 from "../../util/Vector2";
+import Ball from "../Ball";
 import IGameObject from "../IGameObject";
 import Wall from "../Wall";
 import Effect, { EffectType } from "./Effect";
@@ -11,10 +12,9 @@ export function LoadEffectsModule(){}
 @Effect.register
 export class CageEffect extends Effect {
     walls: Wall[];
-    static readonly wallLength = 100; //garbage change
+    static readonly wallLength = 100;
     static readonly wallThickness = 10;
-    static readonly durationMs = 3000; //3 seconds
-
+    static readonly durationMs = 3000;
 
     constructor(game: Game, origin: Vector2) {
         super(game, origin, EffectType.Cage, CageEffect.durationMs);
@@ -36,6 +36,35 @@ export class CageEffect extends Effect {
     onEnd(): void {
         const del = this.game.ball.colliders.indexOf(this.walls[0]);
         this.game.ball.colliders.splice(del, 4);
+    }
+}
+
+@Effect.register
+export class BlackHoleEffect extends Effect {
+    static readonly gravStrength = 5;
+    static readonly durationMs = 3000;
+    static readonly radius = 30;
+
+    gravSource!: Vector2;
+    prevVelocity!: Vector2;
+
+    constructor(game: Game, origin: Vector2) {
+        super(game, origin, EffectType.BlackHole, BlackHoleEffect.durationMs);
+    }
+
+    onStart(ownerIsLeft: boolean, ballpos: Vector2): void {
+        this.prevVelocity = this.game.ball.velocity.clone();
+        const y = Game.height / 2;
+        let dist = BlackHoleEffect.radius * 2;
+        let x = ownerIsLeft ? Game.width - dist : dist;
+
+        this.gravSource = new Vector2(x, y);
+        
+        this.game.ball.blackHoleGravitySource = this.gravSource;
+    }
+
+    onEnd(): void {
+        this.game.ball.blackHoleGravitySource = null;
     }
 }
 
@@ -65,9 +94,4 @@ export class DefensiveWallEffect extends Effect {
         const del = this.game.ball.colliders.indexOf(this.wall);
         this.game.ball.colliders.splice(del, 4);
     }
-
-    registerOwnDrawable() {
-
-    }
 }
-
