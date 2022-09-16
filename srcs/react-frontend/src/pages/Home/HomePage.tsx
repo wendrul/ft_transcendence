@@ -74,7 +74,6 @@ function HomePage(){
 	}
 	useEffect(() =>{
 		if (params.get("twoFactor") === "true")
-			console.log("url[",url,"]");
 			if (url === "true")
 			{
 				navigate("/")
@@ -85,9 +84,6 @@ function HomePage(){
 	
 	useEffect(() => {
 		document.title = "Home";
-	/*	console.log();
-		if (params.get("code"))
-			console.log(params.get("code"))*/
 	}, [])
 	
 	useEffect(() => {

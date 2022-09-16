@@ -108,7 +108,6 @@ function FriendRequest() {
   }
 
   async  function rejectedRequest(user: any, event:any ) {
-    console.log("rejected")
     const req = pendingRequests.request.find((item:any) => item.senderId === user.id );
     let id = "" + req.id;
     dispatch(friendActions.acceptRequest(id, "rejected"))

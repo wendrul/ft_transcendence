@@ -40,7 +40,6 @@ function whoami() {
 }
 
 function turnOn2fa(code:string) {
-    console.log(11, code, 22)
     return (dispatch:any) => {
         dispatch(request());
 
@@ -62,7 +61,6 @@ function turnOn2fa(code:string) {
 }
 
 function turnOff2fa() {
-    console.log("aqui estoy")
     return (dispatch:any) => {
         dispatch(request());
 

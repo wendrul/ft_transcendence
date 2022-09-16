@@ -92,7 +92,7 @@ function History (){
 				const history = res.data;
 				setHistory(history);
 			})
-			.catch(() => {console.log('error')})
+			.catch(() => {})
 		}
 	}, [users]);
 

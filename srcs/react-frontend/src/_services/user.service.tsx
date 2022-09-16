@@ -140,9 +140,7 @@ function signout() {
 }
 
 function updateProfile(user:UpdateUser) {
-    console.log(user)
-    const JSobj = JSON.stringify(user)
-    console.log(JSobj)
+    //const JSobj = JSON.stringify(user)
     return axios.patch(`${config.apiUrl}/users/myprofile`,
     {
      //   User

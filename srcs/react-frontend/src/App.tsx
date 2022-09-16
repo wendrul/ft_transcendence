@@ -33,18 +33,13 @@ function App() {
 	useEffect(() => {
 		socket?.on('youAreOnline', (online: boolean, id: string) => {
 			if (online && curr_user?.data) {
-				console.log('online', curr_user?.data?.login);
 				axios.patch(`${config.apiUrl}/users/myprofile`, 
 					{
 						online: true,
 					},
 					{
 						withCredentials: true,
-					}).then(() => {
-						console.log('bien updateadin');
-					}).catch((e) => {
-						console.log(e);
-					});
+					}).then(() => {}).catch(() => {});
 			}
 		});	
 	}, [socket && curr_user.data])
