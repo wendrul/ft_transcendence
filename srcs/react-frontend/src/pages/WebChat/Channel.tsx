@@ -202,7 +202,6 @@ function Channel (){
 		}
 
 		const editPass = (e:any, id:string) =>{
-			console.log("edit: " + edit);
 			dispatch(channelActions.editPassChan(id, edit));
 		}
 		return(
