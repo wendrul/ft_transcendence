@@ -11,6 +11,12 @@ import Game, { GameEvents } from "./shared/util/Game";
 import WhaffHUD from "./graphics/WhaffHUD";
 import { GameState, GameStateMachine } from "./state/GameStateMachine";
 import config from "../config";
+import PowerupDrawable from "./graphics/powerups/PowerupDrawable";
+import Powerup from "./shared/game_objects/powerups/Powerup";
+import Vector2 from "./shared/util/Vector2";
+import { Utils } from "./shared/util/Utils";
+import CageEffectDrawable from "./graphics/powerups/CageEffectDrawable";
+import { CageEffect } from "./shared/game_objects/powerups/Effects";
 
 class Whaff {
   static debugMode: boolean;
@@ -29,6 +35,8 @@ class Whaff {
   };
 
   socket: Socket;
+  currentPowerupDrawable?: PowerupDrawable;
+  effectDrawable: any;
 
   constructor(
     instantiatedApp: PIXI.Application,
@@ -84,8 +92,39 @@ class Whaff {
     console.log("Finished Game setup");
 
     this.stateMachine = new GameStateMachine(this.game, this);
+    
     this.game.on(GameEvents.GameUpdate, (frame: number) => {
       this.stateMachine.currentState.onUpdate(frame);
+    });
+
+    // this.game.on(GameEvents.PaddleBallCollide, () => {
+
+    //   if (this.game.currentPowerup === null
+    //     && Math.random() <= 1) { //change to 0.1
+    //       const x = Utils.randomIntFromInterval(Game.powerupBoundsTopLeft.x, Game.powerupBoundsBottomRight.x);
+    //       const y = Utils.randomIntFromInterval(Game.powerupBoundsTopLeft.y, Game.powerupBoundsBottomRight.y);
+    //       const powerupPos = new Vector2(x, y);
+    //       this.game.currentPowerup = new Powerup(this.game.eventHandler, this.game, powerupPos);
+    //       this.currentPowerupDrawable = new PowerupDrawable(this.game.currentPowerup!, this.app);
+    //       // setTimeout(()=>this.game.currentPowerup?.onCollision(this.game.ball), 1000);
+    //     }
+    // });
+
+    this.game.on(GameEvents.EffectDisable, () => {
+      if (this.effectDrawable != null){
+        this.effectDrawable.onEnd();
+        this.effectDrawable = null;
+      }
+    })
+
+    this.game.on(GameEvents.PowerupAbort, () =>  {
+      if (this.effectDrawable != null){
+        this.effectDrawable.onEnd();
+        this.effectDrawable = null;
+      }
+      if (this.currentPowerupDrawable != null) {
+        this.currentPowerupDrawable.remove();
+      }
     });
   }
 
@@ -119,6 +158,31 @@ class Whaff {
       this.game.scoreboard.right = gameState.score.right;
       this.socket.emit("pingBack", { time: gameState.time });
       this.debugInfo.pings = gameState.pings;
+      if (!gameState.powerup.on && this.game.currentPowerup != null) {
+        this.game.currentPowerup.abort();
+        this.game.currentPowerup = null;
+
+      }
+      if (gameState.powerup.on && this.game.currentPowerup == null) {
+        const powerupPos = new Vector2(gameState.powerup.pos.x,gameState.powerup.pos.y);
+        this.game.currentPowerup = new Powerup(this.game.eventHandler, this.game, powerupPos, gameState.powerup.effect);  
+        this.currentPowerupDrawable = new PowerupDrawable(this.game.currentPowerup!, this.app);
+      }
+    });
+
+    this.socket.on('powerupTrigger', (data) => {
+      console.log(data);
+      try {
+        this.game.currentPowerup?.startEffect(new Vector2(data.ballpos.x, data.ballpos.y));
+      this.effectDrawable = new CageEffectDrawable(this.game.currentPowerup?.effect as CageEffect, this.app);
+      this.effectDrawable.onStart();
+      this.app.stage.removeChild(this.currentPowerupDrawable!.gfx);
+      } catch (error) {
+        console.log(error);
+        throw error;
+        
+      }
+      
     });
     
     this.socket.on("assignController", (settings) => {

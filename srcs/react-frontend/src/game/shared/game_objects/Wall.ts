@@ -15,6 +15,7 @@ class Wall implements IGameObject, ICollider {
   colliderRay: Ray;
 
   colliderSide: "top" | "bot" | "left" | "right";
+  lastWouldCollide: boolean;
 
 
   constructor(
@@ -28,6 +29,7 @@ class Wall implements IGameObject, ICollider {
     this.height = height;
     this.width = width;
     this.colliderSide = side;
+    this.lastWouldCollide = false;
 
     switch (side) {
       case "top":
@@ -105,8 +107,10 @@ class Wall implements IGameObject, ICollider {
       .cross(this.colliderRay.dir);
 
     if ((crossNew >= 0 && crossOld >= 0) || (crossNew <= 0 && crossOld <= 0))
-      return false;
-    return true;
+      this.lastWouldCollide =  false;
+    else
+      this.lastWouldCollide = true;
+    return this.lastWouldCollide;
   }
 }
 

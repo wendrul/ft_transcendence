@@ -127,7 +127,9 @@ class RunningState implements IState {
     }, Game.respawnCooldown);
   }
 
-  onExit() {}
+  onExit() {
+
+  }
 
   onUpdate(dt: number) {}
 }
@@ -163,7 +165,12 @@ class ScoringState implements IState {
     }, Game.deathCooldown);
   }
 
-  onExit() {}
+  onExit() {
+    if (this.game.currentPowerup != null) {
+      this.game.currentPowerup.abort();
+      this.game.currentPowerup = null;
+    }
+  }
 
   onUpdate(dt: number) {}
 }
