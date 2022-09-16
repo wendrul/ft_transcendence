@@ -96,7 +96,7 @@ function editPassChan(id: string, pwd: string){
 
 
 function handleResponse(response:any) {
-    if(response.status == 400 || response.status == 404)
+    if(response.status === 400 || response.status === 404)
     {
         const error = response.message || response.statusText;
         return Promise.reject(error);

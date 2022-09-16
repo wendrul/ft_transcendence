@@ -23,7 +23,6 @@ function getFriends() {
 }
 
 function acceptRequest(id:string, body:string) {
-    const JSobj = JSON.stringify(body)
     return axios.patch(`${config.apiUrl}/friendRequest/${id}`,
     {
         status: body

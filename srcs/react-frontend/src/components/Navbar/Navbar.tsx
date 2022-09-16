@@ -1,9 +1,3 @@
-/* ******** */
-/* 
-  carga primero una pagina que no deberia, mirar esto en el redux, tal vez hay problema
-*/
-/* ******** */
-
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import {
   MDBContainer,
@@ -19,7 +13,6 @@ import {
   MDBDropdownToggle,
   MDBDropdownMenu,
   MDBDropdownItem,
-  // MDBDropdownLink,
   MDBCollapse,
   MDBSpinner
 } from 'mdb-react-ui-kit';
@@ -33,7 +26,6 @@ export default function NavbarComponent() {
   const authentication = useAppSelector<any>(state => state.authentication);
   const friend_req = useAppSelector<any>(state => state.friend);
   const users = useAppSelector<any>(state => state.users);
-  const alert = useAppSelector<any>(state => state.alert);
   const [showBasic, setShowBasic] = useState(false);
   let navigate = useNavigate();
 
@@ -56,12 +48,7 @@ export default function NavbarComponent() {
 	const logout = () => {
     dispatch(userActions.signout());
 	}
-/*
-  useEffect(()=> {
-    if (alert.message === "user not found")
-      navigate("/404")
-  },[alert.message]) 
-*/
+
   useEffect(()=> {
     if (users.encontrado)
     {
@@ -73,16 +60,11 @@ export default function NavbarComponent() {
   const onSerch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch(userActions.getByLoginNavbar(userLogin));
-    /*const url = "/profile/" + userLogin;
-    console.log(userLogin)*/
-    //navigate(url)
 	}
 
   const handleChangeUserLogin = function(event: ChangeEvent<HTMLInputElement>) {
     setUserLogin(event?.currentTarget?.value);
   }
-
-
 
   return (
     <MDBNavbar expand='lg' light bgColor='light'>

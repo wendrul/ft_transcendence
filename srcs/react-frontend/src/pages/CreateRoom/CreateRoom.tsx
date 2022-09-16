@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import "./CreateRoom.css";
 import RoomCreate from './component/RoomCreate';
 
@@ -9,7 +9,7 @@ function CreateRoom(props: { sender:string, roomid:string, userId:number, socket
 		document.title = "CreateRoom";
 	
 	}, [])
-  const [basicActive, setBasicActive] = useState('tab1');
+  const basicActive = "tab1"
 
   return (
     <>

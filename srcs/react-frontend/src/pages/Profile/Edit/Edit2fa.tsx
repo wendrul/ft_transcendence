@@ -1,11 +1,8 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import {
 	MDBBtn,
-	MDBRow,
-	MDBCol,
 	MDBInput,
-	MDBSwitch,
-	MDBFile
+	MDBSwitch
 } from 'mdb-react-ui-kit';
 import { useAppDispatch, useAppSelector } from '../../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';

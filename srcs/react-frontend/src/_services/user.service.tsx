@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import config from '../config';
 import { UpdateUser } from '../interfaces/iUser'
 
@@ -23,7 +23,7 @@ function whoami() {
     { 
         withCredentials: true
     }).then((response:any) => {
-        if(response == 403)
+        if(response === 403)
         {
             const error = response.message || response.statusText;
             return Promise.reject(error);
@@ -39,7 +39,7 @@ function turnOn2fa(code:string) {
     }, { 
         withCredentials: true 
     }).then((response:any) => {
-        if(response == 401)
+        if(response === 401)
         {
             const error = response.message || response.statusText;
             return Promise.reject(error);
@@ -53,7 +53,7 @@ function turnOff2fa() {
     { 
         withCredentials: true 
     }).then((response:any) => {
-        if(response == 401)
+        if(response === 401)
         {
             const error = response.message || response.statusText;
             return Promise.reject(error);
@@ -69,7 +69,7 @@ function authenticate2fa(code:string) {
     }, { 
         withCredentials: true 
     }).then((response:any) => {
-        if(response == 401)
+        if(response === 401)
         {
             const error = response.message || response.statusText;
             return Promise.reject(error);
@@ -132,7 +132,7 @@ function signout() {
     { 
         withCredentials: true 
     }).then(response => {
-        if(response.status == 200 || response.status == 201 || response.status == 401)
+        if(response.status === 200 || response.status === 201 || response.status === 401)
             return true;
         else
             return Promise.reject("ERRRRORRRRR");    
@@ -154,7 +154,7 @@ function updateProfile(user:UpdateUser) {
     }, { 
         withCredentials: true 
     }).then((response:any) => {
-        if(response == 400)
+        if(response === 400)
         {
             const error = response.message || response.statusText;
             return Promise.reject(error);
@@ -166,7 +166,7 @@ function updateProfile(user:UpdateUser) {
 function getById(id: any) {
     return axios.get(`${config.apiUrl}/users/${id}`,)
     .then((response:any) => {
-        if(response == 403 || response == 404)
+        if(response === 403 || response === 404)
         {
             const error = response.message || response.statusText;
             return Promise.reject(error);
@@ -178,7 +178,7 @@ function getById(id: any) {
 function getByLogin(login: string){
 	return axios.get(`${config.apiUrl}/users/userByLogin/${login}`,)
 		.then((response : any) => {
-			if(response == 403 || response == 404)
+			if(response === 403 || response === 404)
 			{
 					const error = response.message || response.statusText;
 					return Promise.reject(error);
@@ -190,7 +190,7 @@ function getByLogin(login: string){
 function getByLoginNavbar(login: string){
 	return axios.get(`${config.apiUrl}/users/userByLogin/${login}`,)
 		.then((response : any) => {
-			if(response == 403 || response == 404)
+			if(response === 403 || response === 404)
 			{
 					const error = response.message || response.statusText;
 					return Promise.reject(error);
@@ -202,7 +202,7 @@ function getByLoginNavbar(login: string){
 function getAll() {
     return axios.get(`${config.apiUrl}/users`,)
     .then((response:any) => {
-        if(response == 403)
+        if(response === 403)
         {
             const error = response.message || response.statusText;
             return Promise.reject(error);
@@ -212,7 +212,7 @@ function getAll() {
 }
 
 function handleResponse(response:any) {
-    if(response.status == 400)
+    if(response.status === 400)
     {
         const error = response.message || response.statusText;
         return Promise.reject(error);

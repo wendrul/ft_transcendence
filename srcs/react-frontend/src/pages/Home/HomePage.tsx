@@ -7,6 +7,7 @@ import img_user from '../../icon/utilisateur.png'
 import axios from 'axios';
 import config from '../../config';
 import AlertPage from '../../components/Alerts/Alert';
+import { alertActions } from '../../_actions';
 
 function guestView(){
 	return (
@@ -55,6 +56,7 @@ function UserView(user:any){
 }
 
 function HomePage(){
+	const dispatch = useAppDispatch();
 	const authentication = useAppSelector<any>(state => state.authentication);
 	const user = useAppSelector<any>(state => state.user);
 	const alert = useAppSelector<any>(state => state.alert);
@@ -73,7 +75,7 @@ function HomePage(){
 	useEffect(() =>{
 		if (params.get("twoFactor") === "true")
 			console.log("url[",url,"]");
-			if (url == "true")
+			if (url === "true")
 			{
 				navigate("/")
 				seturl(params.get("code"));
@@ -87,11 +89,10 @@ function HomePage(){
 		if (params.get("code"))
 			console.log(params.get("code"))*/
 	}, [])
-
-	// const [ladder, setladder] = useState<Data[]>([
-	// 	{ login: 'hola', wins: 2, losses: 3, score: 4},
-	// 	{ login: 'ho', wins: 2, losses: 3, score: 4}
-	// ]);
+	
+	useEffect(() => {
+		dispatch(alertActions.clear())
+	}, [dispatch])
 
 	const [ladder, setladder] = useState<Data[]>([
 	]);
