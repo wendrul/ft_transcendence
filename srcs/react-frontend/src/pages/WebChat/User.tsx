@@ -6,9 +6,9 @@ import { alertActions, friendActions, userActions } from '../../_actions';
 
 
 
-interface Iprop {
-	search : boolean;
-}
+// interface Iprop {
+// 	search : boolean;
+// }
 
 
 function User(){
@@ -16,7 +16,7 @@ function User(){
 	const [userSrch, setUserSrch] = useState('');
 	const users = useAppSelector<any>(state => state.users);
 	const current_user = useAppSelector<any>(state => state.user);
-	const friends = useAppSelector<any>(state => state.friend);
+	// const friends = useAppSelector<any>(state => state.friend);
 	const dispatch = useAppDispatch();
 	let searchView;
 
@@ -73,7 +73,7 @@ function User(){
 
 
 	if (users && users?.loged){
-		if (users?.item?.login != current_user.data.login)
+		if (users?.item?.login !== current_user.data.login)
 			searchView = UserFinded();
 	}
 	else

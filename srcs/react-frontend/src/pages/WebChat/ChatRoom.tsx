@@ -14,9 +14,9 @@ interface IProps{
 	chanName : string;
 }
 
-interface IState{
-	// chanName : string;
-}
+// interface IState{
+// 	// chanName : string;
+// }
 
 function displayMsg(msg: any) {
 	if (msg.content === ""){
@@ -42,8 +42,8 @@ let isInChannel: boolean = false;
 
 function Channel (props:IProps){
 
-	const curr_user = useAppSelector<any>(state => state.user);
-	const authentication = useAppSelector<any>(state => state.authentication);
+	// const curr_user = useAppSelector<any>(state => state.user);
+	// const authentication = useAppSelector<any>(state => state.authentication);
 	const [usersInChannel, SetUsersInChannel] = useState<any>([]);
 	const [adminsInChannel, SetAdminsInChannel] = useState<any>([]);
 	let recv = window.location.href.split("/").pop();

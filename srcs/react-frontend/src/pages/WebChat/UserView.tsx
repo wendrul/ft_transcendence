@@ -67,7 +67,7 @@ function UserView (props : IProps){
 		return <p>Offline</p>
 	  }
 
-	const openConvView = () => {{
+	const openConvView = () => {
 	return(
 			<div className='d-flex flex-column'>
 					{channel && channel?.data && channel.data && channel.data[0] != null 
@@ -89,9 +89,9 @@ function UserView (props : IProps){
 				)}
 		</div>
 		);
-	}}
+	}
 
-	const oneUser = () => {{
+	const oneUser = () => {
 		return(
 				<div className='d-flex flex-column'>
 						{ allfriends && allfriends.map((item:Friends, i:number) =>
@@ -114,7 +114,7 @@ function UserView (props : IProps){
 					)}
 			</div>
 			);
-		}}
+		}
 
 
 	let view = LoadingView();
