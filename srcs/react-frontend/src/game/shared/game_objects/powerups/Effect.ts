@@ -19,6 +19,8 @@ abstract class Effect implements IGameObject {
     durationMs: number; //60 FPS
     isStarted: boolean;
 
+    public static newDrawable: Function | null = null;
+
     constructor(game: Game, origin: Vector2, type: EffectType, durationMs: number) {
         this.game = game;
         this.origin = origin;
@@ -46,6 +48,7 @@ namespace Effect {
     export function GetImplementations(): Constructor<Effect>[] {
         return implementations;
     }
+
     export function register<T extends Constructor<Effect>>(ctor: T) {
         implementations.push(ctor);
         return ctor;

@@ -9,12 +9,12 @@ import Powerup from "./Powerup";
 export function LoadEffectsModule(){}
 
 @Effect.register
-//@CageEffectDrawable.register
 export class CageEffect extends Effect {
     walls: Wall[];
     static readonly wallLength = 100; //garbage change
-    static readonly wallThickness = 5;
+    static readonly wallThickness = 10;
     static readonly durationMs = 3000; //3 seconds
+
 
     constructor(game: Game, origin: Vector2) {
         super(game, origin, EffectType.Cage, CageEffect.durationMs);
@@ -38,3 +38,36 @@ export class CageEffect extends Effect {
         this.game.ball.colliders.splice(del, 4);
     }
 }
+
+@Effect.register
+export class DefensiveWallEffect extends Effect {
+    wall!: Wall;
+    static readonly wallThickness = 10;
+    static readonly durationMs = 5000;
+
+    constructor(game: Game, origin: Vector2) {
+        super(game, origin, EffectType.DefensiveWall, DefensiveWallEffect.durationMs);
+    }
+
+    onStart(ownerIsLeft: boolean, ballpos: Vector2): void {
+        this.origin = ballpos;
+
+        const thic = DefensiveWallEffect.wallThickness;
+
+        let x = this.origin.x;
+        if (ownerIsLeft) x -= thic;
+
+        this.wall = new Wall(x, 0, thic, Game.height, ownerIsLeft ? "left" : "right");
+        this.game.ball.colliders.push(this.wall);
+    }
+
+    onEnd(): void {
+        const del = this.game.ball.colliders.indexOf(this.wall);
+        this.game.ball.colliders.splice(del, 4);
+    }
+
+    registerOwnDrawable() {
+
+    }
+}
+

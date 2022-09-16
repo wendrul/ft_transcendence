@@ -97,7 +97,9 @@ export default class Game {
 
   constructor(winCondition: string, usePowerups: string) {
     this.gameTime = performance.now();
+    
     LoadEffectsModule();
+
     this._currentFrame = 0;
     this.powerupsON = usePowerups === "power-up";
 

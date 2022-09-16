@@ -15,8 +15,10 @@ import PowerupDrawable from "./graphics/powerups/PowerupDrawable";
 import Powerup from "./shared/game_objects/powerups/Powerup";
 import Vector2 from "./shared/util/Vector2";
 import { Utils } from "./shared/util/Utils";
-import CageEffectDrawable from "./graphics/powerups/CageEffectDrawable";
 import { CageEffect } from "./shared/game_objects/powerups/Effects";
+import { EffectDrawable } from "./graphics/powerups/EffectDrawable";
+import Effect from "./shared/game_objects/powerups/Effect";
+import { LoadEffectDrawablesModule } from "./graphics/powerups/EffectDrawables";
 
 class Whaff {
   static debugMode: boolean;
@@ -36,7 +38,7 @@ class Whaff {
 
   socket: Socket;
   currentPowerupDrawable?: PowerupDrawable;
-  effectDrawable: any;
+  effectDrawable?: EffectDrawable | null;
 
   constructor(
     instantiatedApp: PIXI.Application,
@@ -50,6 +52,10 @@ class Whaff {
     },
     test = false
   ) {
+    LoadEffectDrawablesModule();
+    // CageEffect.newDrawable = (effect: CageEffect, app: PIXI.Application) => new CageEffectDrawable(effect, app)
+
+
     this.socket = io(`${config.apiUrl}/game`, {
       query: { ...queryParameters, test },
     });
@@ -164,25 +170,41 @@ class Whaff {
 
       }
       if (gameState.powerup.on && this.game.currentPowerup == null) {
-        const powerupPos = new Vector2(gameState.powerup.pos.x,gameState.powerup.pos.y);
-        this.game.currentPowerup = new Powerup(this.game.eventHandler, this.game, powerupPos, gameState.powerup.effect);  
+        const powerupPos = new Vector2(gameState.powerup.pos.x, gameState.powerup.pos.y);
+        this.game.currentPowerup = new Powerup(this.game.eventHandler, this.game, powerupPos, gameState.powerup.effect);
         this.currentPowerupDrawable = new PowerupDrawable(this.game.currentPowerup!, this.app);
       }
     });
 
     this.socket.on('powerupTrigger', (data) => {
       console.log(data);
-      try {
+      try { // garbage delete try catch
         this.game.currentPowerup?.startEffect(new Vector2(data.ballpos.x, data.ballpos.y));
-      this.effectDrawable = new CageEffectDrawable(this.game.currentPowerup?.effect as CageEffect, this.app);
-      this.effectDrawable.onStart();
-      this.app.stage.removeChild(this.currentPowerupDrawable!.gfx);
-      } catch (error) {
-        console.log(error);
-        throw error;
+        const drawables = EffectDrawable.GetDrawableImplementations();        
+        console.log("Drawables:");
+        console.log(drawables);
+        console.log("current effect:");
+        console.log(this.game.currentPowerup?.effect);
+        console.log("Effect array:");
+        console.log(Effect.GetImplementations());
+        for (const drawableCtor of drawables) {
+          this.effectDrawable = new drawableCtor(this.game.currentPowerup?.effect, this.app);
+          if (this.effectDrawable.effectType === this.game.currentPowerup?.effect.type) {
+            break;
+          }
+          else {
+            this.effectDrawable.remove();
+            this.effectDrawable = null;
+          }
+        }
         
+        // this.effectDrawable = new CageEffectDrawable(this.game.currentPowerup?.effect, this.app);
+        this.effectDrawable?.onStart();
+        this.app.stage.removeChild(this.currentPowerupDrawable!.gfx);
+      } catch (error) {
+        console.error(error);
+        throw error;
       }
-      
     });
     
     this.socket.on("assignController", (settings) => {

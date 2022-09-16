@@ -31,7 +31,7 @@ class Powerup implements IGameObject, ICollider {
         this.eventHandler = eventHandler;
         this.game = game;
         this.pos = pos.clone();
-        this.effectIndex = effectIndex ?? this.getRandomEffectIndex();
+        this.effectIndex = effectIndex ?? this.getRandomEffectIndex();        
         this.effect = new (Effect.GetImplementations()[this.effectIndex])(this.game, this.pos.clone());
         this.hitbox = [];
         const len = Powerup.sideLength;
@@ -107,6 +107,7 @@ class Powerup implements IGameObject, ICollider {
     public getRandomEffectIndex() {
         const effects = Effect.GetImplementations();
         let i = Utils.randomIntFromInterval(0, effects.length - 1);
+        return 1;
         return i;
     }
 }
