@@ -22,7 +22,7 @@ function SignUp() {
 	
 		if(authentication.loggedIn)
 			navigate("/");
-	}, [authentication])
+	}, [authentication, navigate])
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");

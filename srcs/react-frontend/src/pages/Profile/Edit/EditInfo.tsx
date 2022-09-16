@@ -35,17 +35,12 @@ function EditInfo() {
      navigate("/")
 	}, [userData])
 
-  const testfonc = () => {
-    console.log(userData.updated)
-  }
 
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
     dispatch(alertActions.clear());
     dispatch(userActions.updateProfile(user));
 
-   /* if (userData.updated == true)
-      navigate("/"); */
 	}
 
   const handleChangeFirstName = function(event: ChangeEvent<HTMLInputElement>) {
