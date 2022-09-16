@@ -80,6 +80,7 @@ function FriendRequest() {
     login: string;
     online: boolean;
     inGame: boolean;
+    gameRoom: string;
   }
 
   const [allfriends, setfriends] = useState<Friends[]>([]);
@@ -123,8 +124,9 @@ function FriendRequest() {
     setJustifyActive(value);
   };
 
-  async  function sala(event:any ) {
-   console.log("sala")
+  const spectate = (event:any, gameRoom:string) => {
+    event.preventDefault();
+   console.log(gameRoom)
   }
 
 
@@ -219,10 +221,10 @@ function FriendRequest() {
                             {renderElement(item?.online, item?.inGame )}
                           </div>
                         </div>
-                        { item?.inGame && 
+                        { item && item?.inGame && 
                           <div className='ms-3'>
                             <MDBBtn onClick={(e) => {
-                              sala(e);
+                              spectate(e, item?.gameRoom);
                               }}size='sm'  rounded color='success'>
                             Spectate
                            </MDBBtn>
