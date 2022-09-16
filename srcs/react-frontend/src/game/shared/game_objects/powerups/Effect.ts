@@ -47,7 +47,6 @@ namespace Effect {
         return implementations;
     }
     export function register<T extends Constructor<Effect>>(ctor: T) {
-        console.log("FIRE FIRE FIRE FIRE FIRE");
         implementations.push(ctor);
         return ctor;
     }

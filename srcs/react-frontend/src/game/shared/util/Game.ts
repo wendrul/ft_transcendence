@@ -100,7 +100,6 @@ export default class Game {
     LoadEffectsModule();
     this._currentFrame = 0;
     this.powerupsON = usePowerups === "power-up";
-    console.log(`powerups: ${this.powerupsON}`); //garbage
 
     this.winCondition = Utils.clamp(parseInt(winCondition), 1, 99);
     this.eventHandler = new EventHandler(GameEvents);

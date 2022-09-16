@@ -33,25 +33,15 @@ export class GameService {
 	}
 
 	//==========Uncoment to add game room===========
-	// async userInGame(login: string, gameRoom: string) {
-	// 	const user = await this.userService.findOneLogin(login);
-	// 	if (!user) {
-	// 		throw new NotFoundException('User Not Found');
-	// 	}
-
-	// 	return this.userService.update(user, {inGame: true, gameRoom: gameRoom});
-	// }
-
-
-	//=========Remove to add game room===============
-	async userInGame(login: string) {
+	async userInGame(login: string, gameRoom: string) {
 		const user = await this.userService.findOneLogin(login);
 		if (!user) {
 			throw new NotFoundException('User Not Found');
 		}
 
-		return this.userService.update(user, {inGame: true});
+		return this.userService.update(user, {inGame: true, gameRoom: gameRoom});
 	}
+
 
 	async userWon(login: string) {
 		const user = await this.userService.findOneLogin(login);

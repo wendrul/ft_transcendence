@@ -143,7 +143,7 @@ class GameRoom {
           GameRoom.movingAveragePeriod,
         );
         client.emit('assignController', { control: ['player1'] });
-        this.gameService.userInGame(username);
+        this.gameService.userInGame(username, this.id);
       } else if (this.settings.p2 == null) {
         this.settings.p2 = {
           id: client.id,
@@ -154,7 +154,7 @@ class GameRoom {
           GameRoom.movingAveragePeriod,
         );
         client.emit('assignController', { control: ['player2'] });
-        this.gameService.userInGame(username);
+        this.gameService.userInGame(username, this.id);
         //Start Game
         this.stateMachine.changeGameState(ServerGameState.Running, {});
         this.socket.emit('startGame', {});
