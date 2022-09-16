@@ -39,6 +39,7 @@ class Whaff {
   socket: Socket;
   currentPowerupDrawable?: PowerupDrawable;
   effectDrawable?: EffectDrawable | null;
+  ball!: BallDrawable;
 
   constructor(
     instantiatedApp: PIXI.Application,
@@ -96,7 +97,7 @@ class Whaff {
     console.log("Finished Game setup");
 
     this.stateMachine = new GameStateMachine(this.game, this);
-    
+
     this.game.on(GameEvents.GameUpdate, (frame: number) => {
       this.stateMachine.currentState.onUpdate(frame);
     });
@@ -115,14 +116,14 @@ class Whaff {
     // });
 
     this.game.on(GameEvents.EffectDisable, () => {
-      if (this.effectDrawable != null){
+      if (this.effectDrawable != null) {
         this.effectDrawable.onEnd();
         this.effectDrawable = null;
       }
     })
 
-    this.game.on(GameEvents.PowerupAbort, () =>  {
-      if (this.effectDrawable != null){
+    this.game.on(GameEvents.PowerupAbort, () => {
+      if (this.effectDrawable != null) {
         this.effectDrawable.onEnd();
         this.effectDrawable = null;
       }
@@ -135,7 +136,7 @@ class Whaff {
   private makeDrawables() {
     const p1 = new PaddleDrawable(this.game.paddle1, this.app);
     const p2 = new PaddleDrawable(this.game.paddle2, this.app);
-    const ball = new BallDrawable(this.game.ball, this.app);
+    this.ball = new BallDrawable(this.game.ball, this.app);
 
     this.game.walls.forEach((w) => new WallDrawable(w, this.app));
     new WallDrawable(this.game.leftGoal, this.app, 0x00ffff);
@@ -175,40 +176,29 @@ class Whaff {
     });
 
     this.socket.on('powerupTrigger', (data) => {
-      console.log(data);
-      try { // garbage delete try catch
-        this.game.currentPowerup?.startEffect(new Vector2(data.ballpos.x, data.ballpos.y));
-        const drawables = EffectDrawable.GetDrawableImplementations();        
-        console.log("Drawables:");
-        console.log(drawables);
-        console.log("current effect:");
-        console.log(this.game.currentPowerup?.effect);
-        console.log("Effect array:");
-        console.log(Effect.GetImplementations());
-        for (const drawableCtor of drawables) {
-          this.effectDrawable = new drawableCtor(this.game.currentPowerup?.effect, this.app);
-          if (this.effectDrawable.effectType === this.game.currentPowerup?.effect.type) {
-            break;
-          }
-          else {
-            this.effectDrawable.remove();
-            this.effectDrawable = null;
-          }
+      this.game.currentPowerup?.startEffect(new Vector2(data.ballpos.x, data.ballpos.y));
+      const drawables = EffectDrawable.GetDrawableImplementations();
+      for (const drawableCtor of drawables) {
+        this.effectDrawable = new drawableCtor(this, this.game.currentPowerup!.effect, this.app);
+        if (this.effectDrawable.effectType === this.game.currentPowerup?.effect.type) {
+          break;
         }
-        
-        // this.effectDrawable = new CageEffectDrawable(this.game.currentPowerup?.effect, this.app);
-        this.effectDrawable?.onStart();
-        this.app.stage.removeChild(this.currentPowerupDrawable!.gfx);
-      } catch (error) {
-        console.error(error);
-        throw error;
+        else {
+          this.effectDrawable.remove();
+          this.effectDrawable = null;
+        }
       }
+
+      // this.effectDrawable = new CageEffectDrawable(this.game.currentPowerup?.effect, this.app);
+      this.effectDrawable?.onStart();
+      this.app.stage.removeChild(this.currentPowerupDrawable!.gfx);
+
     });
-    
+
     this.socket.on("assignController", (settings) => {
       this.controlable = settings.control;
     });
-    
+
     this.socket.on("matchEnded", (data) => {
       this.game.gameEnd = true;
       this.stateMachine.changeGameState(GameState.Ending, this.game.scoreboard);
@@ -218,12 +208,12 @@ class Whaff {
       this.createEndScreen(data);
       this.socket.disconnect();
     });
-    
+
     this.socket.on("startGame", () => {
       console.log("Starting game");
       this.stateMachine.changeGameState(GameState.Passive, {});
     });
-    
+
     this.socket.on('planned-dc', (data) => {
       if (!this.game.gameEnd) {
         this.game.gameEnd = true;
@@ -232,7 +222,7 @@ class Whaff {
       }
       this.socket.disconnect()
     });
-    
+
     this.socket.on("disconnect", () => {
       if (!this.game.gameEnd) {
         this.game.gameEnd = true;

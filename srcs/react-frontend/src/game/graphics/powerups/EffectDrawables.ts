@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import "@pixi/graphics-extras";
 import Drawable from "../Drawable";
 import WallDrawable from "../WallDrawable";
-import { BlackHoleEffect, CageEffect, DefensiveWallEffect } from "../../shared/game_objects/powerups/Effects";
+import { BlackHoleEffect, CageEffect, DefensiveWallEffect, InvisiballEffect } from "../../shared/game_objects/powerups/Effects";
 import Effect, { EffectType } from "../../shared/game_objects/powerups/Effect";
 import { EffectDrawable } from "./EffectDrawable";
 import BallDrawable from "../BallDrawable";
@@ -19,8 +19,8 @@ export class CageEffectDrawable extends EffectDrawable {
     private walls: WallDrawable[];
     cageEffect: CageEffect;
 
-    constructor(cageEffect: CageEffect, app: PIXI.Application) {
-        super(cageEffect, app);
+    constructor(whaff: Whaff, cageEffect: CageEffect, app: PIXI.Application) {
+        super(whaff, cageEffect, app);
 
         this.effectType = EffectType.Cage;
         this.color = 0xff0000;
@@ -49,8 +49,8 @@ export class BlackHoleEffectDrawable extends EffectDrawable {
     private color: number;
     blackHoleEffect: BlackHoleEffect;
 
-    constructor(effect: BlackHoleEffect, app: PIXI.Application) {
-        super(effect, app);
+    constructor(whaff: Whaff, effect: BlackHoleEffect, app: PIXI.Application) {
+        super(whaff, effect, app);
 
         this.effectType = EffectType.BlackHole;
         this.color = 0x000000;
@@ -74,7 +74,6 @@ export class BlackHoleEffectDrawable extends EffectDrawable {
         this.gfx!.y = y;
         this.gfx!.pivot.x = r;
         this.gfx!.pivot.y = r;
-        console.log(x); console.log(y);
     }
 
     public onEnd(): void {
@@ -89,8 +88,8 @@ export class DefensiveWallEffectDrawable extends EffectDrawable {
     private wall!: WallDrawable;
     wallEffect: DefensiveWallEffect;
 
-    constructor(effect: DefensiveWallEffect, app: PIXI.Application) {
-        super(effect, app);
+    constructor(whaff: Whaff, effect: DefensiveWallEffect, app: PIXI.Application) {
+        super(whaff, effect, app);
 
         this.effectType = EffectType.DefensiveWall;
         this.color = 0xff0000;
@@ -107,5 +106,33 @@ export class DefensiveWallEffectDrawable extends EffectDrawable {
 
     public onEnd(): void {
         this.wall.remove();
+    }
+}
+
+@EffectDrawable.register
+export class InvisiballEffectDrawable extends EffectDrawable {
+    effectType: EffectType;
+    invisiballEffect: InvisiballEffect;
+    private color: number;
+
+    constructor(whaff: Whaff, effect: InvisiballEffect, app: PIXI.Application) {
+        super(whaff, effect, app);
+
+        this.effectType = EffectType.Invisiball;
+        this.invisiballEffect = effect;
+        this.color = 0xffff00;
+    }
+
+    public redraw() {
+
+    }
+
+    public onStart(): void {
+        this.whaff.ball.isVisible = false;
+        this.whaff.ball.gfx.clear();
+    }
+
+    public onEnd(): void {
+        this.whaff.ball.isVisible = true;
     }
 }

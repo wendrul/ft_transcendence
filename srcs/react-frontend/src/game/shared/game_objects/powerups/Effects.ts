@@ -92,6 +92,23 @@ export class DefensiveWallEffect extends Effect {
 
     onEnd(): void {
         const del = this.game.ball.colliders.indexOf(this.wall);
-        this.game.ball.colliders.splice(del, 4);
+        this.game.ball.colliders.splice(del, 1);
+    }
+}
+
+@Effect.register
+export class InvisiballEffect extends Effect {
+    static readonly durationMs = 1000;
+
+    constructor(game: Game, origin: Vector2) {
+        super(game, origin, EffectType.Invisiball, InvisiballEffect.durationMs);
+    }
+
+    onStart(ownerIsLeft: boolean, ballpos: Vector2): void {
+        //do nothing
+    }
+
+    onEnd(): void {
+        //do nothing
     }
 }
