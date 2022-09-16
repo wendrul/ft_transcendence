@@ -85,7 +85,7 @@ export default class Paddle implements ICollider, IGameObject {
   }
 
   private updatePos(dt: number) {
-    const diff = this.pos.y - this.target.y;
+    const diff = this.pos.y - Utils.clamp(this.target.y, 0, Game.height);
     if (Math.abs(diff) > 0.000001) {
       this.phi -= this.FTBO_K * diff * dt;
     }
@@ -166,7 +166,8 @@ export default class Paddle implements ICollider, IGameObject {
   }
 
   normal(incomingDir: Vector2, incomingPos: Vector2): Vector2 {
-    const inter = this.intersectCircle(new Ray(incomingPos, incomingDir));
+    const posMoreBehind = incomingPos.subtract(incomingDir.normalized().scale(30));
+    const inter = this.intersectCircle(new Ray(posMoreBehind, incomingDir));
     if (inter == null) {
       return new Vector2(0, 1);
       // throw new Error(

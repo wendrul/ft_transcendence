@@ -56,17 +56,16 @@ class Ball implements IGameObject {
 
       case BallStates.MOVING:
         this.enteringState = false;
-        const newPos = this.pos.add(this.velocity.scale(delta / 60));
-
         this.velocity = this.velocity.rotate(this.omega * this.velocity.x);
         this.omega += (delta / 1000) * Utils.clamp(this.magnusForce.y, -0.001, 0.001);
 
+
+        const newPos = this.pos.add(this.velocity.scale(delta / 60));
         const collidedObject = this.findPossibleCollision(
           this.pos,
           newPos,
           this.colliders
         );
-
         //Avoid going over the wall by going exactly to the point where it would collide
         if (collidedObject != null) {
           const collisionPoint = collidedObject.inter;
