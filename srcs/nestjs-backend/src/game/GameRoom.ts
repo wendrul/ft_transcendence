@@ -17,6 +17,7 @@ class GameRoom {
 
   private _id: string;
   private gameEnded: boolean = false;
+  private gameStarted: boolean = false;
   public get id(): string {
     return this._id;
   }
@@ -43,8 +44,8 @@ class GameRoom {
     socket: Socket,
     roomID: string,
     settings: {
-      winCondition: string,
-      type: string
+      winCondition: string;
+      type: string;
     },
     private gameService: GameService,
     private shutoff: Function,
@@ -56,7 +57,10 @@ class GameRoom {
 
     this.spectators = new Map<string, any>();
     this.game = new Game(settings.winCondition, settings.type);
-    this.stateMachine = new ServerGameStateMachine(this.game, ServerGameState.Waiting);
+    this.stateMachine = new ServerGameStateMachine(
+      this.game,
+      ServerGameState.Waiting,
+    );
 
     this.game.on(GameEvents.GameUpdate, (frame) => this.update(frame));
     this.game.on(GameEvents.BallScore, (data) => {
@@ -67,7 +71,7 @@ class GameRoom {
 
       if (this.gameEnded) return;
       this.gameEnded = true;
-      
+
       if (score.left > score.right) {
         this.socket.emit('matchEnded', {
           winner: this.settings.p1.username,
@@ -122,7 +126,10 @@ class GameRoom {
       id: client.id,
       username: username,
     });
+
     client.emit('assignController', { control: [] });
+
+    if (this.gameStarted) client.emit('startGame', {});
   }
 
   public connection(
@@ -158,6 +165,7 @@ class GameRoom {
         //Start Game
         this.stateMachine.changeGameState(ServerGameState.Running, {});
         this.socket.emit('startGame', {});
+        this.gameStarted = true;
       } else {
         this.connectAsSpectator(client, username);
       }
@@ -170,7 +178,7 @@ class GameRoom {
     if (this.gameEnded) return;
     this.gameEnded = true;
 
-    if (this.settings.test){
+    if (this.settings.test) {
       this.socket.emit('matchEnded', {
         reason: 'tested DC',
         score: this.game.scoreboard,
@@ -179,15 +187,16 @@ class GameRoom {
     }
 
     if (this.settings.p1 == null || this.settings.p2 == null) {
-      if (this.settings.p1 != null) this.gameService.userDisconnectOnAbort(this.settings.p1.username);
-      if (this.settings.p2 != null) this.gameService.userDisconnectOnAbort(this.settings.p2.username);
+      if (this.settings.p1 != null)
+        this.gameService.userDisconnectOnAbort(this.settings.p1.username);
+      if (this.settings.p2 != null)
+        this.gameService.userDisconnectOnAbort(this.settings.p2.username);
       this.logger.warn(
         `Aborting match with id ${this.id} because not enough players connected`,
       );
       this.shutoff();
       return;
     }
-
 
     if (client.id == this.settings.p1.id) {
       this.socket.emit('matchEnded', {
@@ -253,7 +262,7 @@ class GameRoom {
   }
 
   private update(frame: number) {
-    if (frame % 3 == 0) {
+    if (this.gameStarted && frame % 3 == 0) {
       const game = this.game;
       let powerup: any = {
         on: false

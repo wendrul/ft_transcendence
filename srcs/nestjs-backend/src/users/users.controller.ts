@@ -82,7 +82,6 @@ export class UsersController {
 	@UseGuards(AuthGuardApi)
 	whoAmI(@CurrentUser() user: User, @Session() session: any) {
 		if (!user) {
-			console.log("no user");
 			session.userId = null;
 			session.twoFactor = null;
 		}
@@ -177,7 +176,6 @@ export class UsersController {
 	@UseGuards(AuthGuard('42'))
 	async Auth42Redirect(@Res() res:any, @Req() req: any, @Session() session: any, @CurrentUser() c_user: User) {
 
-		console.log(req)
 		const user = await this.authService.login42(req.user.email, req.user.firstName, req.user.lastName);
 
 		if (c_user) {
@@ -197,7 +195,6 @@ export class UsersController {
 
 	@Post('/authApi42')
 	async	authApi42(@Body() token: any) {
-		console.log(token);
 	} 
 
 
@@ -271,7 +268,6 @@ export class UsersController {
 	@Serialize(UserDto)
 	@UseGuards(AuthGuardApi)
 	updateUser(@CurrentUser() user: User, @Body() body: UpdateUserDto) {
-		console.log(body)
 		return this.userService.update(user, body);
 	}
 }

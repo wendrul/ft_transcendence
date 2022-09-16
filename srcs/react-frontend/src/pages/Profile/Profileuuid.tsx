@@ -78,7 +78,7 @@ function Profile(){
 			).then((Response: any) => {
 				const rank: string = Response.data
 				setrank(rank);
-			}).catch(() => {console.log('error')});
+			}).catch(() => {});
 		}
 	}, [users]);
 
@@ -98,7 +98,7 @@ function Profile(){
 			).then((Response: any) => {
 				const blockFlag: boolean = Response.data
 				setBlockedFlag(blockFlag);
-			}).catch(() => {console.log('error')});
+			}).catch(() => {});
 		}
 	}, [users]);
 
@@ -108,13 +108,13 @@ function Profile(){
 				{
 					withCredentials: true,
 				}
-			).then(() => window.location.reload()).catch((error: any) => {console.log(error)})
+			).then(() => window.location.reload()).catch(() => {})
 		} else {
 			axios.get(`${config.apiUrl}/users/block/${users?.itemNavbar?.login}`,
 				{
 					withCredentials: true,
 				}
-			).then(() => window.location.reload()).catch((error: any) => {console.log(error)})
+			).then(() => window.location.reload()).catch(() => {})
 		}
 	}
 
@@ -126,11 +126,7 @@ function Profile(){
 			{
 				withCredentials: true,
 			}
-		).then(() => {
-
-		}).catch((err) => {
-			console.log(err);
-		})
+		).then(() => {}).catch(() => {})
 	}
 
 	return (

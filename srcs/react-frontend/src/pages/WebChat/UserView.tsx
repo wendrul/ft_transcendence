@@ -9,6 +9,7 @@ interface Friends {
     login: string;
     online: boolean;
     inGame: boolean;
+	gameRoom: string;
   }
 
 interface IProps{
@@ -92,6 +93,7 @@ function UserView (props : IProps){
 	}
 
 	const oneUser = () => {
+
 		return(
 				<div className='d-flex flex-column'>
 						{ allfriends && allfriends.map((item:Friends, i:number) =>
@@ -109,6 +111,11 @@ function UserView (props : IProps){
 								<button onClick={() => window.location.href=(window.location.origin + '/profile/' + item.login)}>							
 									Profile 
 								</button>
+								{ item && item?.inGame &&
+									<button onClick={() =>  window.location.href=window.location.origin + '/play-premade/' + item?.gameRoom }>							
+										Spectate 
+									</button>
+								}
 							</div>
 						</div>
 					)}

@@ -48,12 +48,10 @@ function Edit2fa() {
 
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		console.log("Codigo:[", code ,"]")
 		dispatch(userActions.turnOn2fa(code));
 	}
 
 	const handletest = function(event: ChangeEvent<HTMLInputElement>) {
-		console.log(boolTwo)
 		toggleSwitch()
 		setUser({...user, twoFactorAuthenticationFlag: !boolTwo});
 		dispatch(userActions.turnOff2fa());

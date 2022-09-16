@@ -80,6 +80,7 @@ function FriendRequest() {
     login: string;
     online: boolean;
     inGame: boolean;
+    gameRoom: string;
   }
 
   const [allfriends, setfriends] = useState<Friends[]>([]);
@@ -108,7 +109,6 @@ function FriendRequest() {
   }
 
   async  function rejectedRequest(user: any, event:any ) {
-    console.log("rejected")
     const req = pendingRequests.request.find((item:any) => item.senderId === user.id );
     let id = "" + req.id;
     dispatch(friendActions.acceptRequest(id, "rejected"))
@@ -215,6 +215,13 @@ function FriendRequest() {
                             {renderElement(item?.online, item?.inGame )}
                           </div>
                         </div>
+                        { item && item?.inGame && 
+                          <div className='ms-3'>
+                            <MDBBtn onClick={() =>  window.location.href=window.location.origin + '/play-premade/' + item?.gameRoom }size='sm'  rounded color='success'>
+                            Spectate
+                           </MDBBtn>
+                          </div>
+                        }
                       </MDBListGroupItem>
                     )}
                   </MDBListGroup>

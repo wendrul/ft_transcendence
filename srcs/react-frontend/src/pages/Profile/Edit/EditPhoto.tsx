@@ -35,16 +35,10 @@ function EditPhoto() {
 
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-    console.log(selectedFile);
-    //dispatch(alertActions.clear());
-    //dispatch(userActions.updateProfile(user));
-    //navigate("/profile");
 
     const formData = new FormData();
     formData.append("file", selectedFile);
 
-
-      console.log(formData)
       fetch( `${config.apiUrl}/users/avatar`,
         {
           method: 'POST',
@@ -52,7 +46,6 @@ function EditPhoto() {
           credentials: 'include'
         }
       ).then((response:any) => {
-        console.log(response)
         if (response?.statusText === "Created")
          navigate("/profile");
       })

@@ -44,7 +44,6 @@ function Leaderboard(){
 		axios.get(`${config.apiUrl}/users/ladder`)
 			.then((res: any) => {
 				const ladder = res.data;
-				console.log(ladder)
 				setladder(ladder);
 			})
 			.catch(() => {})

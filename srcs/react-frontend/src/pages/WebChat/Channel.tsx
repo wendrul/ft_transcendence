@@ -100,8 +100,6 @@ function Channel (){
 			join_data.password = ""
 
 		setActualJoinAccess(join_access);
-		console.log("name entered: " + join_data.name);
-		console.log("password entered: " + join_data.password);
 		dispatch(channelActions.joinChannel(join_data));
 	}
 	
@@ -218,7 +216,6 @@ function Channel (){
 				setAllChannel(allChannel.filter(item => item.name !== name));
 			}).catch((err) => {
 				alert(err.response.data.message);
-				console.log(err);
 			})
 	}
 

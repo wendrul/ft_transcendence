@@ -50,4 +50,8 @@ export class FriendUserDto {
 	@Expose()
 	@ApiProperty()
 	score: number;
+
+	@Expose()
+	@ApiProperty()
+	gameRoom: string;
 }
