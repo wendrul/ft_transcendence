@@ -247,7 +247,7 @@ function getByLoginNavbar(login: string){
         userService.getByLogin(login)
             .then( user =>{
                     dispatch(success(user));
-                    dispatch(alertActions.success("User Founded"));
+                    dispatch(alertActions.clear());
                 },
                 error => {
                     dispatch(failure(error));
