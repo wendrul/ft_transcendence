@@ -70,7 +70,8 @@ function UserView (props : IProps){
 	const openConvView = () => {{
 	return(
 			<div className='d-flex flex-column'>
-					{channel.data[0] != null && history_conv && history_conv.map((item:Conv, i:number) => 
+					{channel && channel?.data && channel.data && channel.data[0] != null 
+						&& history_conv && history_conv.map((item:Conv, i:number) => 
 					<div key={i} className='d-flex flex-row border-bottom m-3 justify-content-between'>
 						<div  className='d-flex flex-row '>
 							<p> {item?.login}</p>
