@@ -60,7 +60,7 @@ function Profile(){
 	}, [navigate, dispatch])
 
 	useEffect(() => {
-		if(!users.encontrado && !users.buscando && users.itemNavbar == null)
+		if(!users.encontrado && !users.buscando && users.itemNavbar === null)
 			navigate("/404");
 	}, [users])
 
