@@ -3,9 +3,7 @@ import {
 	MDBBtn,
 	MDBRow,
 	MDBCol,
-	MDBInput,
-  MDBSwitch,
-  MDBFile
+	MDBInput
   } from 'mdb-react-ui-kit';
 import { useAppDispatch, useAppSelector } from '../../../_helpers/hooks';
 import { useNavigate } from 'react-router-dom';
