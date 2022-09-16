@@ -42,13 +42,11 @@ export class MessagesGateway implements OnGatewayInit, OnGatewayConnection, OnGa
 	async handleDisconnect(client: Socket) {
 		this.logger.log(`Client disconnected: ${client.id}`);
 		let login: string;
-		console.log(this.usersMap);
 		login = this.usersMap.get(client.id);
 		this.usersMap.delete(client.id);
 		const user = await this.userService.findOneLogin(login);
 		if (user)
 			this.userService.update(user, {online: false});
-		console.log(login);
 	}
 
 	// @SubscribeMessage('createMessageForUser')
@@ -68,15 +66,11 @@ export class MessagesGateway implements OnGatewayInit, OnGatewayConnection, OnGa
 
 	@SubscribeMessage('sendMessage')
 	createMessageForChannel(client: Socket, message: {sender: string, room: string, message: string}) {
-		console.log('funciona');
-		console.log(message.message);
-		console.log(message.room);
 		this.server.to(message.room).emit('messageFromChannel', message)	
 	}
 
 	@SubscribeMessage('joinRoom')
 	joinRoom(client: Socket, room: string) {
-		console.log(room);
 		client.join(room);
 		client.emit('joinedRoom', room);
 	}
