@@ -2,8 +2,9 @@ import Vector2 from "../util/Vector2";
 import { ICollider, Ray } from "../util/Collider";
 import Ball from "./Ball";
 import IGameObject from "./IGameObject";
-import Game from "../util/Game";
+import Game, { GameEvents } from "../util/Game";
 import { Utils } from "../util/Utils";
+import EventHandler from "../util/EventHandler";
 
 export default class Paddle implements ICollider, IGameObject {
   name: string;
@@ -41,7 +42,8 @@ export default class Paddle implements ICollider, IGameObject {
     name: string,
     playerNo: 1 | 2,
     fieldCenterX: number,
-    fieldCenterY: number
+    fieldCenterY: number,
+    private eventHandler: EventHandler
   ) {
     this.name = name;
     this.playerNo = playerNo;
@@ -138,16 +140,16 @@ export default class Paddle implements ICollider, IGameObject {
     return circleInter;
   }
 
-  onCollision(collidingObject: any) {
-    const normal = this.normal(collidingObject.velocity, collidingObject.pos);
-    const v = collidingObject.velocity;
+  onCollision(ball: Ball) {
+    const normal = this.normal(ball.velocity, ball.pos);
+    const v = ball.velocity;
     const angle = Math.atan2(normal.cross(v), v.dot(normal)) * 2;
 
-    collidingObject.velocity = collidingObject.velocity.rotate(
-      -angle + Math.PI + collidingObject.omega * 6000
+    ball.velocity = ball.velocity.rotate(
+      -angle + Math.PI + ball.omega * 6000
     );
-    collidingObject.omega /= 10;
-    collidingObject.magnusForce = new Vector2(
+    ball.omega /= 10;
+    ball.magnusForce = new Vector2(
       0,
       Utils.clamp(
         this.velocity * Paddle.vel_to_F_factor,
@@ -157,7 +159,9 @@ export default class Paddle implements ICollider, IGameObject {
     );
 
     //Increase ball velocity by 5% when colliding with paddle
-    collidingObject.velocity = collidingObject.velocity.scale(1.05);
+    ball.velocity = ball.velocity.scale(1.05);
+
+    this.eventHandler.call_callbacks(GameEvents.PaddleBallCollide);
     return normal;
   }
 

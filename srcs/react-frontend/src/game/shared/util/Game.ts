@@ -10,11 +10,16 @@ import EventHandler from "./EventHandler";
 import { Utils } from "./Utils";
 import Vector2 from "./Vector2";
 
+
 export enum GameEvents {
-  BallScore = "ballScore",
-  GameUpdate = "gameUpdate",
-  PointStart = "pointStart",
-  GameEnd = "gameEnd",
+    BallScore = "ballScore",
+    GameUpdate = "gameUpdate",
+    PointStart = "pointStart",
+    GameEnd = "gameEnd",
+    PaddleBallCollide = "paddleBallCollide",
+    PowerupBallCollide = "powerupBallCollide",
+    EffectDisable = "effectDisable",
+    PowerupAbort = "powerupAbort"
 }
 
 export default class Game {
@@ -86,7 +91,7 @@ export default class Game {
     this._walls = v;
   }
 
-  private eventHandler: EventHandler;
+  public eventHandler: EventHandler;
 
   public updateEvents: Function[] = [];
 
@@ -106,13 +111,15 @@ export default class Game {
       "whaffer1",
       1,
       this.fieldWidth / 2,
-      this.fieldHeight / 2
+      this.fieldHeight / 2,
+      this.eventHandler
     );
     this._paddle2 = new Paddle(
       "whaffer2",
       2,
       this.fieldWidth / 2,
-      this.fieldHeight / 2
+      this.fieldHeight / 2,
+      this.eventHandler
     );
     this.lastLoser = Math.random() > 0.5 ? "left" : "right";
 
@@ -135,8 +142,6 @@ export default class Game {
     this.gameObjects.push(this.paddle1, this.paddle2, this.ball, ...this.walls);
 
     const powerupPos = new Vector2(Game.width / 2, Game.height / 2);
-
-    this.currentPowerup = new Powerup(this, powerupPos);
 
     //setTimeout(()=>this.currentPowerup = new Powerup(this, powerupPos), 3000);
 

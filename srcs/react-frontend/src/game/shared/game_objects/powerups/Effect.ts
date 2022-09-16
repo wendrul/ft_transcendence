@@ -17,20 +17,22 @@ abstract class Effect implements IGameObject {
     type: EffectType;
     origin: Vector2;
     durationMs: number; //60 FPS
+    isStarted: boolean;
 
     constructor(game: Game, origin: Vector2, type: EffectType, durationMs: number) {
         this.game = game;
         this.origin = origin;
         this.type = type;
         this.durationMs = durationMs;
+        this.isStarted = false;
     }
 
     update(dt: number): void {
         throw new Error("Method not implemented.");
     }
 
-    abstract onStart(ownerIsLeft: boolean): void;
-    abstract onEnd(ownerIsLeft: boolean): void;
+    abstract onStart(ownerIsLeft: boolean, ballpos: Vector2): void;
+    abstract onEnd(): void;
 }
 export default Effect;
 

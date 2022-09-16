@@ -51,7 +51,6 @@ export class GameGateway
 
   handleConnection(client: Socket, ...args: any[]) {
     const query = client.handshake.query;
-    this.logger.debug(query);
 
     if (
       query.name == undefined ||
