@@ -28,6 +28,7 @@ class Ball implements IGameObject {
 
   static readonly radius = 15;
   static readonly bounceStallDelay = 0.02;
+  static readonly maxVelocity: number = 2500;
 
   constructor(eventHandler: EventHandler) {
     this.eventHandler = eventHandler;
@@ -36,6 +37,9 @@ class Ball implements IGameObject {
   }
 
   public update(delta: number) {
+    if (this.velocity.norm() > Ball.maxVelocity) {
+      this.velocity = this.velocity.normalized().scale(Ball.maxVelocity)
+    }
     switch (this.state) {
       case BallStates.BOUNCE_STALL:
         if (this.enteringState) {
