@@ -252,6 +252,10 @@ export class ChatService {
 		}
 		users.push(owner);
 
+		if (access === 'protected' && password === "") {
+			throw new BadRequestException('Please enter a password');	
+		}
+
 		//hash password
 		if (access === 'protected') {
 			const salt = randomBytes(8).toString('hex');	
