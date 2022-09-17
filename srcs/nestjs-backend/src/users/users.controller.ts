@@ -184,12 +184,12 @@ export class UsersController {
 
 		if (user.twoFactorAuthenticationFlag) {
 			session.twoFactor = user.id;
-			res.redirect('http://localhost:3000/Authenticate2fa?twoFactor=true').send(user);
+			res.redirect('http://localhost:3000/Authenticate2fa?twoFactor=true');
 		}
-
+		console.log(22);
 		session.userId = user.id;
 		this.userService.update(user, {online: true});
-		res.redirect('http://localhost:3000');
+		//res.redirect('http://localhost:3000');
 	}
 
 
