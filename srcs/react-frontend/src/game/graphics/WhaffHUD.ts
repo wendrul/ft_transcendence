@@ -39,20 +39,20 @@ class DebugHUD extends Drawable {
   }
 
   redraw(): void {
+    this.textGfx.text = this.text;
     this.updateText();
-    if (Whaff.debugMode) {
-      this.textGfx.text = this.text;
-    } else {
-      this.textGfx.text = "";
-    }
+    // if (Whaff.debugMode) {
+    // } else {
+    //   this.textGfx.text = "";
+    // }
   }
 
   updateText() {
-    this.text = "Player ping\n";
+    this.text = "Players\n";
     for (const playerName in this.debug.pings) {
       if (Object.prototype.hasOwnProperty.call(this.debug.pings, playerName)) {
         const ping = this.debug.pings[playerName as keyof {}];
-        this.text += `${playerName}: ${ping}\n`;
+        this.text += `${playerName}`.padEnd(15) + `| ${ping}\n`;
       }
     }
   }

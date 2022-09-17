@@ -1,8 +1,6 @@
 import * as PIXI from "pixi.js";
 import { io, Socket } from "socket.io-client";
 
-import addKeyListeners from "./shared/util/Interaction";
-
 import BallDrawable from "./graphics/BallDrawable";
 import PaddleDrawable from "./graphics/PaddleDrawable";
 import WallDrawable from "./graphics/WallDrawable";
@@ -86,10 +84,10 @@ class Whaff {
       }
     });
 
-    const i_listener = addKeyListeners("i");
-    i_listener.press = () => {
-      Whaff.debugMode = !Whaff.debugMode;
-    };
+    // const i_listener = addKeyListeners("i");
+    // i_listener.press = () => {
+    //   Whaff.debugMode = !Whaff.debugMode;
+    // };
     Whaff.debugMode = false;
     Whaff.debugTool = new GraphicalDebugger(this.app);
 
@@ -102,19 +100,6 @@ class Whaff {
     this.game.on(GameEvents.GameUpdate, (frame: number) => {
       this.stateMachine.currentState.onUpdate(frame);
     });
-
-    // this.game.on(GameEvents.PaddleBallCollide, () => {
-
-    //   if (this.game.currentPowerup === null
-    //     && Math.random() <= 1) { //change to 0.1
-    //       const x = Utils.randomIntFromInterval(Game.powerupBoundsTopLeft.x, Game.powerupBoundsBottomRight.x);
-    //       const y = Utils.randomIntFromInterval(Game.powerupBoundsTopLeft.y, Game.powerupBoundsBottomRight.y);
-    //       const powerupPos = new Vector2(x, y);
-    //       this.game.currentPowerup = new Powerup(this.game.eventHandler, this.game, powerupPos);
-    //       this.currentPowerupDrawable = new PowerupDrawable(this.game.currentPowerup!, this.app);
-    //       // setTimeout(()=>this.game.currentPowerup?.onCollision(this.game.ball), 1000);
-    //     }
-    // });
 
     this.game.on(GameEvents.EffectDisable, () => {
       if (this.effectDrawable != null) {

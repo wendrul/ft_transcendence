@@ -1,5 +1,4 @@
 import Vector2 from "../util/Vector2";
-import addKeyListeners from "../util/Interaction";
 import { ICollider, Ray } from "../util/Collider";
 import { cp } from "fs";
 import IGameObject from "./IGameObject";
