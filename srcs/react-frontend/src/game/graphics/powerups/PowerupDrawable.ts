@@ -11,7 +11,7 @@ export default class PowerupDrawable extends Drawable {
 
     constructor(powerup: Powerup, app: PIXI.Application) {
         super(app, true);
-        this.color = 0xffffff;
+        this.color = 0xff0000;
         this.walls = [];
         this.powerup = powerup;
     }

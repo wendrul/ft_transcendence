@@ -8,16 +8,17 @@ export enum EffectType {
     Cage = "The ball is trapped!", //creates cage around ball for 3 seconds
     BlackHole = "A black hole has appeared in the goal!", //adds gravity towards opponent goal
     DefensiveWall = "That's not fair...", //creates wall behind ball where powerup was picked up for 3 seconds
-    Invisiball = "Where did it go?", //makes ball invisible for 1 second
-    DoubleBall = "This is getting out of hand. Now there are two of them!", //creates second ball for 5 seconds
+    Invisiball = "Where did it go?" //makes ball invisible for 1 second
 }
 
 abstract class Effect implements IGameObject {
     game: Game;
     type: EffectType;
     origin: Vector2;
-    durationMs: number; //60 FPS
+    durationMs: number;
     isStarted: boolean;
+
+    public static newDrawable: Function | null = null;
 
     constructor(game: Game, origin: Vector2, type: EffectType, durationMs: number) {
         this.game = game;
@@ -46,6 +47,7 @@ namespace Effect {
     export function GetImplementations(): Constructor<Effect>[] {
         return implementations;
     }
+
     export function register<T extends Constructor<Effect>>(ctor: T) {
         implementations.push(ctor);
         return ctor;

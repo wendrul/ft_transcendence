@@ -15,8 +15,10 @@ import PowerupDrawable from "./graphics/powerups/PowerupDrawable";
 import Powerup from "./shared/game_objects/powerups/Powerup";
 import Vector2 from "./shared/util/Vector2";
 import { Utils } from "./shared/util/Utils";
-import CageEffectDrawable from "./graphics/powerups/CageEffectDrawable";
 import { CageEffect } from "./shared/game_objects/powerups/Effects";
+import Effect from "./shared/game_objects/powerups/Effect";
+import { EffectDrawable } from "./graphics/powerups/EffectDrawable";
+import { LoadEffectDrawablesModule } from "./graphics/powerups/EffectDrawables";
 
 class Whaff {
   static debugMode: boolean;
@@ -36,7 +38,8 @@ class Whaff {
 
   socket: Socket;
   currentPowerupDrawable?: PowerupDrawable;
-  effectDrawable: any;
+  effectDrawable?: EffectDrawable | null;
+  ball!: BallDrawable;
 
   constructor(
     instantiatedApp: PIXI.Application,
@@ -50,6 +53,8 @@ class Whaff {
     },
     test = false
   ) {
+    LoadEffectDrawablesModule();
+
     this.socket = io(`${config.apiUrl}/game`, {
       query: { ...queryParameters, test },
     });
@@ -92,7 +97,7 @@ class Whaff {
     console.log("Finished Game setup");
 
     this.stateMachine = new GameStateMachine(this.game, this);
-    
+
     this.game.on(GameEvents.GameUpdate, (frame: number) => {
       this.stateMachine.currentState.onUpdate(frame);
     });
@@ -111,14 +116,14 @@ class Whaff {
     // });
 
     this.game.on(GameEvents.EffectDisable, () => {
-      if (this.effectDrawable != null){
+      if (this.effectDrawable != null) {
         this.effectDrawable.onEnd();
         this.effectDrawable = null;
       }
     })
 
-    this.game.on(GameEvents.PowerupAbort, () =>  {
-      if (this.effectDrawable != null){
+    this.game.on(GameEvents.PowerupAbort, () => {
+      if (this.effectDrawable != null) {
         this.effectDrawable.onEnd();
         this.effectDrawable = null;
       }
@@ -131,7 +136,7 @@ class Whaff {
   private makeDrawables() {
     const p1 = new PaddleDrawable(this.game.paddle1, this.app);
     const p2 = new PaddleDrawable(this.game.paddle2, this.app);
-    const ball = new BallDrawable(this.game.ball, this.app);
+    this.ball = new BallDrawable(this.game.ball, this.app);
 
     this.game.walls.forEach((w) => new WallDrawable(w, this.app));
     new WallDrawable(this.game.leftGoal, this.app, 0x00ffff);
@@ -164,31 +169,36 @@ class Whaff {
 
       }
       if (gameState.powerup.on && this.game.currentPowerup == null) {
-        const powerupPos = new Vector2(gameState.powerup.pos.x,gameState.powerup.pos.y);
-        this.game.currentPowerup = new Powerup(this.game.eventHandler, this.game, powerupPos, gameState.powerup.effect);  
+        const powerupPos = new Vector2(gameState.powerup.pos.x, gameState.powerup.pos.y);
+        this.game.currentPowerup = new Powerup(this.game.eventHandler, this.game, powerupPos, gameState.powerup.effect);
         this.currentPowerupDrawable = new PowerupDrawable(this.game.currentPowerup!, this.app);
       }
     });
 
     this.socket.on('powerupTrigger', (data) => {
-      console.log(data);
-      try {
-        this.game.currentPowerup?.startEffect(new Vector2(data.ballpos.x, data.ballpos.y));
-      this.effectDrawable = new CageEffectDrawable(this.game.currentPowerup?.effect as CageEffect, this.app);
-      this.effectDrawable.onStart();
-      this.app.stage.removeChild(this.currentPowerupDrawable!.gfx);
-      } catch (error) {
-        console.log(error);
-        throw error;
-        
+      this.game.currentPowerup?.startEffect(new Vector2(data.ballpos.x, data.ballpos.y));
+      const drawables = EffectDrawable.GetDrawableImplementations();
+      for (const drawableCtor of drawables) {
+        this.effectDrawable = new drawableCtor(this, this.game.currentPowerup!.effect, this.app);
+        if (this.effectDrawable.effectType === this.game.currentPowerup?.effect.type) {
+          break;
+        }
+        else {
+          this.effectDrawable.remove();
+          this.effectDrawable = null;
+        }
       }
-      
+
+      // this.effectDrawable = new CageEffectDrawable(this.game.currentPowerup?.effect, this.app);
+      this.effectDrawable?.onStart();
+      this.app.stage.removeChild(this.currentPowerupDrawable!.gfx);
+
     });
-    
+
     this.socket.on("assignController", (settings) => {
       this.controlable = settings.control;
     });
-    
+
     this.socket.on("matchEnded", (data) => {
       this.game.gameEnd = true;
       this.stateMachine.changeGameState(GameState.Ending, this.game.scoreboard);
@@ -198,12 +208,12 @@ class Whaff {
       this.createEndScreen(data);
       this.socket.disconnect();
     });
-    
+
     this.socket.on("startGame", () => {
       console.log("Starting game");
       this.stateMachine.changeGameState(GameState.Passive, {});
     });
-    
+
     this.socket.on('planned-dc', (data) => {
       if (!this.game.gameEnd) {
         this.game.gameEnd = true;
@@ -212,7 +222,7 @@ class Whaff {
       }
       this.socket.disconnect()
     });
-    
+
     this.socket.on("disconnect", () => {
       if (!this.game.gameEnd) {
         this.game.gameEnd = true;
