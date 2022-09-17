@@ -9,6 +9,7 @@ import BallDrawable from "../BallDrawable";
 import Ball from "../../shared/game_objects/Ball";
 import Vector2 from "../../shared/util/Vector2";
 import Whaff from "../../Whaff";
+import { GameColors } from "../../gameColors";
 
 export function LoadEffectDrawablesModule() { }
 
@@ -23,7 +24,7 @@ export class CageEffectDrawable extends EffectDrawable {
         super(whaff, cageEffect, app);
 
         this.effectType = EffectType.Cage;
-        this.color = 0xff0000;
+        this.color = GameColors.wall;
         this.walls = [];
         this.cageEffect = cageEffect;
     }
@@ -92,7 +93,7 @@ export class DefensiveWallEffectDrawable extends EffectDrawable {
         super(whaff, effect, app);
 
         this.effectType = EffectType.DefensiveWall;
-        this.color = 0xff0000;
+        this.color = GameColors.training_wall;
         this.wallEffect = effect;
     }
 

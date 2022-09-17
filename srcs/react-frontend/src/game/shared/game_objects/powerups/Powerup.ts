@@ -17,7 +17,7 @@ class Powerup implements IGameObject, ICollider {
     pos: Vector2;
     effect: Effect;
     effectIndex : number;
-    static readonly sideLength = 40; //garbage change to 30/40
+    static readonly sideLength = 100; //garbage change to 30/40
     game: Game;
     hitbox: Wall[]
 

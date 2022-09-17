@@ -18,7 +18,7 @@ export default class Paddle implements ICollider, IGameObject {
   pos: Vector2;
 
   private _target!: Vector2;
-  public static maxAngle: number = (40 * Math.PI) / 360;
+  public static maxAngle: number = (45 * Math.PI) / 360;
   velocity: any;
   static vel_to_F_factor: number = 2 / 100;
   static maxForce: number = 0.001;
@@ -33,9 +33,9 @@ export default class Paddle implements ICollider, IGameObject {
 
   private FTBO_K = 0.0001;
 
-  static readonly racketSize = 100;
-  static readonly racketWidth = 5;
-  static readonly fieldSize = 700;
+  static readonly racketSize = 150;
+  static readonly racketWidth = 15;
+  static readonly fieldSize =  1000;
   static readonly racketRadius = 600;
 
   constructor(

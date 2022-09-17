@@ -4,10 +4,11 @@ import "@pixi/graphics-extras";
 import Paddle from "../shared/game_objects/Paddle";
 import Drawable from "./Drawable";
 import Whaff from "../Whaff";
+import { GameColors } from "../gameColors";
 
 export default class PaddleDrawable extends Drawable {
   private paddle: Paddle;
-  private color: number = 0x9900ff;
+  private color: number = GameColors.paddle;
 
   constructor(paddle: Paddle, app: PIXI.Application) {
     super(app, true);

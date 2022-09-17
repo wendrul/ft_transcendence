@@ -24,8 +24,8 @@ export enum GameEvents {
 
 export default class Game {
   /* Game constants */
-  public static readonly width: number = 1000;
-  public static readonly height: number = 600;
+  public static readonly width: number = 1300;
+  public static readonly height: number = 700;
   public static readonly respawnCooldown = 1500;
   public static readonly deathCooldown = 3000;
   public static readonly defaultWC = 7;
@@ -127,11 +127,14 @@ export default class Game {
     this._ball = new Ball(this.eventHandler);
 
     this._walls = [];
-    this.walls.push(new Wall(50, 0, 900, 100, "bot"));
-    this.walls.push(new Wall(50, 500, 900, 100, "top"));
+    const wallHeight = 100;
+    const cornerWidth = 50;
+    this.walls.push(new Wall(0, 0, Game.width, wallHeight, "bot"));
+    this.walls.push(new Wall(0, Game.height - wallHeight, Game.width, wallHeight, "top"));
 
-    this.leftGoal = new GoalZone(0, 0, 100, 600, "right", this.eventHandler);
-    this.rightGoal = new GoalZone(900, 0, 100, 600, "left", this.eventHandler);
+
+    this.leftGoal = new GoalZone(0, 0, 100, Game.height, "right", this.eventHandler);
+    this.rightGoal = new GoalZone(Game.width - 100, 0, 100, Game.height, "left", this.eventHandler);
 
     this.ball.colliders.push(...this.walls, this.leftGoal, this.rightGoal);
     this.ball.colliders.push(this.paddle1, this.paddle2);
