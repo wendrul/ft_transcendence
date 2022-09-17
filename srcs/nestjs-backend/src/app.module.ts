@@ -7,7 +7,7 @@ import { User } from './users/entities/users.entity';
 import { APP_PIPE } from '@nestjs/core';
 import { FriendRequest } from './users/entities/friendRequest.entity';
 import { LocalFile } from './users/entities/localFiles.entity';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Channel } from './chat/entities/channels.entity';
 import { Message } from './chat/entities/messages.entity';
 import { ChatModule } from './chat/chat.module';
@@ -20,7 +20,10 @@ const cookieSession = require('cookie-session');
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: '.env' }),
+    ConfigModule.forRoot({ 
+			isGlobal: true,
+			envFilePath: '.env' 
+	}),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.POSTGRES_DB_HOST,
@@ -58,11 +61,14 @@ const cookieSession = require('cookie-session');
 })
 
 export class AppModule {
+	constructor(
+		private configService: ConfigService,
+	) {}
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(
         cookieSession({
-          keys: ['asdflkjn'],
+          keys: [this.configService.get('COOKIES_SECRET')],
         }),
       )
       .forRoutes('*');

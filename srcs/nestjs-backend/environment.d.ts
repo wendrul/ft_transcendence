@@ -8,5 +8,6 @@ declare namespace NodeJS {
 		AUTH42_CLIENTID?: string;
 		AUTH42_CLIENTSECRET?: string;
 		AUTH42_CLIENT_CALLBACKURL?: string;
+		COOKIES_SECRET?: string;
 	}
 }
