@@ -47,7 +47,7 @@ export default class PaddleDrawable extends Drawable {
       .endFill();
 
     if (Whaff.debugMode) {
-      this.gfx!.lineStyle(2, 0xffffff, 0.1); //Player.racketWidth, this.color);
+      this.gfx!.lineStyle(2, GameColors.wall, 0.1); //Player.racketWidth, this.color);
       this.gfx!.arc(cx, cy, Paddle.racketRadius, phi + 20, phi - 20);
     }
   }

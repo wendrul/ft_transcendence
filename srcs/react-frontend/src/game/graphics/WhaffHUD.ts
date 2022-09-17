@@ -3,6 +3,7 @@ import * as PIXI from "pixi.js";
 import ScoreBoardDrawable from "./ScoreBoardDrawable";
 import Game from "../shared/util/Game";
 import Whaff from "../Whaff";
+import { GameColors } from "../gameColors";
 
 class WhaffHUD {
   scoreBoard: ScoreBoardDrawable;
@@ -31,7 +32,7 @@ class DebugHUD extends Drawable {
     this.textGfx = new PIXI.Text(this.text, {
       fontFamily: "\"Courier New\", Courier, monospace",
       fontSize: 20,
-      fill: 0xdad76b,
+      fill: GameColors.debug,
     });
     this.updateText();
     app.stage.addChild(this.textGfx);

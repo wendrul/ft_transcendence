@@ -4,6 +4,8 @@ import Drawable from "../Drawable";
 import WallDrawable from "../WallDrawable";
 import Powerup from "../../shared/game_objects/powerups/Powerup";
 
+const texture = PIXI.Texture.from('https://i.imgur.com/ykglbUE.png');
+
 export default class PowerupDrawable extends Drawable {
     private color: number;
     private walls: WallDrawable[];
@@ -15,7 +17,6 @@ export default class PowerupDrawable extends Drawable {
         this.color = 0xff0000;
         this.walls = [];
         this.powerup = powerup;
-        const texture = PIXI.Texture.from('https://i.imgur.com/ykglbUE.png');
         this.sprite = new PIXI.Sprite(texture);
         this.sprite.anchor.set(0.5);
         this.sprite.x = this.powerup.pos.x;

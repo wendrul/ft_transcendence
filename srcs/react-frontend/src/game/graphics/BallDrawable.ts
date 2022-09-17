@@ -120,7 +120,7 @@ export default class BallDrawable extends Drawable {
         .scale(0.1)
         .add(new Vector2(Ball.radius, Ball.radius));
       this.gfx!.moveTo(Ball.radius, Ball.radius)
-        .lineStyle(3, 0xfcdb03)
+        .lineStyle(3, GameColors.debug)
         .lineTo(col_end.x, col_end.y)
         .endFill();
     }

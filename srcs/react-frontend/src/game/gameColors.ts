@@ -9,4 +9,5 @@ export namespace GameColors {
   export const particle_start = "#f6f6f6";
   export const particle_end   = "#50738c";
   export const paddle         = 0xf6f6f6;
+  export const debug          = 0x111111;
 }

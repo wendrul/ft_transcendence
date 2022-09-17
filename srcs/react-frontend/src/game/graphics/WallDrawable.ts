@@ -9,6 +9,7 @@ import addKeyListeners from "../shared/util/Interaction";
 import { ICollider, Ray } from "../shared/util/Collider";
 import IGameObject from "../shared/game_objects/IGameObject";
 import Whaff from "../Whaff";
+import { GameColors } from "../gameColors";
 
 export default class WallDrawable extends Drawable {
     private wall: Wall;
@@ -57,7 +58,7 @@ export default class WallDrawable extends Drawable {
             );
             const col_end = this.colliderRay.dir.add(col_start);
             this.gfx!.moveTo(col_start.x, col_start.y)
-                .lineStyle(line_width, 0xfcdb03)
+                .lineStyle(line_width, GameColors.debug)
                 .lineTo(col_end.x, col_end.y)
                 .endFill();
         }
