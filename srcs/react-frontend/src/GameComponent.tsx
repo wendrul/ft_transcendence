@@ -134,7 +134,6 @@ function GameComponent(props: any) {
       ref.current?.appendChild(app.view);
       // Start the PixiJS app
       app.start();
-      console.log(user.data);
       
       const query = {
         ...props,

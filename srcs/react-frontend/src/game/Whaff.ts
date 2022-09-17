@@ -152,8 +152,7 @@ class Whaff {
       this.game.ball.pos.y = gameState.ballpos.y;
       this.game.ball.velocity.x = gameState.ballvel.x;
       this.game.ball.velocity.y = gameState.ballvel.y;
-      this.game.ball.magnusForce.y = gameState.magnus.force;
-      this.game.ball.omega = gameState.magnus.omega;
+      this.game.ball.rotSpeed = gameState.magnus.rotSpeed;
       this.game.scoreboard.left = gameState.score.left;
       this.game.scoreboard.right = gameState.score.right;
       this.socket.emit("pingBack", { time: gameState.time });

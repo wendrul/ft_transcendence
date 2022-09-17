@@ -15,8 +15,6 @@ enum BallStates {
 class Ball implements IGameObject {
   pos!: Vector2;
   velocity!: Vector2;
-  omega!: number
-  magnusForce: Vector2 = new Vector2(0, 0);
 
   state: BallStates = BallStates.MOVING;
   enteringState: boolean = false;
@@ -29,6 +27,9 @@ class Ball implements IGameObject {
   static readonly radius = 15;
   static readonly bounceStallDelay = 0.02;
   static readonly maxVelocity: number = 2500;
+  static radius2: number = 15;
+  rotSpeed: number = 0;
+  static readonly MagnusForce: number = 0.000035;
 
   constructor(eventHandler: EventHandler) {
     this.eventHandler = eventHandler;
@@ -36,7 +37,8 @@ class Ball implements IGameObject {
     this.colliders = new Array<ICollider>();
   }
 
-  public update(delta: number) {
+  public update(dt: number) {
+    
     if (this.velocity.norm() > Ball.maxVelocity) {
       this.velocity = this.velocity.normalized().scale(Ball.maxVelocity)
     }
@@ -47,7 +49,7 @@ class Ball implements IGameObject {
           this.elapsedTime = 0;
         }
         const t = this.elapsedTime / Ball.bounceStallDelay;
-        this.elapsedTime += delta / 60;
+        this.elapsedTime += dt / 60;
         if (this.elapsedTime > Ball.bounceStallDelay) {
           this.state = BallStates.MOVING;
           this.enteringState = true;
@@ -56,11 +58,14 @@ class Ball implements IGameObject {
 
       case BallStates.MOVING:
         this.enteringState = false;
-        this.velocity = this.velocity.rotate(this.omega * this.velocity.x);
-        this.omega += (delta / 1000) * Utils.clamp(this.magnusForce.y, -0.001, 0.001);
 
+        if (!(this.rotSpeed === 0 || this.velocity.norm() === 0)) {
+          const F = Ball.MagnusForce * this.rotSpeed * this.velocity.norm();
+          const magnusForce = this.velocity.rotate(Math.PI / 2).normalized().scale(F * dt);
+          this.velocity = this.velocity.add(magnusForce);
+        }
 
-        const newPos = this.pos.add(this.velocity.scale(delta / 60));
+        const newPos = this.pos.add(this.velocity.scale(dt / 60));
         const collidedObject = this.findPossibleCollision(
           this.pos,
           newPos,
@@ -120,10 +125,9 @@ class Ball implements IGameObject {
   }
 
   public reset() {
-    this.omega = 0;
     this.pos = new Vector2(Game.width / 2, Game.height / 2);
     this.velocity = new Vector2(0,0);
-    this.magnusForce = new Vector2(0,0);
+    this.rotSpeed = 0;
   }
 }
 

@@ -146,17 +146,11 @@ export default class Paddle implements ICollider, IGameObject {
     const angle = Math.atan2(normal.cross(v), v.dot(normal)) * 2;
 
     ball.velocity = ball.velocity.rotate(
-      -angle + Math.PI + ball.omega * 6000
+      -angle + Math.PI
     );
-    ball.omega /= 10;
-    ball.magnusForce = new Vector2(
-      0,
-      Utils.clamp(
-        this.velocity * Paddle.vel_to_F_factor,
-        -Paddle.maxForce,
-        Paddle.maxForce
-      )
-    );
+
+    ball.rotSpeed += this.velocity * Paddle.racketRadius * Ball.radius2;
+ 
 
     //Increase ball velocity by 5% when colliding with paddle
     ball.velocity = ball.velocity.scale(1.05);

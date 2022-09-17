@@ -282,7 +282,7 @@ class GameRoom {
         p2: { target: { x: game.paddle2.target.x, y: game.paddle2.target.y } },
         ballpos: { x: game.ball.pos.x, y: game.ball.pos.y },
         ballvel: { x: game.ball.velocity.x, y: game.ball.velocity.y },
-        magnus: { force: game.ball.magnusForce.y, omega: game.ball.omega },
+        magnus: {rotSpeed: game.ball.rotSpeed },
         score: this.game.scoreboard,
         time: performance.now(),
       });

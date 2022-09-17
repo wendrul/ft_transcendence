@@ -1,6 +1,10 @@
 // import * as PIXI from "pixi.js";
 // import { Graphics } from "pixi.js";
-import { ICollider, Ray, rayIntersection as lineIntersecton } from "../util/Collider";
+import {
+  ICollider,
+  Ray,
+  rayIntersection as lineIntersecton,
+} from "../util/Collider";
 import { Utils } from "../util/Utils";
 import Vector2 from "../util/Vector2";
 import Ball from "./Ball";
@@ -11,19 +15,17 @@ class Wall implements IGameObject, ICollider {
   height: number;
   width: number;
 
-
   colliderRay: Ray;
 
   colliderSide: "top" | "bot" | "left" | "right";
   lastWouldCollide: boolean;
-
 
   constructor(
     x: number,
     y: number,
     width: number,
     height: number,
-    side: "top" | "bot" | "left" | "right" = "bot",
+    side: "top" | "bot" | "left" | "right" = "bot"
   ) {
     this.pos = new Vector2(x, y);
     this.height = height;
@@ -56,8 +58,7 @@ class Wall implements IGameObject, ICollider {
     }
   }
 
-  public update(delta: number) {
-  }
+  public update(delta: number) {}
 
   public intersectRay(ray: Ray): Vector2 | null {
     const inter = lineIntersecton(this.colliderRay, ray);
@@ -81,20 +82,17 @@ class Wall implements IGameObject, ICollider {
     return normal;
   }
 
-  public onCollision(collidingObject: Ball): Vector2 {
-    const normal = this.normal(collidingObject.velocity);
-    const v = collidingObject.velocity;
+  public onCollision(ball: Ball): Vector2 {
+    const normal = this.normal(ball.velocity);
+    const v = ball.velocity;
     const angle = Math.atan2(normal.cross(v), v.dot(normal)) * 2;
-    
-    collidingObject.velocity = collidingObject.velocity.rotate(
-      -angle + Math.PI + collidingObject.omega * 6000
+
+    ball.velocity = ball.velocity.rotate(
+      -angle + Math.PI
     );
 
-    collidingObject.magnusForce = new Vector2(0,0);
-    collidingObject.omega /= 10;
-
     //Decrease velocity by 20% on bounce
-    collidingObject.velocity = collidingObject.velocity.scale(1.01);
+    ball.velocity = ball.velocity.scale(1.01);
     return normal;
   }
 
@@ -107,9 +105,8 @@ class Wall implements IGameObject, ICollider {
       .cross(this.colliderRay.dir);
 
     if ((crossNew >= 0 && crossOld >= 0) || (crossNew <= 0 && crossOld <= 0))
-      this.lastWouldCollide =  false;
-    else
-      this.lastWouldCollide = true;
+      this.lastWouldCollide = false;
+    else this.lastWouldCollide = true;
     return this.lastWouldCollide;
   }
 }
