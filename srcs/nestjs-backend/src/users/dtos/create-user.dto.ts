@@ -10,13 +10,11 @@ export class CreateUserDto {
 	
 	@IsString()
 	@IsNotEmpty()
-	@NotContains(" ")
 	@ApiProperty()
 	firstName: string;
 
 	@IsString()
 	@IsNotEmpty()
-	@NotContains(" ")
 	@ApiProperty()
 	lastName: string;
 

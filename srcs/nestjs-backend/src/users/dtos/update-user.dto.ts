@@ -18,14 +18,12 @@ export class UpdateUserDto {
 	@IsString()
 	@ApiProperty()
 	@IsNotEmpty()
-	@NotContains(" ")
 	firstName: string;
 
 	@IsOptional()
 	@IsString()
 	@ApiProperty()
 	@IsNotEmpty()
-	@NotContains(" ")
 	lastName: string;
 
 	@IsOptional()
