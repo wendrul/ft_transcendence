@@ -99,15 +99,17 @@ class GameRoom {
       }
     });
 
-    this.game.on(GameEvents.PaddleBallCollide, () => {
-      if (this.game.currentPowerup === null
+    if (this.game.powerupsON) {
+      this.game.on(GameEvents.PaddleBallCollide, () => {
+        if (this.game.currentPowerup === null
           && Math.random() <= 0.50) {
           const x = Utils.randomIntFromInterval(Game.powerupBoundsTopLeft.x, Game.powerupBoundsBottomRight.x);
           const y = Utils.randomIntFromInterval(Game.powerupBoundsTopLeft.y, Game.powerupBoundsBottomRight.y);
           const powerupPos = new Vector2(x, y);
           this.game.currentPowerup = new Powerup(this.game.eventHandler, this.game, powerupPos);
         }
-    });
+      });
+    }
 
     this.game.on(GameEvents.PowerupBallCollide, () => {
       const pos = this.game.ball.pos;

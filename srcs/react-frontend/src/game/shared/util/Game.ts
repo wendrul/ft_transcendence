@@ -45,7 +45,7 @@ export default class Game {
   /* class variables */
   public currentPowerup : Powerup | null = null;
   public gameEnd = false;
-  private powerupsON = false;
+  public powerupsON = false;
   public gameObjects: Array<IGameObject> = [];
   private gameTime: number;
   private _currentFrame: number;
