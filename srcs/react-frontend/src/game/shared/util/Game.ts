@@ -30,7 +30,7 @@ export default class Game {
   public static readonly deathCooldown = 3000;
   public static readonly defaultWC = 7;
 
-  private static readonly ballStartSpeed = 200;
+  public static readonly ballStartSpeed = 200;
   public static readonly dt = 1000.0 / 120.0;
 
   static readonly powerupBoundsTopLeft = new Vector2(200, 200);
@@ -46,7 +46,7 @@ export default class Game {
   public currentPowerup : Powerup | null = null;
   public gameEnd = false;
   private powerupsON = false;
-  private gameObjects: Array<IGameObject> = [];
+  public gameObjects: Array<IGameObject> = [];
   private gameTime: number;
   private _currentFrame: number;
   private _paddle1: Paddle;
@@ -130,10 +130,6 @@ export default class Game {
     this.walls.push(new Wall(50, 0, 900, 100, "bot"));
     this.walls.push(new Wall(50, 500, 900, 100, "top"));
 
-    //Debugging cage walls
-    // this.walls.push(new Wall(50, 0, 50, 600, "right"));
-    // this.walls.push(new Wall(50, 0, 50, 600, "right"));
-
     this.leftGoal = new GoalZone(0, 0, 100, 600, "right", this.eventHandler);
     this.rightGoal = new GoalZone(900, 0, 100, 600, "left", this.eventHandler);
 
@@ -141,10 +137,6 @@ export default class Game {
     this.ball.colliders.push(this.paddle1, this.paddle2);
 
     this.gameObjects.push(this.paddle1, this.paddle2, this.ball, ...this.walls);
-
-    const powerupPos = new Vector2(Game.width / 2, Game.height / 2);
-
-    //setTimeout(()=>this.currentPowerup = new Powerup(this, powerupPos), 3000);
 
     this.gameLoop();
   }

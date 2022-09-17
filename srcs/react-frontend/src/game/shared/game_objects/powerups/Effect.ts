@@ -8,15 +8,14 @@ export enum EffectType {
     Cage = "The ball is trapped!", //creates cage around ball for 3 seconds
     BlackHole = "A black hole has appeared in the goal!", //adds gravity towards opponent goal
     DefensiveWall = "That's not fair...", //creates wall behind ball where powerup was picked up for 3 seconds
-    Invisiball = "Where did it go?", //makes ball invisible for 1 second
-    DoubleBall = "This is getting out of hand. Now there are two of them!", //creates second ball for 5 seconds
+    Invisiball = "Where did it go?" //makes ball invisible for 1 second
 }
 
 abstract class Effect implements IGameObject {
     game: Game;
     type: EffectType;
     origin: Vector2;
-    durationMs: number; //60 FPS
+    durationMs: number;
     isStarted: boolean;
 
     public static newDrawable: Function | null = null;

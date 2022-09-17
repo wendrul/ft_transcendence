@@ -25,7 +25,7 @@ class Ball implements IGameObject {
 
   colliders: Array<ICollider>;
 
-  private eventHandler: EventHandler;
+  eventHandler: EventHandler;
 
   static readonly radius = 15;
   static readonly bounceStallDelay = 0.02;
