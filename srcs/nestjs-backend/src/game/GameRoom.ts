@@ -173,7 +173,10 @@ class GameRoom {
   }
 
   public disconnect(client: Socket) {
-    if (this.spectators.has(client.id)) this.spectators.delete(client.id);
+    if (this.spectators.has(client.id)){
+      this.spectators.delete(client.id);
+      return;
+    } 
 
     if (this.gameEnded) return;
     this.gameEnded = true;
