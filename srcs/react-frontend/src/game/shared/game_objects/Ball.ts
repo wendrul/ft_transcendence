@@ -16,8 +16,6 @@ enum BallStates {
 class Ball implements IGameObject {
   pos!: Vector2;
   velocity!: Vector2;
-  omega!: number
-  magnusForce: Vector2 = new Vector2(0, 0);
 
   state: BallStates = BallStates.MOVING;
   enteringState: boolean = false;
@@ -29,6 +27,10 @@ class Ball implements IGameObject {
 
   static readonly radius = 15;
   static readonly bounceStallDelay = 0.02;
+  static readonly maxVelocity: number = 2500;
+  static radius2: number = 15;
+  rotSpeed: number = 0;
+  static readonly MagnusForce: number = 0.000035;
 
   blackHoleGravitySource?: Vector2 | null;
 
@@ -40,6 +42,9 @@ class Ball implements IGameObject {
   }
 
   public update(dt: number) {
+    if (this.velocity.norm() > Ball.maxVelocity) {
+      this.velocity = this.velocity.normalized().scale(Ball.maxVelocity)
+    }
     switch (this.state) {
       case BallStates.BOUNCE_STALL:
         if (this.enteringState) {
@@ -56,21 +61,24 @@ class Ball implements IGameObject {
 
       case BallStates.MOVING:
         this.enteringState = false;
-        const newPos = this.pos.add(this.velocity.scale(dt / 60));
+
+        if (!(this.rotSpeed === 0 || this.velocity.norm() === 0)) {
+          const F = Ball.MagnusForce * this.rotSpeed * this.velocity.norm();
+          const magnusForce = this.velocity.rotate(Math.PI / 2).normalized().scale(F * dt);
+          this.velocity = this.velocity.add(magnusForce);
+        }
 
         if (this.blackHoleGravitySource !== null) {
           const grav = this.blackHoleGravitySource?.subtract(this.pos).normalized().scale(BlackHoleEffect.gravStrength * dt);
           this.velocity = this.velocity.add(grav!);
         }
-        this.velocity = this.velocity.rotate(this.omega * this.velocity.x);
-        this.omega += (dt / 1000) * Utils.clamp(this.magnusForce.y, -0.001, 0.001);
-
+        
+        const newPos = this.pos.add(this.velocity.scale(dt / 60));
         const collidedObject = this.findPossibleCollision(
           this.pos,
           newPos,
           this.colliders
         );
-
         //Avoid going over the wall by going exactly to the point where it would collide
         if (collidedObject != null) {
           const collisionPoint = collidedObject.inter;
@@ -125,10 +133,9 @@ class Ball implements IGameObject {
   }
 
   public reset() {
-    this.omega = 0;
     this.pos = new Vector2(Game.width / 2, Game.height / 2);
-    this.velocity = new Vector2(0, 0);
-    this.magnusForce = new Vector2(0, 0);
+    this.velocity = new Vector2(0,0);
+    this.rotSpeed = 0;
   }
 }
 

@@ -19,6 +19,7 @@ import { CageEffect } from "./shared/game_objects/powerups/Effects";
 import Effect from "./shared/game_objects/powerups/Effect";
 import { EffectDrawable } from "./graphics/powerups/EffectDrawable";
 import { LoadEffectDrawablesModule } from "./graphics/powerups/EffectDrawables";
+import { GameColors } from "./gameColors";
 
 class Whaff {
   static debugMode: boolean;
@@ -136,11 +137,11 @@ class Whaff {
   private makeDrawables() {
     const p1 = new PaddleDrawable(this.game.paddle1, this.app);
     const p2 = new PaddleDrawable(this.game.paddle2, this.app);
+    
+    new WallDrawable(this.game.leftGoal, this.app, GameColors.goal);
+    new WallDrawable(this.game.rightGoal, this.app, GameColors.goal);
+    this.game.walls.forEach((w) => new WallDrawable(w, this.app, GameColors.wall));
     this.ball = new BallDrawable(this.game.ball, this.app);
-
-    this.game.walls.forEach((w) => new WallDrawable(w, this.app));
-    new WallDrawable(this.game.leftGoal, this.app, 0x00ffff);
-    new WallDrawable(this.game.rightGoal, this.app, 0x00ffff);
   }
 
   private defineSocketEvents() {
@@ -157,8 +158,7 @@ class Whaff {
       this.game.ball.pos.y = gameState.ballpos.y;
       this.game.ball.velocity.x = gameState.ballvel.x;
       this.game.ball.velocity.y = gameState.ballvel.y;
-      this.game.ball.magnusForce.y = gameState.magnus.force;
-      this.game.ball.omega = gameState.magnus.omega;
+      this.game.ball.rotSpeed = gameState.magnus.rotSpeed;
       this.game.scoreboard.left = gameState.score.left;
       this.game.scoreboard.right = gameState.score.right;
       this.socket.emit("pingBack", { time: gameState.time });
@@ -188,11 +188,8 @@ class Whaff {
           this.effectDrawable = null;
         }
       }
-
-      // this.effectDrawable = new CageEffectDrawable(this.game.currentPowerup?.effect, this.app);
       this.effectDrawable?.onStart();
-      this.app.stage.removeChild(this.currentPowerupDrawable!.gfx);
-
+      this.currentPowerupDrawable?.remove();
     });
 
     this.socket.on("assignController", (settings) => {

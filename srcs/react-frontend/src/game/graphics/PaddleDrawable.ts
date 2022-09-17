@@ -4,10 +4,11 @@ import "@pixi/graphics-extras";
 import Paddle from "../shared/game_objects/Paddle";
 import Drawable from "./Drawable";
 import Whaff from "../Whaff";
+import { GameColors } from "../gameColors";
 
 export default class PaddleDrawable extends Drawable {
   private paddle: Paddle;
-  private color: number = 0x9900ff;
+  private color: number = GameColors.paddle;
 
   constructor(paddle: Paddle, app: PIXI.Application) {
     super(app, true);
@@ -46,7 +47,7 @@ export default class PaddleDrawable extends Drawable {
       .endFill();
 
     if (Whaff.debugMode) {
-      this.gfx!.lineStyle(2, 0xffffff, 0.1); //Player.racketWidth, this.color);
+      this.gfx!.lineStyle(2, GameColors.wall, 0.1); //Player.racketWidth, this.color);
       this.gfx!.arc(cx, cy, Paddle.racketRadius, phi + 20, phi - 20);
     }
   }

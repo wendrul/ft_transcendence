@@ -18,7 +18,7 @@ export default class Paddle implements ICollider, IGameObject {
   pos: Vector2;
 
   private _target!: Vector2;
-  public static maxAngle: number = (40 * Math.PI) / 360;
+  public static maxAngle: number = (45 * Math.PI) / 360;
   velocity: any;
   static vel_to_F_factor: number = 2 / 100;
   static maxForce: number = 0.001;
@@ -33,9 +33,9 @@ export default class Paddle implements ICollider, IGameObject {
 
   private FTBO_K = 0.0001;
 
-  static readonly racketSize = 100;
-  static readonly racketWidth = 5;
-  static readonly fieldSize = 700;
+  static readonly racketSize = 150;
+  static readonly racketWidth = 15;
+  static readonly fieldSize =  1000;
   static readonly racketRadius = 600;
 
   constructor(
@@ -85,7 +85,7 @@ export default class Paddle implements ICollider, IGameObject {
   }
 
   private updatePos(dt: number) {
-    const diff = this.pos.y - this.target.y;
+    const diff = this.pos.y - Utils.clamp(this.target.y, 0, Game.height);
     if (Math.abs(diff) > 0.000001) {
       this.phi -= this.FTBO_K * diff * dt;
     }
@@ -146,17 +146,11 @@ export default class Paddle implements ICollider, IGameObject {
     const angle = Math.atan2(normal.cross(v), v.dot(normal)) * 2;
 
     ball.velocity = ball.velocity.rotate(
-      -angle + Math.PI + ball.omega * 6000
+      -angle + Math.PI
     );
-    ball.omega /= 10;
-    ball.magnusForce = new Vector2(
-      0,
-      Utils.clamp(
-        this.velocity * Paddle.vel_to_F_factor,
-        -Paddle.maxForce,
-        Paddle.maxForce
-      )
-    );
+
+    ball.rotSpeed += this.velocity * Paddle.racketRadius * Ball.radius2;
+ 
 
     //Increase ball velocity by 5% when colliding with paddle
     ball.velocity = ball.velocity.scale(1.05);
@@ -166,7 +160,8 @@ export default class Paddle implements ICollider, IGameObject {
   }
 
   normal(incomingDir: Vector2, incomingPos: Vector2): Vector2 {
-    const inter = this.intersectCircle(new Ray(incomingPos, incomingDir));
+    const posMoreBehind = incomingPos.subtract(incomingDir.normalized().scale(30));
+    const inter = this.intersectCircle(new Ray(posMoreBehind, incomingDir));
     if (inter == null) {
       return new Vector2(0, 1);
       // throw new Error(

@@ -6,6 +6,7 @@ import Whaff from "../Whaff";
 import { GameStateMachine } from "./GameStateMachine";
 import { IState } from "./StateMachine";
 import * as PIXI from "pixi.js";
+import { GameColors } from "../gameColors";
 
 
 export default class SearchingState implements IState {
@@ -23,13 +24,13 @@ export default class SearchingState implements IState {
 
     onEnter() {
         this.trainingWall = new Wall(Game.width - 300, 0, 20, Game.height, "left");
-        this.trainingWallDrawable = new WallDrawable(this.trainingWall, this.whaffInstance.app, 0xff00ff);
+        this.trainingWallDrawable = new WallDrawable(this.trainingWall, this.whaffInstance.app, GameColors.training_wall);
         this.game.ball.colliders.push(this.trainingWall);
 
         this.waitingText = new PIXI.Text(`Waiting for player...`, {
             fontFamily: '"Courier New", Courier, monospace',
             fontSize: 25,
-            fill: 0xeeeeee,
+            fill: GameColors.text,
           });
           this.waitingText.anchor.x = 0.5;
           this.waitingText.anchor.y = 0.5;

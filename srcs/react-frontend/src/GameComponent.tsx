@@ -3,9 +3,11 @@ import { Application } from "pixi.js";
 import Game from "./game/shared/util/Game";
 import { io } from "socket.io-client";
 import Whaff from "./game/Whaff";
+import "./GameComponent.css"
 import { useAppDispatch, useAppSelector } from "./_helpers/hooks";
 import { userActions } from "./_actions";
 import { useNavigate } from "react-router-dom";
+import { GameColors } from "./game/gameColors";
 
 export function GameSettingsTest(params: any) {
   // const username = useRef(null);
@@ -125,7 +127,7 @@ function GameComponent(props: any) {
       const app = new Application({
         width: Game.width,
         height: Game.height,
-        backgroundColor: 0x5bba6f,
+        backgroundColor: GameColors.bg,
         // resolution: 1,
         antialias: true,
       });
@@ -134,7 +136,6 @@ function GameComponent(props: any) {
       ref.current?.appendChild(app.view);
       // Start the PixiJS app
       app.start();
-      console.log(user.data);
       
       const query = {
         ...props,
@@ -159,7 +160,7 @@ function GameComponent(props: any) {
         <p>loading</p>
       }
       { authentication.loggedIn &&
-       <div ref={ref} />
+       <div id="gameCanvas" ref={ref} />
       }
     </>
   )

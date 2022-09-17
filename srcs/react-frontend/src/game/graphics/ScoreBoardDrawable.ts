@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import { GameColors } from "../gameColors";
 import Drawable from "./Drawable";
 
 class ScoreBoardDrawable extends Drawable {
@@ -16,7 +17,7 @@ class ScoreBoardDrawable extends Drawable {
     this.textGfx = new PIXI.Text(this.scoreText, {
       fontFamily: "Arial",
       fontSize: 48,
-      fill: 0xffffff,
+      fill: GameColors.score_text,
       align: "center",
     });
     app.stage.addChild(this.textGfx);

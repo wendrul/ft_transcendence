@@ -1,0 +1,14 @@
+#gameCanvas {
+  margin: 25px;
+  /* width: 100%; */
+  /* height: 100%; */
+  /* width: 350px; */
+  /* height: 200px; */
+  /* outline: dashed 1px black; */
+  /* Center child horizontally*/
+  background-color: #50738c;
+  border: 50px #50738c dotted;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+}
