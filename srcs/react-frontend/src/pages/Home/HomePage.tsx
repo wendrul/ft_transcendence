@@ -48,7 +48,6 @@ function UserView(user:any){
 				<a href="/play">
 					<button className='m-3 dboard-btn-sin bg-warning display-6' >PLAY !</button>
 				</a>
-				<button className='m-3 dboard-btn-sup'>CREATE ROOM</button>
 			</>
 		}
 	</>

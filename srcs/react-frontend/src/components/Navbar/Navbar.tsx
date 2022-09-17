@@ -102,14 +102,6 @@ export default function NavbarComponent() {
               <MDBNavbarItem>
                 <MDBNavbarLink href='/Leaderboard'>Leaderboard</MDBNavbarLink>
               </MDBNavbarItem>
-
-              <MDBNavbarItem>
-                <MDBNavbarLink href='/game-test'>Test</MDBNavbarLink>
-              </MDBNavbarItem>
-
-              <MDBNavbarItem>
-                <MDBNavbarLink href='/game-test2'>RoomTest</MDBNavbarLink>
-              </MDBNavbarItem>
             </MDBNavbarNav>
           
             
