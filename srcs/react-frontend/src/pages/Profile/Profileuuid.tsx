@@ -158,7 +158,7 @@ function Profile(){
 						align-items-center m-4">
 							{ avatarPath &&
 							<img className='user' src={ avatarPath } alt='user'></img>}
-							<p> { users.itemNavbar.online ? "Online" : "Offline" } </p>
+							<p> { users?.itemNavbar?.login } </p>
 							<div className="d-flex flex-row m-3 mb-1">
 								<button onClick={(e) => {
 									sendFriendRequest();
