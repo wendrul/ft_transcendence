@@ -13,16 +13,9 @@ export default class BallDrawable extends Drawable {
   private emitter: particles.Emitter;
   private particleContainer: PIXI.ParticleContainer;
 
-  constructor(ball: Ball, app: PIXI.Application) {
+  constructor(ball: Ball, app: PIXI.Application, public colorStart = "#e3f9ff", public colorEnd = "#e3f9ff") {
     super(app, true);
     this.ball = ball;
-    // const container = new particles.ParticleContainer(5000, {
-    //   scale: true,
-    //   position: true,
-    //   rotation: false,
-    //   uvs: false,
-    //   tint: true,
-    // });
     this.particleContainer = new PIXI.ParticleContainer();
 
     const texture = this.createTexture(0, 8, app.renderer.resolution);
@@ -39,8 +32,8 @@ export default class BallDrawable extends Drawable {
         minimumScaleMultiplier: 1
       },
       color: {
-        start: "#e3f9ff",
-        end: "#2196F3"
+        start: this.colorStart,
+        end: this.colorEnd
       },
       speed: {
         start: 0,

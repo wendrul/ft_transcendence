@@ -17,7 +17,7 @@ class Powerup implements IGameObject, ICollider {
     pos: Vector2;
     effect: Effect;
     effectIndex : number;
-    static readonly sideLength = 80; //garbage change to 30/40
+    static readonly sideLength = 40; //garbage change to 30/40
     game: Game;
     hitbox: Wall[]
 
@@ -31,7 +31,7 @@ class Powerup implements IGameObject, ICollider {
         this.eventHandler = eventHandler;
         this.game = game;
         this.pos = pos.clone();
-        this.effectIndex = effectIndex ?? this.getRandomEffectIndex();
+        this.effectIndex = effectIndex ?? this.getRandomEffectIndex();        
         this.effect = new (Effect.GetImplementations()[this.effectIndex])(this.game, this.pos.clone());
         this.hitbox = [];
         const len = Powerup.sideLength;

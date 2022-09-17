@@ -6,6 +6,7 @@ import IGameObject from "./IGameObject";
 import Game from "../util/Game";
 import EventHandler from "../util/EventHandler";
 import { Utils } from "../util/Utils";
+import { BlackHoleEffect } from "./powerups/Effects";
 
 enum BallStates {
   MOVING,
@@ -22,7 +23,7 @@ class Ball implements IGameObject {
 
   colliders: Array<ICollider>;
 
-  private eventHandler: EventHandler;
+  eventHandler: EventHandler;
 
   static readonly radius = 15;
   static readonly bounceStallDelay = 0.02;
@@ -31,14 +32,16 @@ class Ball implements IGameObject {
   rotSpeed: number = 0;
   static readonly MagnusForce: number = 0.000035;
 
+  blackHoleGravitySource?: Vector2 | null;
+
   constructor(eventHandler: EventHandler) {
     this.eventHandler = eventHandler;
     this.reset();
     this.colliders = new Array<ICollider>();
+    this.blackHoleGravitySource = null;
   }
 
   public update(dt: number) {
-    
     if (this.velocity.norm() > Ball.maxVelocity) {
       this.velocity = this.velocity.normalized().scale(Ball.maxVelocity)
     }
@@ -65,6 +68,11 @@ class Ball implements IGameObject {
           this.velocity = this.velocity.add(magnusForce);
         }
 
+        if (this.blackHoleGravitySource !== null) {
+          const grav = this.blackHoleGravitySource?.subtract(this.pos).normalized().scale(BlackHoleEffect.gravStrength * dt);
+          this.velocity = this.velocity.add(grav!);
+        }
+        
         const newPos = this.pos.add(this.velocity.scale(dt / 60));
         const collidedObject = this.findPossibleCollision(
           this.pos,
