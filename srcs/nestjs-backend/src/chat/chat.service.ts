@@ -676,7 +676,7 @@ export class ChatService {
 			adminFlag = true;
 		}
 
-		if (adminFlag) {
+		if (adminFlag && adminRelation) {
 			await this.adminsInChannelsRepo.remove(adminRelation);
 		}
 
